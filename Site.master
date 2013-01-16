@@ -4,7 +4,7 @@
 <html lang="en">
 <head runat="server">
     <meta charset="utf-8" />
-    <title><%: Page.Title %> - My ASP.NET Application</title>
+    <title><%: Page.Title %> - SC2000!</title>
     <asp:PlaceHolder runat="server">      
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
@@ -38,7 +38,7 @@
         <div class="content-wrapper">
             <div class="float-left">
                 <p class="site-title">
-                    <a runat="server" href="~/">your logo here</a></p>
+                    <a runat="server" href="~/">logo.</a></p>
             </div>
             <div class="float-right">
                 <section id="login">
@@ -63,7 +63,6 @@
                     <ul id="menu">
                         <li><a runat="server" href="~/">Home</a></li>
                         <li><a runat="server" href="~/About.aspx">About</a></li>
-                        <li><a runat="server" href="~/Contact.aspx">Contact</a></li>
                     </ul>
                 </nav>
             </div>
@@ -79,7 +78,7 @@
         <div class="content-wrapper">
             <div class="float-left">
                 <p>
-                    &copy; <%: DateTime.Now.Year %> - My ASP.NET Application
+                    &copy; <%: DateTime.Now.Year %> - Dustin Fennell
                 </p>
             </div>
         </div>
