@@ -7,10 +7,11 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" Runat="Server">
     <div class="content-wrapper">
         <table>
+            <tr><td><asp:Label ID="CityUploadLabel" runat="server" /></td></tr>
             <tr>
                 <td>
-                    <span class="file-upload-label">Upload City</span>
                     <asp:FileUpload ID="CityFileUpload" runat="server" />
+                    <asp:Button runat="server" Text="Upload City" onclick="Page_CityUpload" />
                 </td>
             </tr>
         </table>
