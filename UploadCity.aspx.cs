@@ -21,24 +21,24 @@ public partial class CityUpload : System.Web.UI.Page
 
         if (CityFileUpload.HasFile)
         {
-            if (CityValidator.validate(CityFileUpload.PostedFile.InputStream))
-            {
-                // Validation passed. Reset steam pointed to startoffile.
-                CityFileUpload.PostedFile.InputStream.Position = 0;
-            }
-            else
+            HttpPostedFile cityFile = CityFileUpload.PostedFile;
+
+            if (!CityValidator.validate(cityFile.InputStream))
             {
                 // Validation failed.
                 CityUploadLabel.Text = "Invalid file type.";
                 return;
             }
 
-            string cityFileName = CityFileUpload.FileName;
-            CityFileUpload.PostedFile.SaveAs(path + cityFileName);
-            CityUploadLabel.Text = cityFileName + " uploaded!";
+            CityFileUpload.PostedFile.SaveAs(path + CityFileUpload.FileName);
 
-            // TODO: parse city file.
+            var parser = new CityParser();
+            City city = parser.ParseCityFile(cityFile.InputStream);
 
+            // TODO: Store City in database.
+
+            CityUploadLabel.Text = CityFileUpload.FileName + " uploaded!";
+            return;
         }
         else
         {
