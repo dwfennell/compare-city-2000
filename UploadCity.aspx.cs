@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using CityParser2000;
+using CompareCity.Models;
 
 public partial class CityUpload : System.Web.UI.Page
 {
@@ -14,28 +15,33 @@ public partial class CityUpload : System.Web.UI.Page
 
     }
 
+    /// <summary>
+    /// Event handler for city uploads.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_CityUpload(object sender, EventArgs e)
     {
-        // TODO: Store city files in subfolder based on account name? 
-        String path = Server.MapPath("~/App_Data/CityFiles/");
-
         if (CityFileUpload.HasFile)
         {
-            HttpPostedFile cityFile = CityFileUpload.PostedFile;
-
-            if (!CityValidator.validate(cityFile.InputStream))
+            if (!CityValidator.validate(CityFileUpload.PostedFile.InputStream))
             {
                 // Validation failed.
                 CityUploadLabel.Text = "Invalid file type.";
                 return;
             }
 
+            // Save raw file data.
+            // TODO: Store city files in subfolder based on account name? 
+            String path = Server.MapPath("~/App_Data/CityFiles/");
             CityFileUpload.PostedFile.SaveAs(path + CityFileUpload.FileName);
 
+            // Parse city.
             var parser = new CityParser();
-            City city = parser.ParseCityFile(cityFile.InputStream);
+            CityParser2000.City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream);
 
-            // TODO: Store City in database.
+            // Store city data. 
+            storeCity(parserCity, path);
 
             CityUploadLabel.Text = CityFileUpload.FileName + " uploaded!";
             return;
@@ -45,5 +51,21 @@ public partial class CityUpload : System.Web.UI.Page
             CityUploadLabel.Text = "No file selected.";
             return;
         }
+    }
+
+    private void storeCity(CityParser2000.City parserCity, string path)
+    {
+        var city = new CompareCity.Models.City
+        {
+            CityName = parserCity.CityName,
+            MayorName = parserCity.MayorName,
+            Population = parserCity.Population,
+            FilePath = path
+        };
+
+        // TODO: Probably better to have some sort of context pool, or something.
+        CityContext context = new CityContext();
+        context.Cities.Add(city);
+        context.SaveChanges();
     }
 }
