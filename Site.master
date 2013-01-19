@@ -61,8 +61,8 @@
                 </section>
                 <nav>
                     <ul id="menu">                        
-                        <li><a runat="server" href="~/CityUpload.aspx">Upload City Files</a></li>
-                        <li><a runat="server" href="~/RuleConstruct.aspx">Build Scoring Parameters</a></li>
+                        <li><a runat="server" href="~/ManageCities.aspx">City Management</a></li>
+                        <li><a runat="server" href="~/RuleConstruct.aspx">Rule Set Management</a></li>
                         <li><a runat="server" href="~/CompareCities.aspx">Compare Cities!</a></li>
                     </ul>
                 </nav>

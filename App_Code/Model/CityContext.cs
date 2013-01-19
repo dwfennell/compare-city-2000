@@ -8,7 +8,7 @@ namespace CompareCity.Models
     /// </summary>
     public class CityContext : DbContext
     {
-        public CityContext() : base("CityCompare")
+        public CityContext() : base("CompareCity")
         {
         }
 
