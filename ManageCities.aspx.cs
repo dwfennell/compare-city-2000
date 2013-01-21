@@ -38,8 +38,8 @@ public partial class ManageCities : System.Web.UI.Page
 
             // Parse city.
             var parser = new CityParser();
-            CityParser2000.City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream);
-
+            CityParser2000.City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
+            
             // Store city data. 
             storeCity(parserCity, path);
 
@@ -59,7 +59,7 @@ public partial class ManageCities : System.Web.UI.Page
         {
             CityName = parserCity.CityName,
             MayorName = parserCity.MayorName,
-            Population = parserCity.Population,
+            Population = parserCity.GetMiscStatistic(CityParser2000.City.MiscStatistic.CitySize),
             FilePath = path
         };
 
