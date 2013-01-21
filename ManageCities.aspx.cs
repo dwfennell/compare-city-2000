@@ -31,42 +31,63 @@ public partial class ManageCities : System.Web.UI.Page
                 return;
             }
 
-            // Save raw file data.
-            // TODO: Store city files in subfolder based on account name? 
-            String path = Server.MapPath("~/App_Data/CityFiles/");
-            CityFileUpload.PostedFile.SaveAs(path + CityFileUpload.FileName);
-
-            // Parse city.
+            // Parse city file.
             var parser = new CityParser();
-            CityParser2000.City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
+            City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
             
-            // Store city data. 
-            storeCity(parserCity, path);
+            storeCity(parserCity);
 
             CityUploadLabel.Text = CityFileUpload.FileName + " uploaded!";
-            return;
         }
         else
         {
             CityUploadLabel.Text = "No file selected.";
-            return;
         }
     }
 
-    private void storeCity(CityParser2000.City parserCity, string path)
+    private void storeCity(City parserCity)
     {
+        // Set filepath to raw file data, depending on login status.
+        // TODO: Don't accept uploads from users who aren't logged in?
+        string username;
+        string filepath;
+        if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
+        {
+            username = HttpContext.Current.User.Identity.Name;
+            filepath = Server.MapPath("~/App_Data/CityFiles/" + username + "/") + CityFileUpload.FileName;
+        }
+        else
+        {
+            filepath = Server.MapPath("~/App_Data/CityFiles/") + CityFileUpload.FileName;
+            username = "";
+        }
+
+        // TODO: Modify file name to prevent unintended overwrites.
+        CityFileUpload.PostedFile.SaveAs(filepath);
+
+        // TODO: Serialize and store parserCity.
+        
+        // Scrape relevant data from parserCity.
         var city = new CityInfo
         {
             CityName = parserCity.CityName,
             MayorName = parserCity.MayorName,
-            CitySize = parserCity.GetMiscStatistic(CityParser2000.City.MiscStatistic.CitySize),
-            FilePath = path
+            CitySize = parserCity.GetMiscStatistic(City.MiscStatistic.CitySize),
+            YearOfFounding = parserCity.GetMiscStatistic(City.MiscStatistic.YearOfFounding),
+            DaysSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.DaysSinceFounding),
+            AvailableFunds = parserCity.GetMiscStatistic(City.MiscStatistic.AvailableFunds),
+            LifeExpectancy = parserCity.GetMiscStatistic(City.MiscStatistic.LifeExpectancy),
+            EducationQuotent = parserCity.GetMiscStatistic(City.MiscStatistic.EducationQuotent),
+            User = username,
+            FilePath = filepath
         };
 
         // TODO: Probably better to have some sort of context pool, or something.
         var context = new CityInfoContext();
         context.Cities.Add(city);
         context.SaveChanges();
+
+
     }
 
     public IQueryable<CityInfo> GetCities()

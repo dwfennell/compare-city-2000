@@ -4,7 +4,7 @@
 namespace CompareCity.Models
 {
     /// <summary>
-    /// Defines a context class for data access for <see cref="City"/>.
+    /// Defines a context class for data access for <see cref="CityInfo"/>.
     /// </summary>
     public class CityInfoContext : DbContext
     {
