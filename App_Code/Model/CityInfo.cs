@@ -5,7 +5,7 @@ namespace CompareCity.Models
     /// <summary>
     /// A light-weight representation of a .sc2 city file.
     /// </summary>
-    public class City
+    public class CityInfo
     {
         [ScaffoldColumn(false)]
         public int CityId { get; set; }
@@ -25,8 +25,8 @@ namespace CompareCity.Models
         /// <summary>
         /// Total city population.
         /// </summary>
-        [Display(Name="Population")]
-        public int Population { get; set; }
+        [Display(Name="CitySize")]
+        public int CitySize { get; set; }
 
         /// <summary>
         /// File path of the .sc2 file on the server.

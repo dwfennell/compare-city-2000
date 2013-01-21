@@ -55,26 +55,26 @@ public partial class ManageCities : System.Web.UI.Page
 
     private void storeCity(CityParser2000.City parserCity, string path)
     {
-        var city = new CompareCity.Models.City
+        var city = new CityInfo
         {
             CityName = parserCity.CityName,
             MayorName = parserCity.MayorName,
-            Population = parserCity.GetMiscStatistic(CityParser2000.City.MiscStatistic.CitySize),
+            CitySize = parserCity.GetMiscStatistic(CityParser2000.City.MiscStatistic.CitySize),
             FilePath = path
         };
 
         // TODO: Probably better to have some sort of context pool, or something.
-        CityContext context = new CityContext();
+        var context = new CityInfoContext();
         context.Cities.Add(city);
         context.SaveChanges();
     }
 
-    public IQueryable<CompareCity.Models.City> GetCities()
+    public IQueryable<CityInfo> GetCities()
     {
         // TODO: Filter by username.
 
-        var db = new CityContext();
-        IQueryable<CompareCity.Models.City> query = db.Cities;
+        var db = new CityInfoContext();
+        IQueryable<CityInfo> query = db.Cities;
         return query;
     }
 
