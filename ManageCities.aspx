@@ -20,7 +20,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
     <h3>Your Cities</h3>
 
-    <asp:ListView ID="CitiesView" ItemType="CompareCity.Models.CityInfo" runat="server" SelectMethod="GetCities">
+    <asp:ListView ID="CitiesView" ItemType="CompareCity.Models.CityInfo" runat="server" SelectMethod="GetCities" >
         <LayoutTemplate>
             <table runat="server" ID="TableCities">
                 <tr runat="server">

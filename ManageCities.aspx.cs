@@ -36,13 +36,34 @@ public partial class ManageCities : System.Web.UI.Page
             City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
             
             storeCity(parserCity);
-
+            
             CityUploadLabel.Text = CityFileUpload.FileName + " uploaded!";
         }
         else
         {
             CityUploadLabel.Text = "No file selected.";
         }
+    }
+
+    public IQueryable<CityInfo> GetCities()
+    {
+        string username;
+        if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
+        {
+            username = HttpContext.Current.User.Identity.Name;
+        }
+        else
+        {
+            username = "";
+        }
+
+        var db = new CityInfoContext();
+        IQueryable<CityInfo> query =
+            from c in db.Cities
+            where c.User.Equals(username)
+            select c;
+
+        return query;
     }
 
     private void storeCity(City parserCity)
@@ -87,16 +108,10 @@ public partial class ManageCities : System.Web.UI.Page
         context.Cities.Add(city);
         context.SaveChanges();
 
+        // Refresh cities list. 
 
     }
 
-    public IQueryable<CityInfo> GetCities()
-    {
-        // TODO: Filter by username.
 
-        var db = new CityInfoContext();
-        IQueryable<CityInfo> query = db.Cities;
-        return query;
-    }
 
 }
