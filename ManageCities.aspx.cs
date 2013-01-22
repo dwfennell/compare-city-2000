@@ -109,7 +109,8 @@ public partial class ManageCities : System.Web.UI.Page
         context.SaveChanges();
 
         // Refresh cities list. 
-
+        // TODO: There must be a better way to refresh the list..
+        Response.Redirect(Request.RawUrl);
     }
 
 
