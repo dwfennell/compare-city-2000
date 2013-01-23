@@ -100,7 +100,8 @@ public partial class ManageCities : System.Web.UI.Page
             LifeExpectancy = parserCity.GetMiscStatistic(City.MiscStatistic.LifeExpectancy),
             EducationQuotent = parserCity.GetMiscStatistic(City.MiscStatistic.EducationQuotent),
             User = username,
-            FilePath = filepath
+            FilePath = filepath,
+            Uploaded = DateTime.Now
         };
 
         // TODO: Probably better to have some sort of context pool, or something.
@@ -112,7 +113,4 @@ public partial class ManageCities : System.Web.UI.Page
         // TODO: There must be a better way to refresh the list..
         Response.Redirect(Request.RawUrl);
     }
-
-
-
 }

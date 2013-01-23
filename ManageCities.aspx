@@ -37,6 +37,7 @@
             <asp:BoundField DataField="AvailableFunds" HeaderText="Cashflow" SortExpression="AvailableFunds" />
             <asp:BoundField DataField="LifeExpectancy" HeaderText="Life Expectancy" SortExpression="LifeExpectancy" />
             <asp:BoundField DataField="EducationQuotent" HeaderText="Education Quotent (EQ)" SortExpression="EducationQuotent" />
+            <asp:BoundField DataField="Uploaded" HeaderText="Uploaded" SortExpression="Uploaded" />
         </Columns>
     </asp:GridView>
 

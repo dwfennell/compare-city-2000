@@ -70,5 +70,11 @@ namespace CompareCity.Models
         /// </summary>
         [Display(Name = "User")]
         public string User { get; set; }
+
+        /// <summary>
+        /// <c>DateTime</c> the city was uploaded.
+        /// </summary>
+        [Required, Display(Name = "Uploaded")]
+        public System.DateTime Uploaded { get; set; }
     }
 }
