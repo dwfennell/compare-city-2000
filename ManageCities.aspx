@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="ManageCities.aspx.cs" Inherits="ManageCities" %>
+﻿<%@ Page Title="Cities" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="ManageCities.aspx.cs" Inherits="ManageCities" %>
 
 
 
@@ -10,7 +10,7 @@
             <tr>
                 <td>
                     <asp:FileUpload ID="CityFileUpload" runat="server" />
-                    <asp:Button ID="Button1" runat="server" Text="Upload City" onclick="Page_CityUpload" />
+                    <asp:Button ID="UploadButton" runat="server" Text="Upload City" onclick="Page_CityUpload" />
                 </td>
             </tr>
         </table>

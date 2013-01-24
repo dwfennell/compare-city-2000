@@ -8,7 +8,7 @@ namespace CompareCity.Models
     public class CityInfo
     {
         [Key, ScaffoldColumn(false)]
-        public int CityId { get; set; }
+        public int CityInfoId { get; set; }
 
         /// <summary>
         /// The city's name.
