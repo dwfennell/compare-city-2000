@@ -11,7 +11,7 @@
             <th colspan="2">Create Scoring Rules</th>
         </tr>
         <tr>
-            <td></td><td><asp:Label ID="FormulaStatus" runat="server" Text="" /></td>
+            <td></td><td><asp:Label ID="FormulaStatus" runat="server" Text=" " /></td>
         </tr>
         <tr>
             <td>Name:</td>
