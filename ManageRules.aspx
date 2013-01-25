@@ -26,8 +26,8 @@
         <tr>
             <td></td>
             <td>
-                <asp:Button ID="CheckFormulaButton" Text="Check Formula" runat="server" OnClick="CheckFormula_Page" />
-                <asp:Button ID="SaveFormulaButton" text="Save Formula" runat="server" OnClick="SaveFormula_Page" Enabled="false"/>
+                <asp:Button ID="CheckFormulaButton" Text="Check Formula" runat="server" OnClick="CheckFormulaButton_Click" />
+                <asp:Button ID="SaveFormulaButton" text="Save Formula" runat="server" OnClick="SaveFormulaButton_Click" Enabled="false"/>
             </td>
             <td></td>
         </tr>

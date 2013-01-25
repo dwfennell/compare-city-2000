@@ -10,7 +10,7 @@
             <tr>
                 <td>
                     <asp:FileUpload ID="CityFileUpload" runat="server" />
-                    <asp:Button ID="UploadButton" runat="server" Text="Upload City" onclick="Page_CityUpload" />
+                    <asp:Button ID="UploadButton" runat="server" Text="Upload City" onclick="UploadButton_Click" />
                 </td>
             </tr>
         </table>

@@ -12,15 +12,9 @@ public partial class ManageCities : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
     }
 
-    /// <summary>
-    /// Event handler for city uploads.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void Page_CityUpload(object sender, EventArgs e)
+    protected void UploadButton_Click(object sender, EventArgs e)
     {
         if (CityFileUpload.HasFile)
         {
@@ -34,7 +28,7 @@ public partial class ManageCities : System.Web.UI.Page
             // Parse city file.
             var parser = new CityParser();
             City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
-            
+
             storeCity(parserCity);
 
             // Refresh cities list. 
