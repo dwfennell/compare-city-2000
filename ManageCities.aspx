@@ -23,11 +23,11 @@
     <asp:GridView ID="CitiesView" 
         ItemType="CompareCity.Models.CityInfo" 
         runat="server" 
-        SelectMethod="GetCities" 
+        SelectMethod="GetCities"
         AllowSorting="true" 
         AutoGenerateColumns="false"
         HeaderStyle-CssClass="CityListHeader"
-        RowStyle-CssClass="CityListRow">
+        RowStyle-CssClass="CityListRow" >
         <Columns>
             <asp:BoundField DataField="CityName" HeaderText="City Name" SortExpression="CityName" />
             <asp:BoundField DataField="MayorName" HeaderText="Mayor" SortExpression="MayorName" />

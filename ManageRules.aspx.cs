@@ -12,6 +12,31 @@ public partial class ManageRules : System.Web.UI.Page
 {
     private FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore();
 
+    public IQueryable<RuleSet> GetRules()
+    {
+        // TODO: Remove duplication with ManageCities.aspx.cs?
+        string username;
+        if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
+        {
+            username = HttpContext.Current.User.Identity.Name;
+        }
+        else
+        {
+            username = "";
+        }
+
+        var db = new RuleSetContext();
+        //IQueryable<CityInfo> query =
+        //    from c in db.RuleSets
+        //    where c.User.Equals(username)
+        //    select c;
+        IQueryable<RuleSet> query =
+            from c in db.RuleSets
+            select c;
+
+        return query;
+    }
+
     // TODO: Refactor this for sure... this is not the right place for these values.
     private List<string> validScoringIds = new List<string>
     {
@@ -41,6 +66,12 @@ public partial class ManageRules : System.Web.UI.Page
         }
         
         storeRuleSet(FormulaNameTextBox.Text.Trim(), FormulaTextBox.Text.Trim());
+
+        FormulaStatus.Text = "Rule set saved!";
+
+        // Refresh cities list. 
+        // TODO: There must be a better way to refresh the list..
+        Response.Redirect(Request.RawUrl);
     }
 
     protected void CheckFormula_Page(object sender, EventArgs e)
@@ -74,6 +105,7 @@ public partial class ManageRules : System.Web.UI.Page
         if (scorer.CheckFormula())
         {
             FormulaStatus.Text = "Formula: OKAY!";
+            SaveFormulaButton.Enabled = true;
         }
         else
         {
@@ -92,5 +124,26 @@ public partial class ManageRules : System.Web.UI.Page
         var context = new RuleSetContext();
         context.RuleSets.Add(ruleSet);
         context.SaveChanges();
+    }
+
+
+    protected void FormulaTextBox_TextChanged(object sender, EventArgs e)
+    {
+        SaveFormulaButton.Enabled = false;
+        
+    }
+
+    protected void EditRow()
+    {
+        int test = 10;
+        test = 11;
+    }
+
+    // The id parameter name should match the DataKeyNames value set on the control
+    public void RuleSetsView_DeleteItem(int id)
+    {
+        // TODO: Delete record.
+
+
     }
 }

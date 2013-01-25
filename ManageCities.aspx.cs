@@ -36,7 +36,11 @@ public partial class ManageCities : System.Web.UI.Page
             City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
             
             storeCity(parserCity);
-            
+
+            // Refresh cities list. 
+            // TODO: There must be a better way to refresh the list..
+            Response.Redirect(Request.RawUrl);
+
             CityUploadLabel.Text = CityFileUpload.FileName + " uploaded!";
         }
         else
@@ -108,9 +112,5 @@ public partial class ManageCities : System.Web.UI.Page
         var context = new CityInfoContext();
         context.Cities.Add(city);
         context.SaveChanges();
-
-        // Refresh cities list. 
-        // TODO: There must be a better way to refresh the list..
-        Response.Redirect(Request.RawUrl);
     }
 }
