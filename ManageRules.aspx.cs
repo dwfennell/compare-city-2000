@@ -64,6 +64,11 @@ public partial class ManageRules : System.Web.UI.Page
             FormulaStatus.Text = "Formula cannot be blank.";
             return;
         }
+        else if (!validateFormulaName(FormulaNameTextBox.Text))
+        {
+            FormulaStatus.Text = "Formula name already exists.";
+            return;
+        }
         
         storeRuleSet(FormulaNameTextBox.Text.Trim(), FormulaTextBox.Text.Trim());
 
@@ -143,6 +148,23 @@ public partial class ManageRules : System.Web.UI.Page
     {
         // TODO: Delete record.
 
+    }
 
+    private bool validateFormulaName(string name)
+    {
+        // TODO: Should be some sort of DB pool, or at least a local variable.
+        var context = new RuleSetContext();
+        
+        IQueryable<RuleSet> query =
+            from r in context.RuleSets
+            where r.RuleSetName.Equals(name)
+            select r;
+
+        if (query.Count<RuleSet>() > 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
