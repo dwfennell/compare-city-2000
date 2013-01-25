@@ -135,8 +135,7 @@ public partial class ManageRules : System.Web.UI.Page
 
     protected void EditRow()
     {
-        int test = 10;
-        test = 11;
+
     }
 
     // The id parameter name should match the DataKeyNames value set on the control
