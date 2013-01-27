@@ -25,14 +25,14 @@ public partial class ManageCities : System.Web.UI.Page
                 return;
             }
 
-            // Parse city file.
+            // Parse city file (quick-parse, does not fetch all information).
             var parser = new CityParser();
             City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
 
             storeCity(parserCity);
 
             // Refresh cities list. 
-            // TODO: There must be a better way to refresh the list..
+            // TODO: Is there a better way to do this? 
             Response.Redirect(Request.RawUrl);
 
             CityUploadLabel.Text = CityFileUpload.FileName + " uploaded!";
@@ -66,6 +66,36 @@ public partial class ManageCities : System.Web.UI.Page
 
     private void storeCity(City parserCity)
     {
+        
+        string username = HttpContext.Current.User.Identity.Name;
+        if (!string.IsNullOrWhiteSpace(username))
+        {
+
+        }
+
+        // Scrape relevant data from parserCity.
+        var city = new CityInfo
+        {
+            CityName = parserCity.CityName,
+            MayorName = parserCity.MayorName,
+            CitySize = parserCity.GetMiscStatistic(City.MiscStatistic.CitySize),
+            YearOfFounding = parserCity.GetMiscStatistic(City.MiscStatistic.YearOfFounding),
+            DaysSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.DaysSinceFounding),
+            AvailableFunds = parserCity.GetMiscStatistic(City.MiscStatistic.AvailableFunds),
+            LifeExpectancy = parserCity.GetMiscStatistic(City.MiscStatistic.LifeExpectancy),
+            EducationQuotent = parserCity.GetMiscStatistic(City.MiscStatistic.EducationQuotent),
+            User = username,
+            FilePath = filepath,
+            Uploaded = DateTime.Now
+        };
+
+        // TODO: Probably better to have some sort of context pool.
+        var context = new CityInfoContext();
+        context.Cities.Add(city);
+        context.SaveChanges();
+
+        // TODO: Serialize and store parserCity.
+
         // Set filepath to raw file data, depending on login status.
         // TODO: Don't accept uploads from users who aren't logged in?
         string username;
@@ -84,27 +114,5 @@ public partial class ManageCities : System.Web.UI.Page
         // TODO: Modify file name to prevent unintended overwrites.
         CityFileUpload.PostedFile.SaveAs(filepath);
 
-        // TODO: Serialize and store parserCity.
-        
-        // Scrape relevant data from parserCity.
-        var city = new CityInfo
-        {
-            CityName = parserCity.CityName,
-            MayorName = parserCity.MayorName,
-            CitySize = parserCity.GetMiscStatistic(City.MiscStatistic.CitySize),
-            YearOfFounding = parserCity.GetMiscStatistic(City.MiscStatistic.YearOfFounding),
-            DaysSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.DaysSinceFounding),
-            AvailableFunds = parserCity.GetMiscStatistic(City.MiscStatistic.AvailableFunds),
-            LifeExpectancy = parserCity.GetMiscStatistic(City.MiscStatistic.LifeExpectancy),
-            EducationQuotent = parserCity.GetMiscStatistic(City.MiscStatistic.EducationQuotent),
-            User = username,
-            FilePath = filepath,
-            Uploaded = DateTime.Now
-        };
-
-        // TODO: Probably better to have some sort of context pool, or something.
-        var context = new CityInfoContext();
-        context.Cities.Add(city);
-        context.SaveChanges();
     }
 }
