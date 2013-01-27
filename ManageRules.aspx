@@ -52,7 +52,7 @@
                     <Columns>
                         <asp:BoundField DataField="RuleSetName" HeaderText="Name" SortExpression="RuleSetName" />
                         <asp:BoundField DataField="Formula" HeaderText="Formula" SortExpression="Formula" />
-                        <asp:ButtonField ButtonType="Link" Text="Copy Formula" CommandName="CopyFormula"/>
+                        <asp:ButtonField ButtonType="Link" Text="Copy to edit area" CommandName="CopyFormula"/>
                     </Columns>
                 </asp:GridView>
             </td>
