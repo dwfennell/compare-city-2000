@@ -10,7 +10,11 @@ using CompareCity.Models;
 
 public partial class ManageRules : System.Web.UI.Page
 {
+    // TODO: Something strange is going on with namespaces here.
     private FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore();
+
+    // TODO: A context pool of some kind would be better... in a control class perhaps? 
+    private RuleSetContext ruleDB = new RuleSetContext();
 
     // TODO: Refactor this for sure... this is not the right place for these values.
     private List<string> validScoringIds = new List<string>
@@ -20,6 +24,8 @@ public partial class ManageRules : System.Web.UI.Page
         "lifeexpectancy",
         "educationquotent"
     };
+
+    private static readonly int formulaRowIndex = 2;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -39,10 +45,10 @@ public partial class ManageRules : System.Web.UI.Page
             FormulaStatus.Text = "Formula cannot be blank.";
             return;
         }
-        else if (!validateFormulaName(FormulaNameTextBox.Text))
+        else if (isDuplicateName(FormulaNameTextBox.Text))
         {
-            FormulaStatus.Text = "Formula name already exists.";
-            return;
+            // Duplicate name, prompt user for overwrite.
+            FormulaStatus.Text = "Duplicate formula names are not permitted.";
         }
 
         storeRuleSet(FormulaNameTextBox.Text.Trim(), FormulaTextBox.Text.Trim());
@@ -94,77 +100,73 @@ public partial class ManageRules : System.Web.UI.Page
         }
     }
 
-    protected void RuleSetsView_DeleteItem(int RuleSetId)
+    public void RuleSetsView_DeleteItem(int RuleSetId)
     {
-        // TODO: Delete record.
-
+        RuleSet ruleSet = ruleDB.RuleSets.First(i => i.RuleSetId == RuleSetId);
+        ruleDB.RuleSets.Remove(ruleSet);
+        ruleDB.SaveChanges();
     }
 
     protected void FormulaTextBox_TextChanged(object sender, EventArgs e)
     {
         SaveFormulaButton.Enabled = false;
-        
     }
 
     public IQueryable<RuleSet> GetRules()
     {
-        // TODO: Remove duplication with ManageCities.aspx.cs?
-        string username;
-        if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
-        {
-            username = HttpContext.Current.User.Identity.Name;
-        }
-        else
-        {
-            username = "";
-        }
+        string username = getUsername();
 
-        // TODO: Consider username or id here.
-        var db = new RuleSetContext();
-        //IQueryable<CityInfo> query =
-        //    from c in db.RuleSets
-        //    where c.User.Equals(username)
-        //    select c;
         IQueryable<RuleSet> query =
-            from c in db.RuleSets
+            from c in ruleDB.RuleSets
+            where c.User.Equals(username)
             select c;
-
         return query;
     }
 
-    protected void EditRow()
+    protected void RuleSetsView_RowCommand(Object sender, GridViewCommandEventArgs e)
     {
-        // TODO: Get editing working. (May not involved this method per se)
+        if (e.CommandName == "CopyFormula")
+        {
+            // Fetch row and row data.
+            int index = Convert.ToInt32(e.CommandArgument);
+            GridViewRow row = RuleSetsView.Rows[index];
+            string formula = row.Cells[formulaRowIndex].Text;
+
+            // Load formula data into edit area. 
+            FormulaTextBox.Text = formula;
+        }
     }
 
     private void storeRuleSet(string ruleSetName, string ruleSetFormula)
     {
+        string username = getUsername();
+        DateTime now = DateTime.Now;
         var ruleSet = new RuleSet
         {
             RuleSetName = ruleSetName,
-            Formula = ruleSetFormula
+            Formula = ruleSetFormula,
+            User = username,
+            Created = now,
+            Updated = now
         };
 
-        var context = new RuleSetContext();
-        context.RuleSets.Add(ruleSet);
-        context.SaveChanges();
+        ruleDB.RuleSets.Add(ruleSet);
+        ruleDB.SaveChanges();
     }
 
-    private bool validateFormulaName(string name)
+    private bool isDuplicateName(string name)
     {
-        // TODO: Should be some sort of DB pool, or at least a local variable.
-        var context = new RuleSetContext();
-        
+        // Check for duplicate formula names.
         IQueryable<RuleSet> query =
-            from r in context.RuleSets
+            from r in ruleDB.RuleSets
             where r.RuleSetName.Equals(name)
             select r;
+        return query.Count<RuleSet>() > 0;
+    }
 
-        if (query.Count<RuleSet>() > 0)
-        {
-            return false;
-        }
-
-        return true;
+    // TODO: This should be centralized to avoid repetition between pages.
+    private string getUsername()
+    {
+        return string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name) ? "" : HttpContext.Current.User.Identity.Name;
     }
 }

@@ -26,5 +26,24 @@ namespace CompareCity.Models
         /// </summary>
         [Required, StringLength(1000)]
         public string Formula { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Display(Name = "User")]
+        public string User { get; set; }
+
+        /// <summary>
+        /// <c>DateTime</c> the rule set was created.
+        /// </summary>
+        [Required, Display(Name = "Created")]
+        public System.DateTime Created { get; set; }
+
+        /// <summary>
+        /// <c>DateTime</c> the rule set was last modified.
+        /// </summary>
+        [Display(Name = "Updated")]
+        public System.DateTime Updated { get; set; }
+
     }
 }
