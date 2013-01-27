@@ -14,6 +14,9 @@ public partial class ManageCities : System.Web.UI.Page
 {
     private ThreadSafeRandom random = new ThreadSafeRandom();
 
+    // TODO: Use a global context-pool of some sort? This seems wasteful.
+    private CityInfoContext cityDB = new CityInfoContext();
+
     protected void Page_Load(object sender, EventArgs e)
     {
     }
@@ -47,16 +50,23 @@ public partial class ManageCities : System.Web.UI.Page
         }
     }
 
+    public void CitiesView_DeleteItem(int CityInfoId)
+    {
+        CityInfo cityInfo = cityDB.Cities.First(i => i.CityInfoId == CityInfoId);
+        cityDB.Cities.Remove(cityInfo);
+        cityDB.SaveChanges();
+
+        // TODO: Also delete city files... or mark them as "orphan" somehow.
+    }
+
     public IQueryable<CityInfo> GetCities()
     {
         string username = getUsername();
-
-        var db = new CityInfoContext();
+        
         IQueryable<CityInfo> query =
-            from c in db.Cities
+            from c in cityDB.Cities
             where c.User.Equals(username)
             select c;
-
         return query;
     }
 
@@ -81,10 +91,8 @@ public partial class ManageCities : System.Web.UI.Page
             Uploaded = DateTime.Now
         };
 
-        // TODO: Probably better to have some sort of context pool.
-        var context = new CityInfoContext();
-        context.Cities.Add(city);
-        context.SaveChanges();
+        cityDB.Cities.Add(city);
+        cityDB.SaveChanges();
 
         // TODO: Serialize and store parserCity.
 
@@ -120,7 +128,6 @@ public partial class ManageCities : System.Web.UI.Page
             // Anonymous user has uploaded a file.
             
             // TODO: Temporary cookie auth here? Or just force users to register? 
-            
             filepath = String.Format("{1}{2}-{3}", 
                 Server.MapPath("~/App_Data/CityFiles/"), 
                 CityFileUpload.FileName, 
