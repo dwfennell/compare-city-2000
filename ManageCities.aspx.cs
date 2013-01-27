@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using CityParser2000;
 using CompareCity.Models;
+using CompareCity.Util;
 
 public partial class ManageCities : System.Web.UI.Page
 {
+    private ThreadSafeRandom random = new ThreadSafeRandom();
+
     protected void Page_Load(object sender, EventArgs e)
     {
     }
@@ -45,15 +49,7 @@ public partial class ManageCities : System.Web.UI.Page
 
     public IQueryable<CityInfo> GetCities()
     {
-        string username;
-        if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
-        {
-            username = HttpContext.Current.User.Identity.Name;
-        }
-        else
-        {
-            username = "";
-        }
+        string username = getUsername();
 
         var db = new CityInfoContext();
         IQueryable<CityInfo> query =
@@ -66,14 +62,10 @@ public partial class ManageCities : System.Web.UI.Page
 
     private void storeCity(City parserCity)
     {
-        
-        string username = HttpContext.Current.User.Identity.Name;
-        if (!string.IsNullOrWhiteSpace(username))
-        {
+        string username = getUsername();
+        string filepath = generateCityFilepath(username);
 
-        }
-
-        // Scrape relevant data from parserCity.
+        // Fetch relevant data from parserCity.
         var city = new CityInfo
         {
             CityName = parserCity.CityName,
@@ -96,23 +88,60 @@ public partial class ManageCities : System.Web.UI.Page
 
         // TODO: Serialize and store parserCity.
 
-        // Set filepath to raw file data, depending on login status.
-        // TODO: Don't accept uploads from users who aren't logged in?
-        string username;
+        // Save .sc2 file on server.
+        CityFileUpload.PostedFile.SaveAs(filepath);
+    }
+
+    private string generateCityFilepath(string username)
+    {
         string filepath;
-        if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
+
+        if (!string.IsNullOrWhiteSpace(username))
         {
-            username = HttpContext.Current.User.Identity.Name;
-            filepath = Server.MapPath("~/App_Data/CityFiles/" + username + "/") + CityFileUpload.FileName;
+            // Logged-in user has uploaded the file.
+            filepath = String.Format("{0}{1}-{2}-{3}", 
+                Server.MapPath("~/App_Data/CityFiles/"), 
+                username, 
+                CityFileUpload.FileName, 
+                random.Next());
+
+            while (File.Exists(filepath))
+            {
+                // Random number collision! Try again.
+                filepath = String.Format("{0}{1}-{2}-{3}",
+                Server.MapPath("~/App_Data/CityFiles/"),
+                username,
+                CityFileUpload.FileName,
+                random.Next());
+            }
         }
         else
         {
-            filepath = Server.MapPath("~/App_Data/CityFiles/") + CityFileUpload.FileName;
-            username = "";
+            // Anonymous user has uploaded a file.
+            
+            // TODO: Temporary cookie auth here? Or just force users to register? 
+            
+            filepath = String.Format("{1}{2}-{3}", 
+                Server.MapPath("~/App_Data/CityFiles/"), 
+                CityFileUpload.FileName, 
+                random.Next());
+            
+            while (File.Exists(filepath)) 
+            {
+                // Random number collision! Try again.
+                filepath = String.Format("{1}{2}-{3}", 
+                    Server.MapPath("~/App_Data/CityFiles/"), 
+                    CityFileUpload.FileName, 
+                    random.Next());
+            }
         }
 
-        // TODO: Modify file name to prevent unintended overwrites.
-        CityFileUpload.PostedFile.SaveAs(filepath);
+        return filepath;
+    }
 
+    // TODO: This should be centralized to avoid repetition between pages.
+    private string getUsername()
+    {
+        return string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name) ? "" : HttpContext.Current.User.Identity.Name;
     }
 }
