@@ -39,11 +39,8 @@ namespace CompareCity.Models
         [Required, Display(Name = "Created")]
         public System.DateTime Created { get; set; }
 
-        /// <summary>
-        /// <c>DateTime</c> the rule set was last modified.
-        /// </summary>
-        [Display(Name = "Updated")]
-        public System.DateTime Updated { get; set; }
+        [Required, Display(Name = "Valid")]
+        public bool Valid { get; set; }
 
     }
 }

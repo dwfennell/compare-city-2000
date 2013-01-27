@@ -11,6 +11,7 @@ using CompareCity.Models;
 public partial class ManageRules : System.Web.UI.Page
 {
     // TODO: Something strange is going on with namespaces here.
+    // TODO: THis can also be centralized in a control class.
     private FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore();
 
     // TODO: A context pool of some kind would be better... in a control class perhaps? 
@@ -52,48 +53,33 @@ public partial class ManageRules : System.Web.UI.Page
             return;
         }
 
-        storeRuleSet(FormulaNameTextBox.Text.Trim(), FormulaTextBox.Text.Trim());
+        storeRuleSet(FormulaNameTextBox.Text.Trim(), FormulaTextBox.Text.Trim(), validateRuleSetFormula());
 
         FormulaStatus.Text = "Rule set saved!";
 
         // Refresh cities list. 
         // TODO: There must be a better way to refresh the list..
         Response.Redirect(Request.RawUrl);
-
     }
 
     protected void CheckFormulaButton_Click(object sender, EventArgs e)
     {
         string formula = FormulaTextBox.Text;
-
-        // Make sure all value identifiers are valid.
         List<string> cityValueIds = FormulaScore.FormulaScore.FetchScoringIDs(formula);
-        string badIds = "";
-        foreach (string id in cityValueIds)
-        {
-            if (!validScoringIds.Contains(id))
-            {
-                badIds = badIds + id + " ";
-            }
-        }
-        if (!string.IsNullOrEmpty(badIds))
+        
+        // Check for invalid city value identifiers.
+        // Valid identifiers specify values like city size, etc. 
+        string badIds = getBadFormulaIds(formula, cityValueIds);
+        if (!badIds.Equals(""))
         {
             FormulaStatus.Text = "Invalid value identifiers: " + badIds;
             return;
         }
 
-        // Add dummy values for scoring ids.
-        scorer.ScoringFormula = formula;
-        foreach (string id in cityValueIds)
-        {
-            scorer.AddScoringValue(id, 1);
-        }
-
-        // Confirm valid arithmetic expression.
-        if (scorer.CheckFormula())
+        // Confirm formula is a valid arithmetic expression.
+        if (validateFormulaArithmetic(formula, cityValueIds))
         {
             FormulaStatus.Text = "Formula: OKAY!";
-            SaveFormulaButton.Enabled = true;
         }
         else
         {
@@ -106,11 +92,6 @@ public partial class ManageRules : System.Web.UI.Page
         RuleSet ruleSet = ruleDB.RuleSets.First(i => i.RuleSetId == RuleSetId);
         ruleDB.RuleSets.Remove(ruleSet);
         ruleDB.SaveChanges();
-    }
-
-    protected void FormulaTextBox_TextChanged(object sender, EventArgs e)
-    {
-        SaveFormulaButton.Enabled = false;
     }
 
     public IQueryable<RuleSet> GetRules()
@@ -138,7 +119,7 @@ public partial class ManageRules : System.Web.UI.Page
         }
     }
 
-    private void storeRuleSet(string ruleSetName, string ruleSetFormula)
+    private void storeRuleSet(string ruleSetName, string ruleSetFormula, bool isValidFormula)
     {
         string username = getUsername();
         DateTime now = DateTime.Now;
@@ -148,11 +129,55 @@ public partial class ManageRules : System.Web.UI.Page
             Formula = ruleSetFormula,
             User = username,
             Created = now,
-            Updated = now
+            Valid = isValidFormula
         };
 
         ruleDB.RuleSets.Add(ruleSet);
         ruleDB.SaveChanges();
+    }
+
+    private bool validateRuleSetFormula()
+    {
+        string formula = FormulaTextBox.Text;
+        List<string> cityValueIds = FormulaScore.FormulaScore.FetchScoringIDs(formula);
+        string badIds = getBadFormulaIds(formula, cityValueIds);
+
+        return badIds.Equals("") && validateFormulaArithmetic(formula, cityValueIds);
+    }
+
+    private bool validateFormulaArithmetic(string formula, List<string> cityIds)
+    {
+        // Add dummy values for scoring ids.
+        scorer.ScoringFormula = formula;
+        foreach (string id in cityIds)
+        {
+            try
+            {
+                scorer.AddScoringValue(id, 1);
+            }
+            catch (ArgumentException)
+            {
+                // Identifier already added. Ignore exception.
+            }
+        }
+
+        return scorer.CheckFormula();
+    }
+
+    private string getBadFormulaIds(string formula, List<string> cityIds)
+    {
+        // Make sure all value identifiers are valid.
+
+        string badIds = "";
+        foreach (string id in cityIds)
+        {
+            if (!validScoringIds.Contains(id))
+            {
+                badIds = badIds + id + " ";
+            }
+        }
+
+        return badIds;
     }
 
     private bool isDuplicateName(string name)

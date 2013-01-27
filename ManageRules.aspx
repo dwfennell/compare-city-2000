@@ -20,18 +20,16 @@
         </tr>
         <tr>
             <td>Formula:</td>
-            <td><asp:TextBox ID="FormulaTextBox" runat="server" OnTextChanged="FormulaTextBox_TextChanged"/></td>
+            <td><asp:TextBox ID="FormulaTextBox" runat="server"/></td>
             <td></td>
         </tr>
         <tr>
             <td></td>
             <td>
                 <asp:Button ID="CheckFormulaButton" Text="Check Formula" runat="server" OnClick="CheckFormulaButton_Click" />
-                <asp:Button ID="SaveFormulaButton" text="Save Formula" runat="server" OnClick="SaveFormulaButton_Click" Enabled="false"/>
+                <asp:Button ID="SaveFormulaButton" text="Save Formula" runat="server" OnClick="SaveFormulaButton_Click" />
             </td>
             <td></td>
-        </tr>
-        <tr>
         </tr>
         <tr>
             <th colspan="3">Your Rule Sets</th>
@@ -52,6 +50,7 @@
                     <Columns>
                         <asp:BoundField DataField="RuleSetName" HeaderText="Name" SortExpression="RuleSetName" />
                         <asp:BoundField DataField="Formula" HeaderText="Formula" SortExpression="Formula" />
+                        <asp:BoundField DataField="Valid" HeaderText="Valid?" SortExpression="Valid" />
                         <asp:ButtonField ButtonType="Link" Text="Copy to edit area" CommandName="CopyFormula"/>
                     </Columns>
                 </asp:GridView>
