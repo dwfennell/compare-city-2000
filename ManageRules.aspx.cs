@@ -48,7 +48,8 @@ public partial class ManageRules : System.Web.UI.Page
         else if (isDuplicateName(FormulaNameTextBox.Text))
         {
             // Duplicate name, prompt user for overwrite.
-            FormulaStatus.Text = "Duplicate formula names are not permitted.";
+            FormulaStatus.Text = "Duplicate names not permitted.";
+            return;
         }
 
         storeRuleSet(FormulaNameTextBox.Text.Trim(), FormulaTextBox.Text.Trim());
