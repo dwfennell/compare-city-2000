@@ -33,10 +33,10 @@
             <asp:BoundField DataField="MayorName" HeaderText="Mayor" SortExpression="MayorName" />
             <asp:BoundField DataField="CitySize" HeaderText="Pop" SortExpression="CitySize" />
             <asp:BoundField DataField="YearOfFounding" HeaderText="Founded" SortExpression="YearOfFounding" />
-            <asp:BoundField DataField="DaysSinceFounding" HeaderText="Days Since Founding" SortExpression="DaysSinceFounding" />
+            <asp:BoundField DataField="DaysSinceFounding" HeaderText="Age (Sim Days)" SortExpression="DaysSinceFounding" />
             <asp:BoundField DataField="AvailableFunds" HeaderText="Cashflow" SortExpression="AvailableFunds" />
             <asp:BoundField DataField="LifeExpectancy" HeaderText="Life Expectancy" SortExpression="LifeExpectancy" />
-            <asp:BoundField DataField="EducationQuotent" HeaderText="Education Quotent (EQ)" SortExpression="EducationQuotent" />
+            <asp:BoundField DataField="EducationQuotent" HeaderText="EQ" SortExpression="EducationQuotent" />
             <asp:BoundField DataField="Uploaded" HeaderText="Uploaded" SortExpression="Uploaded" />
         </Columns>
     </asp:GridView>
