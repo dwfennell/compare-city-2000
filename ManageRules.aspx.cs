@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 
 using FormulaScore;
 using CompareCity.Models;
+using CompareCity.Control;
 
 public partial class ManageRules : System.Web.UI.Page
 {
@@ -96,7 +97,7 @@ public partial class ManageRules : System.Web.UI.Page
 
     public IQueryable<RuleSet> GetRules()
     {
-        string username = getUsername();
+        string username = SiteControl.Username;
 
         IQueryable<RuleSet> query =
             from c in ruleDB.RuleSets
@@ -121,7 +122,7 @@ public partial class ManageRules : System.Web.UI.Page
 
     private void storeRuleSet(string ruleSetName, string ruleSetFormula, bool isValidFormula)
     {
-        string username = getUsername();
+        string username = SiteControl.Username;
         DateTime now = DateTime.Now;
         var ruleSet = new RuleSet
         {
@@ -185,14 +186,8 @@ public partial class ManageRules : System.Web.UI.Page
         // Check for duplicate formula names.
         IQueryable<RuleSet> query =
             from r in ruleDB.RuleSets
-            where r.RuleSetName.Equals(name)
+            where r.RuleSetName.Equals(name) && r.User.Equals(SiteControl.Username)
             select r;
         return query.Count<RuleSet>() > 0;
-    }
-
-    // TODO: This should be centralized to avoid repetition between pages.
-    private string getUsername()
-    {
-        return string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name) ? "" : HttpContext.Current.User.Identity.Name;
     }
 }

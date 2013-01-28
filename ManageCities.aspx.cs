@@ -8,7 +8,9 @@ using System.Web.UI.WebControls;
 
 using CityParser2000;
 using CompareCity.Models;
+using CompareCity.Control;
 using CompareCity.Util;
+
 
 public partial class ManageCities : System.Web.UI.Page
 {
@@ -61,7 +63,7 @@ public partial class ManageCities : System.Web.UI.Page
 
     public IQueryable<CityInfo> GetCities()
     {
-        string username = getUsername();
+        string username = SiteControl.Username;
         
         IQueryable<CityInfo> query =
             from c in cityDB.Cities
@@ -72,7 +74,7 @@ public partial class ManageCities : System.Web.UI.Page
 
     private void storeCity(City parserCity)
     {
-        string username = getUsername();
+        string username = SiteControl.Username;
         string filepath = generateCityFilepath(username);
 
         // Fetch relevant data from parserCity.
@@ -144,11 +146,5 @@ public partial class ManageCities : System.Web.UI.Page
         }
 
         return filepath;
-    }
-
-    // TODO: This should be centralized to avoid repetition between pages.
-    private string getUsername()
-    {
-        return string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name) ? "" : HttpContext.Current.User.Identity.Name;
     }
 }
