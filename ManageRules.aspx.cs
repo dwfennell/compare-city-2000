@@ -31,7 +31,6 @@ public partial class ManageRules : System.Web.UI.Page
         }
         else if (RulesControl.IsDuplicateName(formulaName, SiteControl.Username))
         {
-            // Duplicate name, prompt user for overwrite.
             FormulaStatus.Text = "Duplicate names not permitted.";
         }
         else
