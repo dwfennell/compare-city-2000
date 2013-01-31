@@ -33,7 +33,7 @@
         RowStyle-CssClass="CityListRow" >
         <Columns>
             <asp:BoundField DataField="CityName" HeaderText="City Name" SortExpression="CityName" />
-            <asp:BoundField DataField="MayorName" HeaderText="Mayor" SortExpression="MayorName" />
+            <asp:BoundField DataField="Mayor" HeaderText="Mayor" SortExpression="Mayor" />
             <asp:BoundField DataField="CitySize" HeaderText="Pop" SortExpression="CitySize" />
             <asp:BoundField DataField="YearOfFounding" HeaderText="Founded" SortExpression="YearOfFounding" />
             <asp:BoundField DataField="DaysSinceFounding" HeaderText="Age (Sim Days)" SortExpression="DaysSinceFounding" />

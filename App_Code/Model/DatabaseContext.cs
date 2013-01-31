@@ -28,8 +28,9 @@ namespace CompareCity.Model
 
             // Define required fields.
 
-            modelBuilder.Entity<CityInfo>().HasRequired(ci => ci.MayorName);
-            modelBuilder.Entity<CityInfo>().HasRequired(ci => ci.FilePath);
+            modelBuilder.Entity<CityInfo>().Property(ci => ci.CityName).IsRequired();
+            modelBuilder.Entity<CityInfo>().Property(ci => ci.Mayor).IsRequired();
+            modelBuilder.Entity<CityInfo>().Property(ci => ci.FilePath).IsRequired();
             modelBuilder.Entity<CityInfo>().Property(ci => ci.Uploaded).IsRequired();
 
             modelBuilder.Entity<RuleSet>().Property(rs => rs.RuleSetName).IsRequired();
@@ -41,6 +42,8 @@ namespace CompareCity.Model
             modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.GroupingName).IsRequired();
             modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.CityInfoId).IsRequired();
             modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.ScoringRulesId).IsRequired();
+
+
 
             // Define ComparisionGroupMember relationships.
 

@@ -14,7 +14,7 @@ namespace CompareCity.Model
         public int CityInfoId { get; set; }
 
         public string CityName { get; set; }
-        public string MayorName { get; set; }
+        public string Mayor { get; set; }
         public int CitySize { get; set; }
         public int AvailableFunds { get; set; }
         public int LifeExpectancy { get; set; }

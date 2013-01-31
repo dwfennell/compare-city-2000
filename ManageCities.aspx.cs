@@ -81,7 +81,7 @@ public partial class ManageCities : System.Web.UI.Page
         var city = new CityInfo
         {
             CityName = parserCity.CityName,
-            MayorName = parserCity.MayorName,
+            Mayor = parserCity.MayorName,
             CitySize = parserCity.GetMiscStatistic(City.MiscStatistic.CitySize),
             YearOfFounding = parserCity.GetMiscStatistic(City.MiscStatistic.YearOfFounding),
             DaysSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.DaysSinceFounding),
