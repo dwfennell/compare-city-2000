@@ -17,7 +17,7 @@ public partial class ManageCities : System.Web.UI.Page
     private ThreadSafeRandom random = new ThreadSafeRandom();
 
     // TODO: Use a global context-pool of some sort? This seems wasteful.
-    private CityInfoContext cityDB = new CityInfoContext();
+    private DatabaseContext db = new DatabaseContext();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -54,9 +54,9 @@ public partial class ManageCities : System.Web.UI.Page
 
     public void CitiesView_DeleteItem(int CityInfoId)
     {
-        CityInfo cityInfo = cityDB.Cities.First(i => i.CityInfoId == CityInfoId);
-        cityDB.Cities.Remove(cityInfo);
-        cityDB.SaveChanges();
+        CityInfo cityInfo = db.CityInfoes.First(i => i.CityInfoId == CityInfoId);
+        db.CityInfoes.Remove(cityInfo);
+        db.SaveChanges();
 
         // TODO: Also delete city files... or mark them as "orphan" somehow.
     }
@@ -66,7 +66,7 @@ public partial class ManageCities : System.Web.UI.Page
         string username = SiteControl.Username;
         
         IQueryable<CityInfo> query =
-            from c in cityDB.Cities
+            from c in db.CityInfoes
             where c.User.Equals(username)
             select c;
         return query;
@@ -93,8 +93,8 @@ public partial class ManageCities : System.Web.UI.Page
             Uploaded = DateTime.Now
         };
 
-        cityDB.Cities.Add(city);
-        cityDB.SaveChanges();
+        db.CityInfoes.Add(city);
+        db.SaveChanges();
 
         // TODO: Serialize and store parserCity.
 

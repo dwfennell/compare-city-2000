@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using CompareCity.Models;
+using CompareCity.Model;
 
 namespace CompareCity.Control
 {
@@ -24,7 +24,7 @@ namespace CompareCity.Control
 
         // TODO: Will having a single static db connection variable slow things to a crawl when there are multiple users? 
         //       Maybe not, but more efficient persistance access also couldn't hurt. 
-        private static RuleSetContext db = new RuleSetContext();
+        private static DatabaseContext db = new DatabaseContext();
 
         /// <summary>
         /// 

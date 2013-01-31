@@ -6,7 +6,7 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-using CompareCity.Models;
+using CompareCity.Model;
 
 public partial class SiteMaster : MasterPage
 {

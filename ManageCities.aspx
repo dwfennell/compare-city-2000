@@ -21,7 +21,7 @@
     <h3>Your Cities</h3>
 
     <asp:GridView ID="CitiesView" 
-        ItemType="CompareCity.Models.CityInfo" 
+        ItemType="CompareCity.Model.CityInfo" 
         runat="server" 
         SelectMethod="GetCities"
         AllowSorting="true" 

@@ -38,7 +38,7 @@
         <tr>
             <td colspan="3">
                 <asp:GridView 
-                    ItemType="CompareCity.Models.RuleSet" 
+                    ItemType="CompareCity.Model.RuleSet" 
                     ID="RuleSetsView" 
                     runat="server" 
                     SelectMethod="GetRules"
