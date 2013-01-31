@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace CompareCity.Models
+namespace CompareCity.Model
 {
     /// <summary>
     /// 

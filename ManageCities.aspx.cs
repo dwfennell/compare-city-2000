@@ -7,7 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using CityParser2000;
-using CompareCity.Models;
+using CompareCity.Model;
 using CompareCity.Control;
 using CompareCity.Util;
 

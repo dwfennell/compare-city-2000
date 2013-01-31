@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-using CompareCity.Models;
+using CompareCity.Model;
 using CompareCity.Control;
 
 public partial class ManageRules : System.Web.UI.Page

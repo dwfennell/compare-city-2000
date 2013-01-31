@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 
 
-namespace CompareCity.Models
+namespace CompareCity.Model
 {
     /// <summary>
     /// Defines a context class for data access for <see cref="CityInfo"/>.

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CompareCity.Models
+namespace CompareCity.Model
 {
     /// <summary>
     /// A light-weight representation of a .sc2 city file.
