@@ -25,17 +25,27 @@ namespace CompareCity.Util
         {
             if (_local == null)
             {
-                int seed;
-                lock (_global)
-                {
-                    seed = _global.Next();
-                }
-                _local = new Random(seed);
+                initLocal();
             }
         }
         public int Next()
         {
+            if (_local == null)
+            {
+                // Another check since we are still getting nullpointers. -dustin
+                initLocal();
+            }
             return _local.Next();
+        }
+
+        private void initLocal()
+        {
+            int seed;
+            lock (_global)
+            {
+                seed = _global.Next();
+            }
+            _local = new Random(seed);
         }
     }
 }
