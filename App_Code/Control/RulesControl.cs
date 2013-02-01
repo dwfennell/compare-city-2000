@@ -10,6 +10,7 @@ namespace CompareCity.Control
 {
     public class RulesControl
     {
+        // TODO: Consider moving this somewhere more different... like an xml config file or database table.
         private static readonly List<string> _cityValueIdentifiers = new List<string> 
         {
             "citysize", 
@@ -17,6 +18,7 @@ namespace CompareCity.Control
             "lifeexpectancy",
             "educationquotent"
         };
+
         /// <summary>
         /// 
         /// </summary>

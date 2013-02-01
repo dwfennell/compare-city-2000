@@ -10,7 +10,8 @@ namespace CompareCity.Model
     {
         public DbSet<RuleSet> RuleSets { get; set; }
         public DbSet<CityInfo> CityInfoes { get; set; }
-        public DbSet<ComparisonGroupMember> ComparisionGroups { get; set; }
+        public DbSet<ComparisonGroup> ComparisionGroups { get; set; }
+        public DbSet<ComparisonGroupMember> ComparisionGroupMembers { get; set; }
 
         public DatabaseContext() : base("CompareCity")   
         {
@@ -24,7 +25,8 @@ namespace CompareCity.Model
             
             modelBuilder.Entity<CityInfo>().HasKey(ci => ci.CityInfoId);
             modelBuilder.Entity<RuleSet>().HasKey(rs => rs.RuleSetId);
-            modelBuilder.Entity<ComparisonGroupMember>().HasKey(cg => cg.ComparisionGroupMemberId);
+            modelBuilder.Entity<ComparisonGroup>().HasKey(cg => cg.ComparisonGroupId);
+            modelBuilder.Entity<ComparisonGroupMember>().HasKey(cg => cg.ComparisonGroupMemberId);
 
             // Define required fields.
 
@@ -38,26 +40,27 @@ namespace CompareCity.Model
             modelBuilder.Entity<RuleSet>().Property(rs => rs.Created).IsRequired();
             modelBuilder.Entity<RuleSet>().Property(rs => rs.Valid).IsRequired();
 
-            modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.GroupingIdenifier).IsRequired();
-            modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.GroupingName).IsRequired();
+            modelBuilder.Entity<ComparisonGroup>().Property(cg => cg.User).IsRequired();
+
+            modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.ComparisonGroupId).IsRequired();
             modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.CityInfoId).IsRequired();
-            modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.ScoringRulesId).IsRequired();
 
+            // Define ComparisionGroup/Member relationships.
 
-
-            // Define ComparisionGroupMember relationships.
-
-            // TODO: Make this an actual one-to-many relationship... if it isn't already.
-            modelBuilder.Entity<ComparisonGroupMember>().HasRequired(r => r.ScoringRules)
+            modelBuilder.Entity<ComparisonGroup>().HasRequired(r => r.RuleSet)
                 .WithMany()
-                .HasForeignKey(s => s.ScoringRulesId)
+                .HasForeignKey(s => s.RuleSetId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ComparisonGroupMember>().HasRequired(cg => cg.ComparisonGroup)
+                .WithMany()
+                .HasForeignKey(cg => cg.ComparisonGroupId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ComparisonGroupMember>().HasRequired(c => c.CityInfo)
                 .WithMany()
                 .HasForeignKey(d => d.CityInfoId)
                 .WillCascadeOnDelete(false);
-
         }
     }
 }
