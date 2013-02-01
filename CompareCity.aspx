@@ -3,7 +3,8 @@
 <asp:Content ID="FeaturedContent" ContentPlaceHolderID="FeaturedContent" Runat="Server">
 </asp:Content>
 
-<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" ViewStateMode="Enabled" Runat="Server">
+
     <table> 
         <tr>
             <th>City Ranking <asp:Label ID="RankingNameLabel" Text="" runat="server" /></th>

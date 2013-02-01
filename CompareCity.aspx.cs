@@ -10,7 +10,7 @@ using CompareCity.Control;
 
 public partial class CompareCities : System.Web.UI.Page
 {
-    private ComparisonControl comparisonControl;
+    private ComparisonControl comparisonControl = new ComparisonControl(SiteControl.Username);
 
     /// <summary>
     /// 
@@ -20,7 +20,7 @@ public partial class CompareCities : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         // TODO: Some caching here could be useful.
-        comparisonControl = new ComparisonControl(SiteControl.Username);
+        //comparisonControl = new ComparisonControl(SiteControl.Username);
 
         if (!IsPostBack)
         {
@@ -129,6 +129,10 @@ public partial class CompareCities : System.Web.UI.Page
 
         comparisonControl.LoadRuleSet(ruleSetId);
         comparisonControl.SaveComparisonGroup();
+
+        RuleSetLabel.Text = comparisonControl.GetRuleSetName();
+        RuleFormulaLabel.Text = comparisonControl.GetRuleSetFormula();
+    
     }
 
     /// <summary>
