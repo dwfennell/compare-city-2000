@@ -16,15 +16,25 @@
         </tr>
         <tr>
             <td>
-                <span class="droplist-preamble">Using Rule Set:</span>
+                <span class="label-preamble">Rule Set: </span>
+                <asp:Label ID="RuleSetLabel" Text="-no rule set loaded-" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="label-preamble">Formula: </span>
+                <asp:Label ID="RuleFormulaLabel" Text="-no rule set loaded-" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <asp:DropDownList 
                     ID="ScoringRulesList" 
                     ItemType="CompareCity.Model.RuleSet" 
-                    OnSelectedIndexChanged="ScoringRulesList_SelectedIndexChanged" 
-                    AppendDataBoundItems="false"
                     runat="server">
-                    <asp:listitem>--Select Rule Set--</asp:listitem>
+                    <asp:listitem Value="-1" Text="--Select Rule Set--" />
                 </asp:DropDownList>
+                <asp:Button ID="LoadRuleSetButton" Text="Load Rule Set" OnClick="LoadRuleSetButton_Click" runat="server" />
             </td>
         </tr>
         <tr>
@@ -62,10 +72,11 @@
         </tr>
         <tr>
             <td>
-                <asp:DropDownList ID="RankingNameList" AppendDataBoundItems="false" runat="server">
-                    <asp:ListItem>--Select Other Ranking--</asp:ListItem>
+                <asp:DropDownList ID="RankingNameList" runat="server">
+                    <asp:ListItem Text="--Select Ranking--" Value="-1" />
                 </asp:DropDownList>
                 <asp:Button ID="LoadRankButton" Text="Load Ranking" OnClick="LoadRankButton_Click" runat="server" />
+                <asp:Label ID="LoadStatusLabel" Text="" runat="server" />
             </td>
         </tr>
     </table>

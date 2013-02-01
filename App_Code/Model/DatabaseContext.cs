@@ -10,8 +10,8 @@ namespace CompareCity.Model
     {
         public DbSet<RuleSet> RuleSets { get; set; }
         public DbSet<CityInfo> CityInfoes { get; set; }
-        public DbSet<ComparisonGroup> ComparisionGroups { get; set; }
-        public DbSet<ComparisonGroupMember> ComparisionGroupMembers { get; set; }
+        public DbSet<ComparisonGroup> ComparisonGroups { get; set; }
+        public DbSet<ComparisonGroupMember> ComparisonGroupMembers { get; set; }
 
         public DatabaseContext() : base("CompareCity")   
         {
