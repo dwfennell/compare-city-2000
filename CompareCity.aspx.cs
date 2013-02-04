@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -12,8 +13,10 @@ public partial class CompareCities : System.Web.UI.Page
 {
     private ComparisonControl comparisonControl = new ComparisonControl(SiteControl.Username);
 
+    private DataTable foundCities;
+
     /// <summary>
-    /// 
+    /// Page load event handler.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -60,20 +63,10 @@ public partial class CompareCities : System.Web.UI.Page
         return comparisonControl.GetComparisonGroupMembers();
     }
 
-    // The id parameter name should match the DataKeyNames value set on the control
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    public void CityRanksView_DeleteItem(int id)
-    {
-
-    }
-
-    #region button click events
+    #region ranking events
 
     /// <summary>
-    /// 
+    /// Event handler for <c>SaveButton</c> click. Saves the current comparison.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -103,23 +96,14 @@ public partial class CompareCities : System.Web.UI.Page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void AddCitiesButton_Click(object sender, EventArgs e)
-    {
-        // TODO: Code 'add cities'.
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     protected void CalcRankingButton_Click(object sender, EventArgs e)
     {
         // TODO: Code ranking code.
     }
 
     /// <summary>
-    /// 
+    /// Event handler for <c>LoadRuleSetButton</c> click.
+    /// Loads the rule set indicated by <c>ScoringRulesList</c> and resets city scoring, if necessary.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -132,11 +116,13 @@ public partial class CompareCities : System.Web.UI.Page
 
         RuleSetLabel.Text = comparisonControl.GetRuleSetName();
         RuleFormulaLabel.Text = comparisonControl.GetRuleSetFormula();
-    
+
+        // TODO: Check if scoring was done using previous rule set and clear those scores.
     }
 
     /// <summary>
-    /// 
+    /// Event handler for <c>LoadRankButton</c> click.
+    /// Loads a previous comparison ranking.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -162,6 +148,55 @@ public partial class CompareCities : System.Web.UI.Page
     }
     #endregion
 
+
+    #region city search events
+
+    /// <summary>
+    /// Event handler for <c>FindCitiesButton</c> click. 
+    /// Evaluates city search parameters and loads city data into <c>CitySearchGridView</c>.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void FindCitiesButton_Click(object sender, EventArgs e)
+    {
+        // Gather search conditions.
+        bool allUsers = CitySearchUserCheckBox.Checked;
+        bool allCityNames = CitySearchCityNameCheckBox.Checked;
+        string userPattern = CitySearchUserTextBox.Text.Trim();
+        string cityNamePattern = CitySeachCityNameTextBox.Text.Trim();
+
+        DataTable cities = comparisonControl.GetCities(allUsers, userPattern, allCityNames, cityNamePattern);
+
+        // Display city search results
+        CitySearchGridView.DataSource = null;
+        CitySearchGridView.DataSource = cities;
+        CitySearchGridView.DataBind();
+    }
+
+    /// <summary>
+    /// Event handler for <c>CitySearchUserCheckBox</c> check changed. 
+    /// Toggles user search textbox useability.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void CitySearchUserCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        CitySearchUserTextBox.Enabled = !CitySearchUserCheckBox.Checked;
+    }
+
+    /// <summary>
+    /// Event handler for <c>CitySearchCityNameCheckBox</c> check changed.
+    /// Toggles city name textbox useability.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void CitySearchCityNameCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        CitySeachCityNameTextBox.Enabled = !CitySearchCityNameCheckBox.Checked;
+    }
+    #endregion
+
+
     #region private helper functions
 
     private int getSelectedRuleSetId()
@@ -181,5 +216,6 @@ public partial class CompareCities : System.Web.UI.Page
         comparisonControl.SaveComparisonGroup();
         SaveStatusLabel.Text = "Saved!";
     }
+
     #endregion
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
@@ -77,6 +78,10 @@ public class ComparisonControl
         CurrentRuleSet = group.RuleSet;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ruleSetId"></param>
     public void LoadRuleSet(int ruleSetId)
     {
         CurrentRuleSetId = ruleSetId;
@@ -87,6 +92,10 @@ public class ComparisonControl
 
     #region getters
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public IQueryable<RuleSet> GetRuleSets()
     {
         var query =
@@ -97,6 +106,10 @@ public class ComparisonControl
         return query;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public IQueryable<ComparisonGroup> GetComparisonGroups()
     {
         var query =
@@ -107,6 +120,10 @@ public class ComparisonControl
         return query;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public IQueryable<ComparisonGroupMember> GetComparisonGroupMembers()
     {
         var query =
@@ -117,16 +134,74 @@ public class ComparisonControl
         return query;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="doSearchAllUsers"></param>
+    /// <param name="userPattern"></param>
+    /// <param name="doGetAllCities"></param>
+    /// <param name="cityNamePattern"></param>
+    /// <returns></returns>
+    public DataTable GetCities(bool doSearchAllUsers, string userPattern, bool doGetAllCities, string cityNamePattern)
+    {
+        // Perform city search based on parameters. 
+        IQueryable<CityInfo> query;
+        if (doSearchAllUsers && doGetAllCities)
+        {
+            query = db.CityInfoes;
+        }
+        else if (doSearchAllUsers)
+        {
+            query = db.CityInfoes.Where(c => c.CityName.StartsWith(cityNamePattern));
+        }
+        else if (doGetAllCities)
+        {
+            query = db.CityInfoes.Where(c => c.User.StartsWith(userPattern));
+        }
+        else
+        {
+            query = db.CityInfoes.Where(c => c.User.StartsWith(userPattern) && c.CityName.StartsWith(cityNamePattern));
+        }
+
+        DataTable table = new DataTable();
+        
+        // Set up table columns.
+        table.Columns.Add("User", typeof(string));
+        table.Columns.Add("Name", typeof(string));
+        table.Columns.Add("Size", typeof(int));
+        table.Columns.Add("Funds", typeof(int));
+
+        // Load search data.
+        foreach (CityInfo city in query)
+        {
+            table.Rows.Add(city.User, city.CityName, city.CitySize, city.AvailableFunds);
+        }
+
+        return table;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public string GetRuleSetName()
     {
         return CurrentRuleSet == null ? "" : CurrentRuleSet.RuleSetName;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public string GetRuleSetFormula()
     {
         return CurrentRuleSet == null ? "" : CurrentRuleSet.Formula;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public string GetUntitledRankingName()
     {
         return "Untitled";
