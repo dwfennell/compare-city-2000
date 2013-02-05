@@ -44,23 +44,9 @@ public partial class CompareCities : System.Web.UI.Page
     /// <param name="e"></param>
     protected void SaveButton_Click(object sender, EventArgs e)
     {
-        if (!hasSelectedRuleSet())
-        {
-            SaveStatusLabel.Text = "Not Saved. Please select a rule set.";
-            return;
-        }
-
         string rankingName = RankingNameTextBox.Text.Trim();
-
-        if (!String.IsNullOrWhiteSpace(rankingName))
-        {
-            rankControl.CurrentRankingName = rankingName;
-            rankControl.SaveRanking();
-        }
-        else
-        {
-            SaveStatusLabel.Text = "Not Saved. Please enter a ranking name.";
-        }
+        storeRanking();
+        rankControl.SaveRanking();
     }
 
     /// <summary>
@@ -152,6 +138,9 @@ public partial class CompareCities : System.Web.UI.Page
     {
         if (e.CommandName == "AddCity")
         {
+            // Update control object before adding a new city to ranking.
+            storeRanking();
+
             // Fetch row and row data.
             int index = Convert.ToInt32(e.CommandArgument);
             GridViewRow row = CitySearchGridView.Rows[index];
@@ -204,11 +193,21 @@ public partial class CompareCities : System.Web.UI.Page
         return getSelectedRuleSetId() != -1;
     }
 
-    private void saveComparisonGroup()
+    private bool storeRanking()
     {
-        string rankingName = RankingNameTextBox.Text.Trim();
-        rankControl.SaveRanking();
-        SaveStatusLabel.Text = "Saved!";
+        // Store ranking name.
+        string name = RankingNameTextBox.Text.Trim();
+        rankControl.CurrentRankingName = name;
+        
+        // Store rule set, if present.
+        // TODO: Revisit this. It is possible to set a rule set here that has not been explicitly "loaded".
+        if (hasSelectedRuleSet())
+        {
+            int ruleSetId = getSelectedRuleSetId();
+            rankControl.LoadRuleSet(ruleSetId);
+        }
+
+        return true;
     }
 
     private void populateRulesList()

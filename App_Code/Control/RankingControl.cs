@@ -25,7 +25,7 @@ public class RankingControl
 
     private readonly Dictionary<string, Type> cityRankingsColumns = new Dictionary<string, Type>
     {
-        {"ID", typeof(int)},
+        {"CityID", typeof(int)},
         {"City Name", typeof(string)},
         {"User", typeof(string)},
         {"Score", typeof(double)}
@@ -76,7 +76,7 @@ public class RankingControl
             {
                 ComparisonGroupName = CurrentRankingName,
                 RuleSetId = CurrentRuleSetId,
-                RuleSet = CurrentRuleSet,
+                //RuleSet = CurrentRuleSet,
                 User = CurrentUser
             };
 
@@ -89,7 +89,7 @@ public class RankingControl
 
             cg.ComparisonGroupName = CurrentRankingName;
             cg.RuleSetId = CurrentRuleSetId;
-            cg.RuleSet = CurrentRuleSet;
+            //cg.RuleSet = CurrentRuleSet;
         }
         db.SaveChanges();
     }
@@ -100,7 +100,7 @@ public class RankingControl
     /// <returns></returns>
     public List<ListItem> GetRankings()
     {
-        var comparisonGroups = new List<ListItem>();
+        var rankings = new List<ListItem>();
         var query =
             from g in db.ComparisonGroups
             where g.User == CurrentUser
@@ -108,10 +108,10 @@ public class RankingControl
 
         foreach (ComparisonGroup group in query)
         {
-            comparisonGroups.Add(new ListItem(group.ComparisonGroupName, group.ComparisonGroupId.ToString()));
+            rankings.Add(new ListItem(group.ComparisonGroupName, group.ComparisonGroupId.ToString()));
         }
 
-        return comparisonGroups;
+        return rankings;
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public class RankingControl
         CurrentRankingId = id;
         CurrentRankingName = group.ComparisonGroupName;
         CurrentRuleSetId = group.RuleSetId;
-        CurrentRuleSet = group.RuleSet;
+        //CurrentRuleSet = group.RuleSet;
     }
 
     /// <summary>
@@ -146,7 +146,13 @@ public class RankingControl
     /// <param name="cityId"></param>
     public void AddRankedCity(int cityId)
     {
-        // Create new ComparisonGroupMember
+        // Persist (non-city) ranking details. 
+        if (CurrentRankingId == -1)
+        {
+            SaveRanking();
+        } 
+
+        // Create and store new ComparisonGroupMember
         var newRankedCity = new ComparisonGroupMember
         {
             ComparisonGroupId = CurrentRankingId,
@@ -158,7 +164,7 @@ public class RankingControl
 
         var city = getCity(cityId);
         // Construct new city rankings table row.
-        cityRankingsTable.Rows.Add(city.CityName, city.User, newRankedCity.TotalScore);
+        cityRankingsTable.Rows.Add(city.CityInfoId, city.CityName, city.User, newRankedCity.TotalScore);
     }
 
     /// <summary>

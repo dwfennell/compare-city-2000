@@ -11,7 +11,6 @@ using CompareCity.Model;
 using CompareCity.Control;
 using CompareCity.Util;
 
-
 public partial class ManageCities : System.Web.UI.Page
 {
     private ThreadSafeRandom random = new ThreadSafeRandom();
