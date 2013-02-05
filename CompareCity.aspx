@@ -35,14 +35,7 @@
         </tr>
         <tr>
             <td>
-                <asp:GridView 
-                    ID="CityRanksView"
-                    AllowSorting="true"
-                    runat="server" >
-                    <Columns>
-
-                    </Columns>
-                </asp:GridView>
+                <asp:GridView ID="CityRanksView" AllowSorting="true" runat="server"></asp:GridView>
             </td>
         </tr>
         <tr>
@@ -93,9 +86,9 @@
         </tr>
         <tr>
             <td>
-                <asp:GridView ID="CitySearchGridView" AllowPaging="true" runat="server">
+                <asp:GridView ID="CitySearchGridView" AllowPaging="true" runat="server" OnRowCommand="CitySearchGridView_RowCommand">
                     <Columns>
-                        <asp:ButtonField ButtonType="Link" Text="Add City" />
+                        <asp:ButtonField ButtonType="Link" Text="Add City" CommandName="AddCity"/>
                     </Columns>
                 </asp:GridView>
             </td>

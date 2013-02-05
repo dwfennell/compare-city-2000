@@ -15,6 +15,15 @@ public class ComparisonControl
     // TODO: Once again, a context pool might be useful.
     private static DatabaseContext db = new DatabaseContext();
 
+    private readonly Dictionary<string, Type> citiesTableColumns = new Dictionary<string, Type>
+    {
+        {"User", typeof(string)}, 
+        {"City Name", typeof(string)}, 
+        {"Size", typeof(int)},
+        {"Funds", typeof(int)},
+        {"CityID", typeof(int)}
+    };
+
     public string CurrentComparisonName { get; set; }
     public int CurrentComparisonGroupId { get; private set; }
     public string CurrentUser { get; private set; }
@@ -86,6 +95,18 @@ public class ComparisonControl
         CurrentRuleSet = getRuleSet(ruleSetId);
     }
 
+    public DataTable AddRankedCity(int cityId)
+    {
+        //var rankedCityTable = new DataTable();
+
+        // TODO: Create new ComparisonGroupMember
+
+
+        // TODO: Update and return datatable.
+
+        return rankedCityTable;
+    }
+
     #endregion
 
     #region getters
@@ -152,8 +173,10 @@ public class ComparisonControl
     /// <param name="doGetAllCities"></param>
     /// <param name="cityNamePattern"></param>
     /// <returns></returns>
-    public DataTable GetCities(bool doSearchAllUsers, string userPattern, bool doGetAllCities, string cityNamePattern)
+    public DataTable GetCitiesTable(bool doSearchAllUsers, string userPattern, bool doGetAllCities, string cityNamePattern)
     {
+        DataTable table = initDataTable(citiesTableColumns);
+
         // Perform city search based on parameters. 
         IQueryable<CityInfo> query;
         if (doSearchAllUsers && doGetAllCities)
@@ -173,18 +196,10 @@ public class ComparisonControl
             query = db.CityInfoes.Where(c => c.User.StartsWith(userPattern) && c.CityName.StartsWith(cityNamePattern));
         }
 
-        DataTable table = new DataTable();
-        
-        // Set up table columns.
-        table.Columns.Add("User", typeof(string));
-        table.Columns.Add("Name", typeof(string));
-        table.Columns.Add("Size", typeof(int));
-        table.Columns.Add("Funds", typeof(int));
-
         // Load search data.
         foreach (CityInfo city in query)
         {
-            table.Rows.Add(city.User, city.CityName, city.CitySize, city.AvailableFunds);
+            table.Rows.Add(city.User, city.CityName, city.CitySize, city.AvailableFunds, city.CityInfoId);
         }
 
         return table;
@@ -228,6 +243,18 @@ public class ComparisonControl
     private RuleSet getRuleSet(int id)
     {
         return db.RuleSets.First(i => i.RuleSetId == id);
+    }
+
+    private DataTable initDataTable(Dictionary<string, Type> columns)
+    {
+        var table = new DataTable();
+
+        foreach (KeyValuePair<string, Type> heading in columns)
+        {
+            table.Columns.Add(heading.Key, heading.Value);
+        }
+
+        return table;
     }
 
     #endregion

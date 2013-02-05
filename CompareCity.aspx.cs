@@ -12,6 +12,7 @@ public partial class CompareCities : System.Web.UI.Page
 {
     private static readonly string rankingListDefaultText = "--Select Ranking--";
     private static readonly string ruleSetListDefaultText = "--Select Rule Set--";
+    private static readonly int citySearchIdIndex = 5;
 
     private ComparisonControl comparisonControl = new ComparisonControl(SiteControl.Username);
 
@@ -136,12 +137,34 @@ public partial class CompareCities : System.Web.UI.Page
         string userPattern = CitySearchUserTextBox.Text.Trim();
         string cityNamePattern = CitySeachCityNameTextBox.Text.Trim();
 
-        DataTable cities = comparisonControl.GetCities(allUsers, userPattern, allCityNames, cityNamePattern);
+        DataTable cities = comparisonControl.GetCitiesTable(allUsers, userPattern, allCityNames, cityNamePattern);
 
         // Display city search results
-        CitySearchGridView.DataSource = null;
-        CitySearchGridView.DataSource = cities;
-        CitySearchGridView.DataBind();
+        bindToGridview(CitySearchGridView, cities);
+    }
+
+    /// <summary>
+    /// Event handler for <c>CitySearchGridView</c> commands.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void CitySearchGridView_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "AddCity")
+        {
+            // Fetch row and row data.
+            int index = Convert.ToInt32(e.CommandArgument);
+            GridViewRow row = CitySearchGridView.Rows[index];
+
+            // Fetch cityId from row data.
+            int cityId;
+            Int32.TryParse(row.Cells[citySearchIdIndex].Text, out cityId);
+
+            DataTable rankedMembers = comparisonControl.AddRankedCity(cityId);
+
+            bindToGridview(CityRanksView, rankedMembers);
+        }
+
     }
 
     /// <summary>
@@ -215,6 +238,13 @@ public partial class CompareCities : System.Web.UI.Page
         RankingNameList.DataSource = null;
         RankingNameList.DataSource = comparisonGroups;
         RankingNameList.DataBind();
+    }
+
+    private void bindToGridview(GridView grid, DataTable table)
+    {
+        grid.DataSource = null;
+        grid.DataSource = table;
+        grid.DataBind();
     }
 
     #endregion
