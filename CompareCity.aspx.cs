@@ -14,7 +14,7 @@ public partial class CompareCities : System.Web.UI.Page
     private static readonly string ruleSetListDefaultText = "--Select Rule Set--";
     private static readonly int citySearchIdIndex = 5;
 
-    private ComparisonControl comparisonControl = new ComparisonControl(SiteControl.Username);
+    private RankingControl rankControl = new RankingControl(SiteControl.Username);
 
     /// <summary>
     /// Page load event handler.
@@ -27,7 +27,7 @@ public partial class CompareCities : System.Web.UI.Page
         {
             if (String.IsNullOrWhiteSpace(RankingNameTextBox.Text))
             {
-                RankingNameTextBox.Text = comparisonControl.GetUntitledRankingName();
+                RankingNameTextBox.Text = rankControl.GetUntitledRankingName();
             }
 
             populateRulesList();
@@ -50,12 +50,12 @@ public partial class CompareCities : System.Web.UI.Page
             return;
         }
 
-        string comparisonName = RankingNameTextBox.Text.Trim();
+        string rankingName = RankingNameTextBox.Text.Trim();
 
-        if (!String.IsNullOrWhiteSpace(comparisonName))
+        if (!String.IsNullOrWhiteSpace(rankingName))
         {
-            comparisonControl.CurrentComparisonName = comparisonName;
-            comparisonControl.SaveComparisonGroup();
+            rankControl.CurrentRankingName = rankingName;
+            rankControl.SaveRanking();
         }
         else
         {
@@ -83,11 +83,11 @@ public partial class CompareCities : System.Web.UI.Page
     {
         int ruleSetId = getSelectedRuleSetId();
 
-        comparisonControl.LoadRuleSet(ruleSetId);
-        comparisonControl.SaveComparisonGroup();
+        rankControl.LoadRuleSet(ruleSetId);
+        rankControl.SaveRanking();
 
-        RuleSetLabel.Text = comparisonControl.GetRuleSetName();
-        RuleFormulaLabel.Text = comparisonControl.GetRuleSetFormula();
+        RuleSetLabel.Text = rankControl.GetRuleSetName();
+        RuleFormulaLabel.Text = rankControl.GetRuleSetFormula();
 
         // TODO: Check if scoring was done using previous rule set and clear those scores.
     }
@@ -108,12 +108,12 @@ public partial class CompareCities : System.Web.UI.Page
             return;
         }
 
-        comparisonControl.LoadComparisonGroup(comparisonGroupId);
+        rankControl.LoadComparisonGroup(comparisonGroupId);
 
-        RankingNameTextBox.Text = comparisonControl.CurrentComparisonName;
+        RankingNameTextBox.Text = rankControl.CurrentRankingName;
 
-        RuleSetLabel.Text = comparisonControl.GetRuleSetName();
-        RuleFormulaLabel.Text = comparisonControl.GetRuleSetFormula();
+        RuleSetLabel.Text = rankControl.GetRuleSetName();
+        RuleFormulaLabel.Text = rankControl.GetRuleSetFormula();
 
         // TODO: Load group members.
 
@@ -137,7 +137,7 @@ public partial class CompareCities : System.Web.UI.Page
         string userPattern = CitySearchUserTextBox.Text.Trim();
         string cityNamePattern = CitySeachCityNameTextBox.Text.Trim();
 
-        DataTable cities = comparisonControl.GetCitiesTable(allUsers, userPattern, allCityNames, cityNamePattern);
+        DataTable cities = rankControl.GetCitySearchTable(allUsers, userPattern, allCityNames, cityNamePattern);
 
         // Display city search results
         bindToGridview(CitySearchGridView, cities);
@@ -160,11 +160,11 @@ public partial class CompareCities : System.Web.UI.Page
             int cityId;
             Int32.TryParse(row.Cells[citySearchIdIndex].Text, out cityId);
 
-            DataTable rankedMembers = comparisonControl.AddRankedCity(cityId);
+            rankControl.AddRankedCity(cityId);
+            DataTable rankedCities = rankControl.GetRankedCitiesTable();
 
-            bindToGridview(CityRanksView, rankedMembers);
+            bindToGridview(CityRankingGridView, rankedCities);
         }
-
     }
 
     /// <summary>
@@ -207,13 +207,13 @@ public partial class CompareCities : System.Web.UI.Page
     private void saveComparisonGroup()
     {
         string rankingName = RankingNameTextBox.Text.Trim();
-        comparisonControl.SaveComparisonGroup();
+        rankControl.SaveRanking();
         SaveStatusLabel.Text = "Saved!";
     }
 
     private void populateRulesList()
     {
-        List<ListItem> ruleSets = comparisonControl.GetRuleSets();
+        List<ListItem> ruleSets = rankControl.GetRuleSets();
         ruleSets.Insert(0, new ListItem(ruleSetListDefaultText, "-1"));
 
         // Configure listbox for use with a List<ListItem>.
@@ -228,15 +228,15 @@ public partial class CompareCities : System.Web.UI.Page
     private void populateRankingsList()
     {
         // Populate rankings list.
-        List<ListItem> comparisonGroups = comparisonControl.GetComparisonGroups();
-        comparisonGroups.Insert(0, new ListItem(rankingListDefaultText, "-1"));
+        List<ListItem> rankings = rankControl.GetRankings();
+        rankings.Insert(0, new ListItem(rankingListDefaultText, "-1"));
 
         // Configure listbox for use with a List<ListItem>. 
         RankingNameList.DataTextField = "Text";
         RankingNameList.DataValueField = "Value";
 
         RankingNameList.DataSource = null;
-        RankingNameList.DataSource = comparisonGroups;
+        RankingNameList.DataSource = rankings;
         RankingNameList.DataBind();
     }
 

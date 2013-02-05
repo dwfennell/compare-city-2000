@@ -35,7 +35,7 @@
         </tr>
         <tr>
             <td>
-                <asp:GridView ID="CityRanksView" AllowSorting="true" runat="server"></asp:GridView>
+                <asp:GridView ID="CityRankingGridView" AllowSorting="true" runat="server"></asp:GridView>
             </td>
         </tr>
         <tr>

@@ -16,8 +16,6 @@ namespace CompareCity.Model
         public int ComparisonGroupId { get; set; }
         public ComparisonGroup ComparisonGroup { get; set; }
 
-        public string CityUser { get; set; }
-
         public int CityInfoId { get; set; }
         public virtual CityInfo CityInfo { get; set; }
 
