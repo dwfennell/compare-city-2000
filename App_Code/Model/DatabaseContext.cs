@@ -47,20 +47,20 @@ namespace CompareCity.Model
 
             // Define ComparisionGroup/Member relationships.
 
-            modelBuilder.Entity<ComparisonGroup>().HasOptional(r => r.RuleSet)
-                .WithMany()
-                .HasForeignKey(s => s.RuleSetId)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<ComparisonGroup>().HasOptional(r => r.RuleSet)
+            //    .WithMany()
+            //    .HasForeignKey(s => s.RuleSetId)
+            //    .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<ComparisonGroupMember>().HasRequired(cg => cg.ComparisonGroup)
-                .WithMany()
-                .HasForeignKey(cg => cg.ComparisonGroupId)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<ComparisonGroupMember>().HasRequired(cg => cg.ComparisonGroup)
+            //    .WithMany()
+            //    .HasForeignKey(cg => cg.ComparisonGroupId)
+            //    .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<ComparisonGroupMember>().HasRequired(c => c.CityInfo)
-                .WithMany()
-                .HasForeignKey(d => d.CityInfoId)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<ComparisonGroupMember>().HasRequired(c => c.CityInfo)
+            //    .WithMany()
+            //    .HasForeignKey(d => d.CityInfoId)
+            //    .WillCascadeOnDelete(false);
         }
     }
 }

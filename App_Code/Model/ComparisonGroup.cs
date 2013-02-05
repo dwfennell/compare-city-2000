@@ -11,7 +11,7 @@ public class ComparisonGroup
     public string ComparisonGroupName { get; set; }
 
     public int RuleSetId { get; set; }
-    public virtual RuleSet RuleSet { get; set; }
+    //public virtual RuleSet RuleSet { get; set; }
 
     public string User { get; set; }
 }
