@@ -6,14 +6,14 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-using CompareCity.Model;
 using CompareCity.Control;
 
 public partial class CompareCities : System.Web.UI.Page
 {
-    private ComparisonControl comparisonControl = new ComparisonControl(SiteControl.Username);
+    private static readonly string rankingListDefaultText = "--Select Ranking--";
+    private static readonly string ruleSetListDefaultText = "--Select Rule Set--";
 
-    private DataTable foundCities;
+    private ComparisonControl comparisonControl = new ComparisonControl(SiteControl.Username);
 
     /// <summary>
     /// Page load event handler.
@@ -22,9 +22,6 @@ public partial class CompareCities : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        // TODO: Some caching here could be useful.
-        //comparisonControl = new ComparisonControl(SiteControl.Username);
-
         if (!IsPostBack)
         {
             if (String.IsNullOrWhiteSpace(RankingNameTextBox.Text))
@@ -32,35 +29,9 @@ public partial class CompareCities : System.Web.UI.Page
                 RankingNameTextBox.Text = comparisonControl.GetUntitledRankingName();
             }
 
-            // Populate rule set list.
-            IQueryable<RuleSet> ruleSets = comparisonControl.GetRuleSets();
-            foreach (RuleSet rule in ruleSets)
-            {
-                ScoringRulesList.Items.Add(new ListItem(rule.RuleSetName, rule.RuleSetId.ToString()));
-            }
-
-            // Populate rankings list.
-            IQueryable<ComparisonGroup> comparisonGroups = comparisonControl.GetComparisonGroups();
-            foreach (ComparisonGroup group in comparisonGroups)
-            {
-                RankingNameList.Items.Add(new ListItem(group.ComparisonGroupName, group.ComparisonGroupId.ToString()));
-            }
+            populateRulesList();
+            populateRankingsList();
         }
-    }
-
-    // The return type can be changed to IEnumerable, however to support
-    // paging and sorting, the following parameters must be added:
-    //     int maximumRows
-    //     int startRowIndex
-    //     out int totalRowCount
-    //     string sortByExpression
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public IQueryable<ComparisonGroupMember> CityRanksView_GetData()
-    {
-        return comparisonControl.GetComparisonGroupMembers();
     }
 
     #region ranking events
@@ -215,6 +186,35 @@ public partial class CompareCities : System.Web.UI.Page
         string rankingName = RankingNameTextBox.Text.Trim();
         comparisonControl.SaveComparisonGroup();
         SaveStatusLabel.Text = "Saved!";
+    }
+
+    private void populateRulesList()
+    {
+        List<ListItem> ruleSets = comparisonControl.GetRuleSets();
+        ruleSets.Insert(0, new ListItem(ruleSetListDefaultText, "-1"));
+
+        // Configure listbox for use with a List<ListItem>.
+        ScoringRulesList.DataTextField = "Text";
+        ScoringRulesList.DataValueField = "Value";
+
+        ScoringRulesList.DataSource = null;
+        ScoringRulesList.DataSource = ruleSets;
+        ScoringRulesList.DataBind();
+    }
+
+    private void populateRankingsList()
+    {
+        // Populate rankings list.
+        List<ListItem> comparisonGroups = comparisonControl.GetComparisonGroups();
+        comparisonGroups.Insert(0, new ListItem(rankingListDefaultText, "-1"));
+
+        // Configure listbox for use with a List<ListItem>. 
+        RankingNameList.DataTextField = "Text";
+        RankingNameList.DataValueField = "Value";
+
+        RankingNameList.DataSource = null;
+        RankingNameList.DataSource = comparisonGroups;
+        RankingNameList.DataBind();
     }
 
     #endregion

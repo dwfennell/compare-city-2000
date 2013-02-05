@@ -15,8 +15,6 @@ public class ComparisonControl
     // TODO: Once again, a context pool might be useful.
     private static DatabaseContext db = new DatabaseContext();
 
-    private IQueryable<ComparisonGroupMember> groupMembers;
-
     public string CurrentComparisonName { get; set; }
     public int CurrentComparisonGroupId { get; private set; }
     public string CurrentUser { get; private set; }
@@ -96,28 +94,40 @@ public class ComparisonControl
     /// 
     /// </summary>
     /// <returns></returns>
-    public IQueryable<RuleSet> GetRuleSets()
+    public List<ListItem> GetRuleSets()
     {
+        var ruleSets = new List<ListItem>();
         var query =
             from r in db.RuleSets
             where r.User == CurrentUser
             select r;
 
-        return query;
+        foreach (RuleSet rules in query)
+        {
+            ruleSets.Add(new ListItem(rules.RuleSetName, rules.RuleSetId.ToString()));
+        }
+
+        return ruleSets;
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    public IQueryable<ComparisonGroup> GetComparisonGroups()
+    public List<ListItem> GetComparisonGroups()
     {
+        var comparisonGroups = new List<ListItem>();
         var query =
             from g in db.ComparisonGroups
             where g.User == CurrentUser
             select g;
 
-        return query;
+        foreach (ComparisonGroup group in query)
+        {
+            comparisonGroups.Add(new ListItem(group.ComparisonGroupName, group.ComparisonGroupId.ToString()));
+        }
+
+        return comparisonGroups;
     }
 
     /// <summary>
