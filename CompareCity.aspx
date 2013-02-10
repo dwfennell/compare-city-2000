@@ -59,6 +59,8 @@
         <tr>
             <td>
                 <span class="textbox-preamble" >User: </span>
+            </td>
+            <td>
                 <asp:TextBox ID="CitySearchUserTextBox" runat="server" Enabled="false"/>
             </td>
             <td>
@@ -73,6 +75,8 @@
         <tr>
             <td>
                 <span class="textbox-preamble">City Name: </span>
+            </td>
+            <td>
                 <asp:TextBox ID="CitySeachCityNameTextBox" Enabled="false" runat="server" />
             </td>
             <td>
@@ -85,8 +89,12 @@
             </td>
         </tr>
         <tr>
-            <td>
-                <asp:GridView ID="CitySearchGridView" AllowPaging="true" runat="server" OnRowCommand="CitySearchGridView_RowCommand">
+            <td colspan="3">
+                <asp:GridView 
+                    ID="CitySearchGridView" 
+                    AllowPaging="true" 
+                    runat="server" 
+                    OnRowCommand="CitySearchGridView_RowCommand">
                     <Columns>
                         <asp:ButtonField ButtonType="Link" Text="Add City" CommandName="AddCity"/>
                     </Columns>
@@ -94,7 +102,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td colspan="3">
                 <asp:Button ID="FindCitiesButton" Text="Find Cities" OnClick="FindCitiesButton_Click" runat="server"/>
             </td>
         </tr>
