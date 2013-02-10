@@ -69,6 +69,8 @@ public class RankingControl
 
     public void SaveRanking()
     {
+
+        // TODO: There is a bug here because the control class does not persist. 
         if (CurrentRankingId == -1)
         {
             // Create new comparison group.

@@ -129,7 +129,7 @@ public partial class ManageCities : System.Web.UI.Page
             // Anonymous user has uploaded a file.
             
             // TODO: Temporary cookie auth here? Or just force users to register? 
-            filepath = String.Format("{1}{2}-{3}", 
+            filepath = String.Format("{0}{1}-{2}", 
                 Server.MapPath("~/App_Data/CityFiles/"), 
                 CityFileUpload.FileName, 
                 random.Next());
@@ -137,7 +137,7 @@ public partial class ManageCities : System.Web.UI.Page
             while (File.Exists(filepath)) 
             {
                 // Random number collision! Try again.
-                filepath = String.Format("{1}{2}-{3}", 
+                filepath = String.Format("{0}{1}-{2}", 
                     Server.MapPath("~/App_Data/CityFiles/"), 
                     CityFileUpload.FileName, 
                     random.Next());
