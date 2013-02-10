@@ -40,17 +40,12 @@ public partial class CompareCities : System.Web.UI.Page
             // Init ranking GridView.
             DataTable rankedCities = StaticRankingControl.GetEmptyRankingTable();
             Session["rankedCities"] = rankedCities;
-
-
-            //bindToGridview(CityRankingGridView, rankedCities);
         }
         else
         {
             // Reload ranked cities table data.
             DataTable rankedCities = (DataTable)Session["rankedCities"];
             bindToGridview(CityRankingGridView, rankedCities);
-
-
         }
     }
 
@@ -76,7 +71,9 @@ public partial class CompareCities : System.Web.UI.Page
     protected void CalcRankingButton_Click(object sender, EventArgs e)
     {
         var rankedCities = (DataTable)Session["rankedCities"];
-        rankedCities = StaticRankingControl.ScoreCities(rankedCities);
+        var ruleSetId = (int)Session["ruleSetId"];
+
+        rankedCities = StaticRankingControl.ScoreCities(rankedCities, ruleSetId);
         bindToGridview(CityRankingGridView, rankedCities);
     }
 
@@ -98,6 +95,7 @@ public partial class CompareCities : System.Web.UI.Page
             RuleFormulaLabel.Text = ruleSetInfo[StaticRankingControl.RuleSetKeys.Formula];
 
             ruleSetLoaded = true;
+            Session["ruleSetId"] = ruleSetId;
         }
         catch (InvalidOperationException)
         {
@@ -137,6 +135,8 @@ public partial class CompareCities : System.Web.UI.Page
             RuleFormulaLabel.Text = rankingInfo[StaticRankingControl.RankingKeys.RuleSetFormula];
             ScoringRulesList.SelectedIndex = 0;
 
+            Session["ruleSetId"] = Int32.Parse(rankingInfo[StaticRankingControl.RankingKeys.RuleSetId]);
+
             // TODO: Load group members.
 
         }
@@ -147,7 +147,6 @@ public partial class CompareCities : System.Web.UI.Page
         }
     }
     #endregion
-
 
     #region city search events
 
@@ -218,7 +217,6 @@ public partial class CompareCities : System.Web.UI.Page
         CitySeachCityNameTextBox.Enabled = !CitySearchCityNameCheckBox.Checked;
     }
     #endregion
-
 
     #region private helper functions
 

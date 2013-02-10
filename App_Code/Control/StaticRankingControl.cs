@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.IO;
 using System.Web.UI.WebControls;
 
 using CompareCity.Model;
+using CompareCity.Util;
+using CityParser2000;
+using FormulaScore;
 
 /// <summary>
 /// 
@@ -14,6 +18,32 @@ public static class StaticRankingControl
 {
     // TODO: Context pool? 
     private static DatabaseContext db = new DatabaseContext();
+
+
+    #region private 'constants'
+
+    private static readonly Dictionary<string, Type> citySearchColumns = new Dictionary<string, Type>
+    {
+        {"User", typeof(string)}, 
+        {"City Name", typeof(string)}, 
+        {"Size", typeof(int)},
+        {"Funds", typeof(int)},
+        {"CityID", typeof(int)}
+    };
+
+    private static readonly Dictionary<string, Type> cityRankingsColumns = new Dictionary<string, Type>
+    {
+        {"CityID", typeof(int)},
+        {"City Name", typeof(string)},
+        {"User", typeof(string)},
+        {"Score", typeof(double)}
+    };
+
+    private const int rankingCityIdColumn = 0;
+    private const int rankingScoreColumn = 3;
+
+    #endregion
+
 
     public enum RuleSetKeys { Name, Formula };
     public enum RankingKeys { Name, RuleSetId, RuleSetName, RuleSetFormula};
@@ -94,10 +124,29 @@ public static class StaticRankingControl
         return rankings;
     }
 
-    public static DataTable ScoreCities(DataTable citiesTable)
+    public static DataTable ScoreCities(DataTable citiesTable, int ruleSetId)
     {
-        // TODO: Score cities.
+        string ruleSetFormula = LoadRuleSet(ruleSetId)[RuleSetKeys.Formula];
 
+        // Load rule set into scorer. 
+        FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore(ruleSetFormula);
+
+        int cityId;
+        CityInfo city;
+        City parsedCity;
+        CityParser parser = new CityParser();
+        for (int i = 0; i < citiesTable.Rows.Count; i++)
+        {
+            cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
+            city = getCity(cityId);
+
+            using (FileStream cityStream = File.OpenRead(city.FilePath))
+            {
+                parsedCity = parser.ParseCityFile(cityStream);
+            }
+            // Score and update table value.
+            citiesTable.Rows[i][rankingScoreColumn] = scoreCity(parsedCity, ruleSetFormula);
+        }
 
         return citiesTable;
     }
@@ -173,27 +222,26 @@ public static class StaticRankingControl
     }
     #endregion
 
-    #region private 'constants'
-
-    private static readonly Dictionary<string, Type> citySearchColumns = new Dictionary<string, Type>
-    {
-        {"User", typeof(string)}, 
-        {"City Name", typeof(string)}, 
-        {"Size", typeof(int)},
-        {"Funds", typeof(int)},
-        {"CityID", typeof(int)}
-    };
-
-    private static readonly Dictionary<string, Type> cityRankingsColumns = new Dictionary<string, Type>
-    {
-        {"CityID", typeof(int)},
-        {"City Name", typeof(string)},
-        {"User", typeof(string)},
-        {"Score", typeof(double)}
-    };
-    #endregion
-
     #region private helper functions
+
+    private static double scoreCity(City city, string formula)
+    {
+        FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore();
+        scorer.ScoringFormula = formula;
+
+        // Load scoring values into scorer.
+        List<string> scoringIdentifiers = FormulaScore.FormulaScore.FetchScoringIDs(formula);
+        foreach (string scoringId in scoringIdentifiers)
+        {
+            if (GetCityValue.IsValueIdentifier(scoringId)) 
+            {
+                scorer.AddScoringValue(scoringId, GetCityValue.GetValue(scoringId, city));
+            }
+        }
+
+        double score = scorer.CalculateScore();
+        return score;
+    }
 
     private static DataTable initDataTable(Dictionary<string, Type> columns)
     {

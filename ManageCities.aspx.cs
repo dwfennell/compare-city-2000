@@ -32,7 +32,7 @@ public partial class ManageCities : System.Web.UI.Page
                 CityUploadLabel.Text = "Invalid file type.";
                 return;
             }
-
+            
             // Parse city file (quick-parse, does not fetch all information).
             var parser = new CityParser();
             City parserCity = parser.ParseCityFile(CityFileUpload.PostedFile.InputStream, true);
@@ -98,6 +98,7 @@ public partial class ManageCities : System.Web.UI.Page
         // TODO: Serialize and store parserCity.
 
         // Save .sc2 file on server.
+        CityFileUpload.PostedFile.InputStream.Position = 0;
         CityFileUpload.PostedFile.SaveAs(filepath);
     }
 

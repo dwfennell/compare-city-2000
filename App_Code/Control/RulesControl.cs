@@ -4,25 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CompareCity.Util;
 using CompareCity.Model;
 
 namespace CompareCity.Control
 {
     public class RulesControl
     {
-        // TODO: Consider moving this somewhere more different... like an xml config file or database table.
-        private static readonly List<string> _cityValueIdentifiers = new List<string> 
-        {
-            "citysize", 
-            "availablefunds", 
-            "lifeexpectancy",
-            "educationquotent"
-        };
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static List<string> CityValueIdentifiers { get { return _cityValueIdentifiers; } private set { } }
 
         // TODO: Will having a single static db connection variable slow things to a crawl when there are multiple users? 
         //       Maybe not, but more efficient persistance access also couldn't hurt. 
@@ -142,7 +130,7 @@ namespace CompareCity.Control
             string badIds = "";
             foreach (string id in cityIds)
             {
-                if (!RulesControl.CityValueIdentifiers.Contains(id))
+                if (!GetCityValue.IsValueIdentifier(id))
                 {
                     badIds = badIds + id + " ";
                 }
