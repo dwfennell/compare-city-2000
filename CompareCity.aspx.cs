@@ -31,14 +31,14 @@ public partial class CompareCities : System.Web.UI.Page
         {
             if (String.IsNullOrWhiteSpace(RankingNameTextBox.Text))
             {
-                RankingNameTextBox.Text = StaticRankingControl.GetUntitledRankingName();
+                RankingNameTextBox.Text = RankingControl.GetUntitledRankingName();
             }
 
             populateRulesList();
             populateRankingsList();
 
             // Init ranking GridView.
-            DataTable rankedCities = StaticRankingControl.GetEmptyRankingTable();
+            DataTable rankedCities = RankingControl.GetEmptyRankingTable();
             Session["rankedCities"] = rankedCities;
         }
         else
@@ -73,7 +73,7 @@ public partial class CompareCities : System.Web.UI.Page
         var rankedCities = (DataTable)Session["rankedCities"];
         var ruleSetId = (int)Session["ruleSetId"];
 
-        rankedCities = StaticRankingControl.ScoreCities(rankedCities, ruleSetId);
+        rankedCities = RankingControl.ScoreCities(rankedCities, ruleSetId);
         bindToGridview(CityRankingGridView, rankedCities);
     }
 
@@ -89,10 +89,10 @@ public partial class CompareCities : System.Web.UI.Page
 
         try
         {
-            Dictionary<StaticRankingControl.RuleSetKeys, string> ruleSetInfo = StaticRankingControl.LoadRuleSet(ruleSetId);
+            Dictionary<RankingControl.RuleSetKeys, string> ruleSetInfo = RankingControl.LoadRuleSet(ruleSetId);
 
-            RuleSetLabel.Text = ruleSetInfo[StaticRankingControl.RuleSetKeys.Name];
-            RuleFormulaLabel.Text = ruleSetInfo[StaticRankingControl.RuleSetKeys.Formula];
+            RuleSetLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Name];
+            RuleFormulaLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Formula];
 
             ruleSetLoaded = true;
             Session["ruleSetId"] = ruleSetId;
@@ -128,14 +128,14 @@ public partial class CompareCities : System.Web.UI.Page
 
         try
         {
-            Dictionary<StaticRankingControl.RankingKeys, string> rankingInfo = StaticRankingControl.LoadRanking(rankingId);
+            Dictionary<RankingControl.RankingKeys, string> rankingInfo = RankingControl.LoadRanking(rankingId);
 
-            RankingNameTextBox.Text = rankingInfo[StaticRankingControl.RankingKeys.Name];
-            RuleSetLabel.Text = rankingInfo[StaticRankingControl.RankingKeys.RuleSetName];
-            RuleFormulaLabel.Text = rankingInfo[StaticRankingControl.RankingKeys.RuleSetFormula];
+            RankingNameTextBox.Text = rankingInfo[RankingControl.RankingKeys.Name];
+            RuleSetLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetName];
+            RuleFormulaLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetFormula];
             ScoringRulesList.SelectedIndex = 0;
 
-            Session["ruleSetId"] = Int32.Parse(rankingInfo[StaticRankingControl.RankingKeys.RuleSetId]);
+            Session["ruleSetId"] = Int32.Parse(rankingInfo[RankingControl.RankingKeys.RuleSetId]);
 
             // TODO: Load group members.
 
@@ -164,7 +164,7 @@ public partial class CompareCities : System.Web.UI.Page
         string userPattern = CitySearchUserTextBox.Text.Trim();
         string cityNamePattern = CitySeachCityNameTextBox.Text.Trim();
 
-        DataTable cities = StaticRankingControl.GetCitySearchTable(allUsers, userPattern, allCityNames, cityNamePattern);
+        DataTable cities = RankingControl.GetCitySearchTable(allUsers, userPattern, allCityNames, cityNamePattern);
 
         // Display city search results
         bindToGridview(CitySearchGridView, cities);
@@ -190,7 +190,7 @@ public partial class CompareCities : System.Web.UI.Page
             //DataTable rankedCities = CityRankingGridView.DataSource as DataTable;
             DataTable rankedCities = (DataTable)Session["rankedCities"];
 
-            rankedCities = StaticRankingControl.AddRankedCity(rankedCities, cityId);
+            rankedCities = RankingControl.AddRankedCity(rankedCities, cityId);
             bindToGridview(CityRankingGridView, rankedCities);
         }
     }
@@ -249,7 +249,7 @@ public partial class CompareCities : System.Web.UI.Page
 
     private void populateRulesList()
     {
-        List<ListItem> ruleSets = StaticRankingControl.GetRuleSets(SiteControl.Username);
+        List<ListItem> ruleSets = RankingControl.GetRuleSets(SiteControl.Username);
         ruleSets.Insert(0, new ListItem(ruleSetListDefaultText, "-1"));
 
         // Configure listbox for use with a List<ListItem>.
@@ -264,7 +264,7 @@ public partial class CompareCities : System.Web.UI.Page
     private void populateRankingsList()
     {
         // Populate rankings list.
-        List<ListItem> rankings = StaticRankingControl.GetRankings(SiteControl.Username);
+        List<ListItem> rankings = RankingControl.GetRankings(SiteControl.Username);
         rankings.Insert(0, new ListItem(rankingListDefaultText, "-1"));
 
         // Configure listbox for use with a List<ListItem>. 

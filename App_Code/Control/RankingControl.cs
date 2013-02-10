@@ -3,18 +3,26 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.IO;
 using System.Web.UI.WebControls;
 
 using CompareCity.Model;
+using CompareCity.Util;
+using CityParser2000;
+using FormulaScore;
 
 /// <summary>
 /// 
 /// </summary>
-public class RankingControl
+public static class RankingControl
 {
+    // TODO: Context pool? 
+    private static DatabaseContext db = new DatabaseContext();
+
+
     #region private 'constants'
 
-    private readonly Dictionary<string, Type> citySearchColumns = new Dictionary<string, Type>
+    private static readonly Dictionary<string, Type> citySearchColumns = new Dictionary<string, Type>
     {
         {"User", typeof(string)}, 
         {"City Name", typeof(string)}, 
@@ -23,89 +31,89 @@ public class RankingControl
         {"CityID", typeof(int)}
     };
 
-    private readonly Dictionary<string, Type> cityRankingsColumns = new Dictionary<string, Type>
+    private static readonly Dictionary<string, Type> cityRankingsColumns = new Dictionary<string, Type>
     {
         {"CityID", typeof(int)},
         {"City Name", typeof(string)},
         {"User", typeof(string)},
         {"Score", typeof(double)}
     };
+
+    private const int rankingCityIdColumn = 0;
+    private const int rankingScoreColumn = 3;
+
     #endregion
 
-    #region private member variables
 
-    private DataTable cityRankingsTable;
-    private DataTable citySearchTable;
+    public enum RuleSetKeys { Name, Formula };
+    public enum RankingKeys { Name, RuleSetId, RuleSetName, RuleSetFormula};
 
-    // TODO: Once again, a context pool might be useful.
-    private static DatabaseContext db = new DatabaseContext();
-    #endregion
+    #region rankings
 
-    #region public properties
-
-    public string CurrentRankingName { get; set; }
-    public int CurrentRankingId { get; private set; }
-    public string CurrentUser { get; private set; }
-    public int CurrentRuleSetId { get; private set; }
-    public RuleSet CurrentRuleSet { get; private set; }
-    #endregion
-
-    #region contructors
-
-    public RankingControl(string user)
-	{
-        // Default to -1 to match no ids if grouping id is not set. 
-        CurrentRankingId = -1;
-        CurrentRuleSetId = -1;
-        CurrentRuleSet = null;
-        CurrentUser = user;
-
-        cityRankingsTable = initDataTable(cityRankingsColumns);
-        citySearchTable = initDataTable(citySearchColumns);
-	}
-    #endregion
-
-    #region ranking methods
-
-    public void SaveRanking()
+    public static void SaveRanking(string rankingName, string username, int ruleSetId)
     {
-
-        // TODO: There is a bug here because the control class does not persist. 
-        if (CurrentRankingId == -1)
+        if (rankingExists(rankingName, username))
         {
-            // Create new comparison group.
-            var newGroup = new ComparisonGroup
-            {
-                ComparisonGroupName = CurrentRankingName,
-                RuleSetId = CurrentRuleSetId,
-                //RuleSet = CurrentRuleSet,
-                User = CurrentUser
-            };
+            // Update existing ranking. 
 
-            db.ComparisonGroups.Add(newGroup);
+            ComparisonGroup ranking = db.ComparisonGroups.First(g => g.ComparisonGroupName == rankingName && g.User == username);
+            ranking.RuleSetId = ruleSetId;
         }
         else
         {
-            // Update existing comparison group.
-            var cg = db.ComparisonGroups.First(i => i.ComparisonGroupId == CurrentRankingId);
+            // Create new ranking.
 
-            cg.ComparisonGroupName = CurrentRankingName;
-            cg.RuleSetId = CurrentRuleSetId;
-            //cg.RuleSet = CurrentRuleSet;
+            ComparisonGroup newRanking = new ComparisonGroup
+            {
+                ComparisonGroupName = rankingName,
+                RuleSetId = ruleSetId,
+                User = username
+            };
+            db.ComparisonGroups.Add(newRanking);
         }
+
         db.SaveChanges();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public List<ListItem> GetRankings()
+    public static Dictionary<RankingKeys, string> LoadRanking(int rankingId)
+    {
+        ComparisonGroup ranking = db.ComparisonGroups.Single(r => r.ComparisonGroupId == rankingId);
+        RuleSet rankingRuleSet = db.RuleSets.Single(r => r.RuleSetId == ranking.RuleSetId);
+
+        return new Dictionary<RankingKeys, string>
+        {
+            {RankingKeys.Name, ranking.ComparisonGroupName},
+            {RankingKeys.RuleSetId, ranking.RuleSetId.ToString()},
+            {RankingKeys.RuleSetName, rankingRuleSet.RuleSetName},
+            {RankingKeys.RuleSetFormula, rankingRuleSet.Formula}
+        };
+    }
+
+    public static DataTable GetEmptyRankingTable()
+    {
+        return initDataTable(cityRankingsColumns);
+    }
+
+    public static DataTable AddRankedCity(DataTable rankedCities, int cityId)
+    {
+        if (rankedCities == null)
+        {
+            rankedCities = initDataTable(cityRankingsColumns);
+        }
+
+        // Load city data.
+        CityInfo city = getCity(cityId);
+        rankedCities.Rows.Add(city.CityInfoId, city.CityName, city.User, 0.0);
+
+        return rankedCities;
+    }
+
+    public static List<ListItem> GetRankings(string username)
     {
         var rankings = new List<ListItem>();
         var query =
             from g in db.ComparisonGroups
-            where g.User == CurrentUser
+            where g.User == username
             select g;
 
         foreach (ComparisonGroup group in query)
@@ -116,92 +124,72 @@ public class RankingControl
         return rankings;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    public void LoadComparisonGroup(int id)
+    public static DataTable ScoreCities(DataTable citiesTable, int ruleSetId)
     {
-        ComparisonGroup group = getComparisonGroup(id);
+        string ruleSetFormula = LoadRuleSet(ruleSetId)[RuleSetKeys.Formula];
 
-        CurrentRankingId = id;
-        CurrentRankingName = group.ComparisonGroupName;
-        CurrentRuleSetId = group.RuleSetId;
-        //CurrentRuleSet = group.RuleSet;
+        // Load rule set into scorer. 
+        FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore(ruleSetFormula);
+
+        int cityId;
+        CityInfo city;
+        City parsedCity;
+        CityParser parser = new CityParser();
+        for (int i = 0; i < citiesTable.Rows.Count; i++)
+        {
+            cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
+            city = getCity(cityId);
+
+            using (FileStream cityStream = File.OpenRead(city.FilePath))
+            {
+                parsedCity = parser.ParseCityFile(cityStream);
+            }
+            // Score and update table value.
+            citiesTable.Rows[i][rankingScoreColumn] = scoreCity(parsedCity, ruleSetFormula);
+        }
+
+        return citiesTable;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public string GetUntitledRankingName()
+    public static string GetUntitledRankingName()
     {
         return "Untitled";
     }
     #endregion
 
-    #region city ranking table methods
+    #region rule sets
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="cityId"></param>
-    public void AddRankedCity(int cityId)
+    public static Dictionary<RuleSetKeys, string> LoadRuleSet(int ruleSetId)
     {
-        // Persist (non-city) ranking details. 
-        if (CurrentRankingId == -1)
-        {
-            SaveRanking();
-        } 
+        RuleSet ruleSet = db.RuleSets.Single(r => r.RuleSetId == ruleSetId);
 
-        // Create and store new ComparisonGroupMember
-        var newRankedCity = new ComparisonGroupMember
+        return new Dictionary<RuleSetKeys, string>
         {
-            ComparisonGroupId = CurrentRankingId,
-            CityInfoId = cityId,
-            TotalScore = 0.0
+           {RuleSetKeys.Name, ruleSet.RuleSetName},
+           {RuleSetKeys.Formula, ruleSet.Formula}
         };
-        db.ComparisonGroupMembers.Add(newRankedCity);
-        db.SaveChanges();
-
-        var city = getCity(cityId);
-        // Construct new city rankings table row.
-        cityRankingsTable.Rows.Add(city.CityInfoId, city.CityName, city.User, newRankedCity.TotalScore);
     }
 
-    /// <summary>
-    /// Delete a city ranking.
-    /// </summary>
-    /// <param name="cityId"></param>
-    public void RemoveRankedCity(int cityId, int tableIndex)
+    public static List<ListItem> GetRuleSets(string username)
     {
-        // Delete ComparisonGroupMember from database.
-        ComparisonGroupMember groupMember = db.ComparisonGroupMembers
-            .First(m => m.CityInfoId == cityId && m.ComparisonGroupId == CurrentRankingId);
-        db.ComparisonGroupMembers.Remove(groupMember);
+        var ruleSets = new List<ListItem>();
+        var query =
+            from r in db.RuleSets
+            where r.User == username
+            select r;
 
-        // Remove city rankings table row. 
-        cityRankingsTable.Rows.RemoveAt(tableIndex);
+        foreach (RuleSet rules in query)
+        {
+            ruleSets.Add(new ListItem(rules.RuleSetName, rules.RuleSetId.ToString()));
+        }
+
+        return ruleSets;
     }
-
-    public DataTable GetRankedCitiesTable()
-    {
-        return cityRankingsTable;
-    }
-
     #endregion
 
-    #region city searching
+    #region city search
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="doSearchAllUsers"></param>
-    /// <param name="userPattern"></param>
-    /// <param name="doGetAllCities"></param>
-    /// <param name="cityNamePattern"></param>
-    /// <returns></returns>
-    public DataTable GetCitySearchTable(bool doSearchAllUsers, string userPattern, bool doGetAllCities, string cityNamePattern)
+    public static DataTable GetCitySearchTable(bool doSearchAllUsers, string userPattern, bool doGetAllCities, string cityNamePattern)
     {
         // Perform city search based on input parameters. 
         IQueryable<CityInfo> query;
@@ -223,11 +211,8 @@ public class RankingControl
         }
 
         // Form table from search data. 
-        if (citySearchTable == null)
-        {
-            citySearchTable = initDataTable(citySearchColumns);
-        }
-        citySearchTable.Rows.Clear();
+        DataTable citySearchTable = initDataTable(citySearchColumns);
+
         foreach (CityInfo city in query)
         {
             citySearchTable.Rows.Add(city.User, city.CityName, city.CitySize, city.AvailableFunds, city.CityInfoId);
@@ -237,70 +222,28 @@ public class RankingControl
     }
     #endregion
 
-    #region rule set methods
+    #region private helper functions
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="ruleSetId"></param>
-    public void LoadRuleSet(int ruleSetId)
+    private static double scoreCity(City city, string formula)
     {
-        CurrentRuleSetId = ruleSetId;
-        CurrentRuleSet = getRuleSet(ruleSetId);
-    }
+        FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore();
+        scorer.ScoringFormula = formula;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public List<ListItem> GetRuleSets()
-    {
-        var ruleSets = new List<ListItem>();
-        var query =
-            from r in db.RuleSets
-            where r.User == CurrentUser
-            select r;
-
-        foreach (RuleSet rules in query)
+        // Load scoring values into scorer.
+        List<string> scoringIdentifiers = FormulaScore.FormulaScore.FetchScoringIDs(formula);
+        foreach (string scoringId in scoringIdentifiers)
         {
-            ruleSets.Add(new ListItem(rules.RuleSetName, rules.RuleSetId.ToString()));
+            if (GetCityValue.IsValueIdentifier(scoringId)) 
+            {
+                scorer.AddScoringValue(scoringId, GetCityValue.GetValue(scoringId, city));
+            }
         }
 
-        return ruleSets;
+        double score = scorer.CalculateScore();
+        return score;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public string GetRuleSetName()
-    {
-        return CurrentRuleSet == null ? "" : CurrentRuleSet.RuleSetName;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public string GetRuleSetFormula()
-    {
-        return CurrentRuleSet == null ? "" : CurrentRuleSet.Formula;
-    }
-    #endregion
-
-    #region private helper methods
-
-    private ComparisonGroup getComparisonGroup(int id)
-    {
-        return db.ComparisonGroups.First(i => i.ComparisonGroupId == id);
-    }
-
-    private RuleSet getRuleSet(int id)
-    {
-        return db.RuleSets.First(i => i.RuleSetId == id);
-    }
-
-    private DataTable initDataTable(Dictionary<string, Type> columns)
+    private static DataTable initDataTable(Dictionary<string, Type> columns)
     {
         var table = new DataTable();
 
@@ -312,9 +255,15 @@ public class RankingControl
         return table;
     }
 
-    private CityInfo getCity(int cityId)
+    private static CityInfo getCity(int cityId)
     {
-        return db.CityInfoes.First(c => c.CityInfoId == cityId);
+        return db.CityInfoes.Single(c => c.CityInfoId == cityId);
+    }
+
+    private static bool rankingExists(string rankingName, string username)
+    {
+        return db.ComparisonGroups.Any(g => g.ComparisonGroupName == rankingName && g.User == username);
     }
     #endregion
+
 }
