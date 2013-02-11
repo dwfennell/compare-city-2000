@@ -1,7 +1,5 @@
 ﻿<%@ Page Title="Cities" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="ManageCities.aspx.cs" Inherits="ManageCities" %>
 
-
-
 <asp:Content ID="FeaturedContent" ContentPlaceHolderID="FeaturedContent" Runat="Server">
     <div class="content-wrapper">
         <h3>Upload City</h3>
@@ -43,5 +41,4 @@
             <asp:BoundField DataField="Uploaded" HeaderText="Uploaded" SortExpression="Uploaded" />
         </Columns>
     </asp:GridView>
-
 </asp:Content>

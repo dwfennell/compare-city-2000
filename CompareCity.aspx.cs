@@ -11,13 +11,16 @@ using CompareCity.Control;
 
 public partial class CompareCities : System.Web.UI.Page
 {
+    #region private constants
+
     private static readonly string rankingListDefaultText = "--Select Ranking--";
     private static readonly string ruleSetListDefaultText = "--Select Rule Set--";
+    
     private static readonly int citySearchIdIndex = 5;
 
     private static readonly Color ruleSetPresentColor = Color.DarkGreen;
     private static readonly Color ruleSetMissingColor = Color.Red;
-
+    #endregion
 
     private bool ruleSetLoaded = false;
 
