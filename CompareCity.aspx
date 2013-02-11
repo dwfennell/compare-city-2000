@@ -48,7 +48,8 @@
         <tr>
             <td></td>
             <td>
-                <asp:Button ID="CalcRankingButton" Text="Rank Cities!" OnClick="CalcRankingButton_Click" CssClass="ranking-button"  runat="server"/>       
+                <asp:Button ID="CalcRankingButton" Text="Rank Cities!" OnClick="CalcRankingButton_Click" CssClass="ranking-button"  runat="server"/>
+                <asp:Label ID="CalcRankingStatusLabel" Text="" ForeColor="Red" runat="server" />
             </td>
         </tr>
         <tr>

@@ -175,7 +175,7 @@ public static class RankingControl
         var ruleSets = new List<ListItem>();
         var query =
             from r in db.RuleSets
-            where r.User == username
+            where r.User == username && r.Valid == true
             select r;
 
         foreach (RuleSet rules in query)

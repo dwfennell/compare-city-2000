@@ -83,11 +83,18 @@ public partial class CompareCities : System.Web.UI.Page
     /// <param name="e"></param>
     protected void CalcRankingButton_Click(object sender, EventArgs e)
     {
-        var rankedCities = (DataTable)Session["rankedCities"];
-        var ruleSetId = (int)Session["ruleSetId"];
+        try
+        {
+            var rankedCities = (DataTable)Session["rankedCities"];
+            var ruleSetId = (int)Session["ruleSetId"];
 
-        rankedCities = RankingControl.ScoreCities(rankedCities, ruleSetId);
-        bindToGridview(CityRankingGridView, rankedCities);
+            rankedCities = RankingControl.ScoreCities(rankedCities, ruleSetId);
+            bindToGridview(CityRankingGridView, rankedCities);
+        }
+        catch (NullReferenceException)
+        {
+            CalcRankingStatusLabel.Text = "Please select a rule set.";
+        }
     }
 
     /// <summary>
@@ -108,6 +115,7 @@ public partial class CompareCities : System.Web.UI.Page
             RuleFormulaLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Formula];
 
             setRuleSetTextColor(true);
+            CalcRankingStatusLabel.Text = "";
 
             ruleSetLoaded = true;
             Session["ruleSetId"] = ruleSetId;
