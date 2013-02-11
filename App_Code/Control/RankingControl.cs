@@ -153,7 +153,7 @@ public static class RankingControl
 
     public static string GetUntitledRankingName()
     {
-        return "Untitled";
+        return "Untitled Ranking";
     }
     #endregion
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Web;
+using System.Drawing;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -13,6 +14,10 @@ public partial class CompareCities : System.Web.UI.Page
     private static readonly string rankingListDefaultText = "--Select Ranking--";
     private static readonly string ruleSetListDefaultText = "--Select Rule Set--";
     private static readonly int citySearchIdIndex = 5;
+
+    private static readonly Color ruleSetPresentColor = Color.DarkGreen;
+    private static readonly Color ruleSetMissingColor = Color.Red;
+
 
     private bool ruleSetLoaded = false;
 
@@ -34,12 +39,17 @@ public partial class CompareCities : System.Web.UI.Page
                 RankingNameTextBox.Text = RankingControl.GetUntitledRankingName();
             }
 
+            // Populate dropdown lists. 
             populateRulesList();
             populateRankingsList();
+
+            setRuleSetTextColor(false);
 
             // Init ranking GridView.
             DataTable rankedCities = RankingControl.GetEmptyRankingTable();
             Session["rankedCities"] = rankedCities;
+            // Bind here so EmptyDataTemplate will show itself in the gridview.
+            bindToGridview(CityRankingGridView, rankedCities);
         }
         else
         {
@@ -94,16 +104,17 @@ public partial class CompareCities : System.Web.UI.Page
             RuleSetLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Name];
             RuleFormulaLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Formula];
 
+            setRuleSetTextColor(true);
+
             ruleSetLoaded = true;
             Session["ruleSetId"] = ruleSetId;
         }
         catch (InvalidOperationException)
         {
             // Rule set not found. 
-
-            // TODO: Make text red, and consider restructuring. 
             RuleSetLabel.Text = "Rule set not found!";
             RuleFormulaLabel.Text = "Rule set not found!";
+            setRuleSetTextColor(false);
             return;
         }
 
@@ -131,8 +142,10 @@ public partial class CompareCities : System.Web.UI.Page
             Dictionary<RankingControl.RankingKeys, string> rankingInfo = RankingControl.LoadRanking(rankingId);
 
             RankingNameTextBox.Text = rankingInfo[RankingControl.RankingKeys.Name];
+
             RuleSetLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetName];
             RuleFormulaLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetFormula];
+            setRuleSetTextColor(true);
             ScoringRulesList.SelectedIndex = 0;
 
             Session["ruleSetId"] = Int32.Parse(rankingInfo[RankingControl.RankingKeys.RuleSetId]);
@@ -294,6 +307,20 @@ public partial class CompareCities : System.Web.UI.Page
         }
 
         return table.Rows;
+    }
+
+    private void setRuleSetTextColor(bool ruleSetPresent)
+    {
+        if (ruleSetPresent)
+        {
+            RuleSetLabel.ForeColor = ruleSetPresentColor;
+            RuleFormulaLabel.ForeColor = ruleSetPresentColor;
+        }
+        else
+        {
+            RuleSetLabel.ForeColor = ruleSetMissingColor;
+            RuleFormulaLabel.ForeColor = ruleSetMissingColor;
+        }
     }
 
     #endregion
