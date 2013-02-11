@@ -20,6 +20,11 @@ public partial class ManageCities : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Don't allow users without logins here.
+        if (String.IsNullOrWhiteSpace(SiteControl.Username))
+        {
+            Response.Redirect("~/");
+        }
     }
 
     protected void UploadButton_Click(object sender, EventArgs e)

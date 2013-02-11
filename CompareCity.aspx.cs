@@ -35,6 +35,12 @@ public partial class CompareCities : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Don't allow users without logins here.
+        if (String.IsNullOrWhiteSpace(SiteControl.Username))
+        {
+            Response.Redirect("~/");
+        }
+
         if (!IsPostBack)
         {
             if (String.IsNullOrWhiteSpace(RankingNameTextBox.Text))
