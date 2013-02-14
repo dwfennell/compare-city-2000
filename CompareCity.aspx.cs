@@ -22,12 +22,6 @@ public partial class CompareCities : System.Web.UI.Page
     private static readonly Color ruleSetMissingColor = Color.Red;
     #endregion
 
-    private bool ruleSetLoaded = false;
-
-    private enum sessionKeys { rankedCitiesTable };
-
-    //private RankingControl rankControl = new RankingControl(SiteControl.Username);
-
     /// <summary>
     /// Page load event handler.
     /// </summary>
@@ -59,6 +53,8 @@ public partial class CompareCities : System.Web.UI.Page
             Session["rankedCities"] = rankedCities;
             // Bind here so EmptyDataTemplate will show itself in the gridview.
             bindToGridview(CityRankingGridView, rankedCities);
+
+            Session["ruleSetId"] = -1;
         }
         else
         {
@@ -104,41 +100,6 @@ public partial class CompareCities : System.Web.UI.Page
     }
 
     /// <summary>
-    /// Event handler for <c>LoadRuleSetButton</c> click.
-    /// Loads the rule set indicated by <c>ScoringRulesList</c> and resets city scoring, if necessary.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void LoadRuleSetButton_Click(object sender, EventArgs e)
-    {
-        int ruleSetId = getSelectedRuleSetId();
-
-        try
-        {
-            Dictionary<RankingControl.RuleSetKeys, string> ruleSetInfo = RankingControl.LoadRuleSet(ruleSetId);
-
-            RuleSetLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Name];
-            RuleFormulaLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Formula];
-
-            setRuleSetTextColor(true);
-            CalcRankingStatusLabel.Text = "";
-
-            ruleSetLoaded = true;
-            Session["ruleSetId"] = ruleSetId;
-        }
-        catch (InvalidOperationException)
-        {
-            // Rule set not found. 
-            RuleSetLabel.Text = "Rule set not found!";
-            RuleFormulaLabel.Text = "Rule set not found!";
-            setRuleSetTextColor(false);
-            return;
-        }
-
-        // TODO: Check if scoring was done using previous rule set and clear those scores.
-    }
-
-    /// <summary>
     /// Event handler for <c>LoadRankButton</c> click.
     /// Loads a previous comparison ranking.
     /// </summary>
@@ -160,21 +121,62 @@ public partial class CompareCities : System.Web.UI.Page
 
             RankingNameTextBox.Text = rankingInfo[RankingControl.RankingKeys.Name];
 
+            // Load rule set.
             RuleSetLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetName];
             RuleFormulaLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetFormula];
             setRuleSetTextColor(true);
             ScoringRulesList.SelectedIndex = 0;
-
             Session["ruleSetId"] = Int32.Parse(rankingInfo[RankingControl.RankingKeys.RuleSetId]);
 
-            // TODO: Load group members.
-
+            // Load ranked cities.
+            DataTable rankedCities = RankingControl.LoadRankingCities(rankingInfo[RankingControl.RankingKeys.Name], SiteControl.Username);
+            bindToGridview(CityRankingGridView, rankedCities);
+            Session["rankedCities"] = rankedCities;
         }
         catch (InvalidOperationException)
         {
             LoadStatusLabel.Text = "Ranking not found!";
             return;
         }
+    }
+    #endregion
+
+    #region rule sets
+
+    /// <summary>
+    /// Event handler for <c>LoadRuleSetButton</c> click.
+    /// Loads the rule set indicated by <c>ScoringRulesList</c> and resets city scoring, if necessary.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void LoadRuleSetButton_Click(object sender, EventArgs e)
+    {
+        int ruleSetId = getSelectedRuleSetId();
+
+        try
+        {
+            Dictionary<RankingControl.RuleSetKeys, string> ruleSetInfo = RankingControl.LoadRuleSet(ruleSetId);
+
+            RuleSetLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Name];
+            RuleFormulaLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Formula];
+
+            setRuleSetTextColor(true);
+            CalcRankingStatusLabel.Text = "";
+
+            Session["ruleSetId"] = ruleSetId;
+        }
+        catch (InvalidOperationException)
+        {
+            // Rule set not found.
+            setRuleSetTextColor(false);
+            RuleSetLabel.Text = "Rule set not found!";
+            RuleFormulaLabel.Text = "Rule set not found!";
+
+            Session["ruleSetId"] = -1;
+            return;
+        }
+
+        // TODO: Check if scoring was done using previous rule set and clear those scores.
     }
     #endregion
 
@@ -252,29 +254,22 @@ public partial class CompareCities : System.Web.UI.Page
 
     private void saveRanking()
     {
-        // Store ranking name.
+        // Fetch name and rule set id.
         string rankingName = RankingNameTextBox.Text.Trim();
-        int ruleSetId = -1;
+        int ruleSetId = (int)Session["ruleSetId"];;
 
-        // Store rule set, if present.
-        if (ruleSetLoaded && hasSelectedRuleSet())
-        {
-            ruleSetId = getSelectedRuleSetId();
-        }
+        // Save name and rule set id.
+        RankingControl.SaveRanking(rankingName, SiteControl.Username, ruleSetId);
 
-        // TODO: Get "ranked" cities and save them. 
+        // Save ranked cities.
+        DataTable rankedCities = (DataTable)Session["rankedCities"];
+        RankingControl.SaveRankingCities(rankingName, SiteControl.Username, rankedCities);
     }
-
 
     private int getSelectedRuleSetId()
     {
         int ruleSetId;
         return Int32.TryParse(ScoringRulesList.SelectedValue, out ruleSetId) ? ruleSetId : -1;
-    }
-
-    private bool hasSelectedRuleSet()
-    {
-        return getSelectedRuleSetId() != -1;
     }
 
     private void populateRulesList()
