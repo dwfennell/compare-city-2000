@@ -18,7 +18,10 @@
         </tr>
         <tr>
             <td colspan="3">
-                <asp:GridView ID="CityRankingGridView" AllowSorting="true" runat="server">
+                <asp:GridView 
+                    ID="CityRankingGridView"
+                    AllowSorting="true" 
+                    runat="server">
                     <EmptyDataTemplate>
                         <span class="gridview-emptydata">--search below for cities to rank--</span>
                     </EmptyDataTemplate>
