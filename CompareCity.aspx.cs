@@ -138,7 +138,7 @@ public partial class CompareCities : System.Web.UI.Page
             // Load rule set.
             if (rankingInfo[RankingControl.RankingKeys.RuleSetName] != "") {
 
-                ViewState["rankingId"] = Int32.Parse(rankingInfo[RankingControl.RankingKeys.RuleSetId]);
+                ViewState["ruleSetId"] = Int32.Parse(rankingInfo[RankingControl.RankingKeys.RuleSetId]);
 
                 RuleSetLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetName];
                 RuleFormulaLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetFormula];
@@ -150,12 +150,33 @@ public partial class CompareCities : System.Web.UI.Page
             // Load ranked cities table data.
             DataTable rankedCities = RankingControl.GetRankingMemberTable(rankingId);
             bindToGridview(CityRankingGridView, rankedCities);
+
+            RankingNameList.SelectedIndex = 0;
         }
         catch (InvalidOperationException)
         {
             LoadStatusLabel.Text = "Ranking not found!";
             return;
         }
+    }
+
+    protected void NewRankButton_Click(object sender, EventArgs e)
+    {
+        ViewState["rankingId"] = null;
+        ViewState["ruleSetId"] = null;
+
+        // TODO: Centrailize initial label text.
+        RuleSetLabel.Text = "";
+        RuleFormulaLabel.Text = "";
+        setRuleSetTextColor(false);
+
+        SaveStatusLabel.Text = "";
+        CalcRankingStatusLabel.Text = "";
+        
+        bindToGridview(CityRankingGridView, new DataTable());
+
+        ScoringRulesList.SelectedIndex = 0;
+        RankingNameList.SelectedIndex = 0;
     }
     #endregion
 
@@ -305,6 +326,7 @@ public partial class CompareCities : System.Web.UI.Page
         {
             // Ranking does not yet exist.
             ViewState["rankingId"] = RankingControl.SaveNewRanking(SiteControl.Username, rankingName, ruleSetId);
+            populateRankingsList();
         }
         else
         {

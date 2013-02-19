@@ -70,6 +70,9 @@
                 <asp:Button ID="LoadRankButton" Text="Load Ranking" OnClick="LoadRankButton_Click" runat="server" CssClass="ranking-button" />
                 <asp:Label ID="LoadStatusLabel" Text="" runat="server" />
             </td>
+            <td>
+                <asp:Button ID="NewRankButton" Text="New Ranking" OnClick="NewRankButton_Click" runat="server" CssClass="ranking-button" />
+            </td>
         </tr>
     </table>
 
