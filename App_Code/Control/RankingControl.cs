@@ -70,13 +70,13 @@ public static class RankingControl
     {
         var rankings = new List<ListItem>();
         var query =
-            from g in db.ComparisonGroups
+            from g in db.Rankings
             where g.User == username
             select g;
 
-        foreach (ComparisonGroup group in query)
+        foreach (Ranking group in query)
         {
-            rankings.Add(new ListItem(group.ComparisonGroupName, group.ComparisonGroupId.ToString()));
+            rankings.Add(new ListItem(group.RankingName, group.RankingId.ToString()));
         }
 
         return rankings;
@@ -112,12 +112,12 @@ public static class RankingControl
     public static void SaveRankingCities(string rankingName, string user, DataTable citiesTable)
     {
         // Fetch parent ranking.
-        ComparisonGroup ranking = db.ComparisonGroups.Single(c => c.ComparisonGroupName == rankingName && c.User == user);
+        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
 
         // Delete old members.
-        foreach (ComparisonGroupMember rankedCity in db.ComparisonGroupMembers.Where(c => c.ComparisonGroupId == ranking.ComparisonGroupId))
+        foreach (RankingMember rankedCity in db.RankingMembers.Where(c => c.RankingId == ranking.RankingId))
         {
-            db.ComparisonGroupMembers.Remove(rankedCity);
+            db.RankingMembers.Remove(rankedCity);
         }
 
         // Add new members.
@@ -128,11 +128,11 @@ public static class RankingControl
             cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
             score = (double)citiesTable.Rows[i][rankingScoreColumn];
 
-            db.ComparisonGroupMembers.Add(new ComparisonGroupMember
+            db.RankingMembers.Add(new RankingMember
             {
                 CityInfoId = cityId,
                 TotalScore = score,
-                ComparisonGroupId = ranking.ComparisonGroupId
+                RankingId = ranking.RankingId
             });
         }
 
@@ -144,19 +144,19 @@ public static class RankingControl
         if (rankingExists(rankingName, username))
         {
             // Update existing ranking. 
-            ComparisonGroup ranking = db.ComparisonGroups.First(g => g.ComparisonGroupName == rankingName && g.User == username);
+            Ranking ranking = db.Rankings.First(g => g.RankingName == rankingName && g.User == username);
             ranking.RuleSetId = ruleSetId;
         }
         else
         {
             // Create new ranking.
-            ComparisonGroup newRanking = new ComparisonGroup
+            Ranking newRanking = new Ranking
             {
-                ComparisonGroupName = rankingName,
+                RankingName = rankingName,
                 RuleSetId = ruleSetId,
                 User = username
             };
-            db.ComparisonGroups.Add(newRanking);
+            db.Rankings.Add(newRanking);
         }
 
         db.SaveChanges();
@@ -164,12 +164,12 @@ public static class RankingControl
 
     public static DataTable LoadRankingCities(string rankingName, string user)
     {
-        ComparisonGroup ranking = db.ComparisonGroups.Single(c => c.ComparisonGroupName == rankingName && c.User == user);
+        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
 
         DataTable rankedCitiesTable = initDataTable(cityRankingsColumns);
         CityInfo city;
-        List<ComparisonGroupMember> rankedCities = db.ComparisonGroupMembers.Where(c => c.ComparisonGroupId == ranking.ComparisonGroupId).ToList();
-        foreach (ComparisonGroupMember rankedCity in rankedCities)
+        List<RankingMember> rankedCities = db.RankingMembers.Where(c => c.RankingId == ranking.RankingId).ToList();
+        foreach (RankingMember rankedCity in rankedCities)
         {
             city = db.CityInfoes.Single(c => c.CityInfoId == rankedCity.CityInfoId);
             rankedCitiesTable.Rows.Add(rankedCity.CityInfoId, city.CityName, user, rankedCity.TotalScore);
@@ -180,12 +180,12 @@ public static class RankingControl
 
     public static Dictionary<RankingKeys, string> LoadRanking(int rankingId)
     {
-        ComparisonGroup ranking = db.ComparisonGroups.Single(r => r.ComparisonGroupId == rankingId);
+        Ranking ranking = db.Rankings.Single(r => r.RankingId == rankingId);
         RuleSet rankingRuleSet = db.RuleSets.Single(r => r.RuleSetId == ranking.RuleSetId);
 
         return new Dictionary<RankingKeys, string>
         {
-            {RankingKeys.Name, ranking.ComparisonGroupName},
+            {RankingKeys.Name, ranking.RankingName},
             {RankingKeys.RuleSetId, ranking.RuleSetId.ToString()},
             {RankingKeys.RuleSetName, rankingRuleSet.RuleSetName},
             {RankingKeys.RuleSetFormula, rankingRuleSet.Formula}
@@ -303,7 +303,7 @@ public static class RankingControl
 
     private static bool rankingExists(string rankingName, string username)
     {
-        return db.ComparisonGroups.Any(g => g.ComparisonGroupName == rankingName && g.User == username);
+        return db.Rankings.Any(g => g.RankingName == rankingName && g.User == username);
     }
     #endregion
 

@@ -6,18 +6,16 @@ namespace CompareCity.Model
     /// <summary>
     /// Specifies cities and a 
     /// </summary>
-    public class ComparisonGroupMember
+    public class RankingMember
     {
         // Primary key. 
         [ScaffoldColumn(false)]
-        public int ComparisonGroupMemberId { get; set; }
+        public int RankingMemberId { get; set; }
 
         [ScaffoldColumn(false)]
-        public int ComparisonGroupId { get; set; }
-        //public ComparisonGroup ComparisonGroup { get; set; }
+        public int RankingId { get; set; }
 
         public int CityInfoId { get; set; }
-        //public virtual CityInfo CityInfo { get; set; }
 
         public double TotalScore { get; set; }
     }

@@ -10,8 +10,8 @@ namespace CompareCity.Model
     {
         public DbSet<RuleSet> RuleSets { get; set; }
         public DbSet<CityInfo> CityInfoes { get; set; }
-        public DbSet<ComparisonGroup> ComparisonGroups { get; set; }
-        public DbSet<ComparisonGroupMember> ComparisonGroupMembers { get; set; }
+        public DbSet<Ranking> Rankings { get; set; }
+        public DbSet<RankingMember> RankingMembers { get; set; }
 
         public DatabaseContext() : base("CompareCity")   
         {
@@ -25,8 +25,8 @@ namespace CompareCity.Model
             
             modelBuilder.Entity<CityInfo>().HasKey(ci => ci.CityInfoId);
             modelBuilder.Entity<RuleSet>().HasKey(rs => rs.RuleSetId);
-            modelBuilder.Entity<ComparisonGroup>().HasKey(cg => cg.ComparisonGroupId);
-            modelBuilder.Entity<ComparisonGroupMember>().HasKey(cg => cg.ComparisonGroupMemberId);
+            modelBuilder.Entity<Ranking>().HasKey(cg => cg.RankingId);
+            modelBuilder.Entity<RankingMember>().HasKey(cg => cg.RankingMemberId);
 
             // Define required fields.
 
@@ -40,27 +40,10 @@ namespace CompareCity.Model
             modelBuilder.Entity<RuleSet>().Property(rs => rs.Created).IsRequired();
             modelBuilder.Entity<RuleSet>().Property(rs => rs.Valid).IsRequired();
 
-            modelBuilder.Entity<ComparisonGroup>().Property(cg => cg.User).IsRequired();
+            modelBuilder.Entity<Ranking>().Property(cg => cg.User).IsRequired();
 
-            modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.ComparisonGroupId).IsRequired();
-            modelBuilder.Entity<ComparisonGroupMember>().Property(cg => cg.CityInfoId).IsRequired();
-
-            // Define ComparisionGroup/Member relationships.
-
-            //modelBuilder.Entity<ComparisonGroup>().HasOptional(r => r.RuleSet)
-            //    .WithMany()
-            //    .HasForeignKey(s => s.RuleSetId)
-            //    .WillCascadeOnDelete(false);
-
-            //modelBuilder.Entity<ComparisonGroupMember>().HasRequired(cg => cg.ComparisonGroup)
-            //    .WithMany()
-            //    .HasForeignKey(cg => cg.ComparisonGroupId)
-            //    .WillCascadeOnDelete(false);
-
-            //modelBuilder.Entity<ComparisonGroupMember>().HasRequired(c => c.CityInfo)
-            //    .WithMany()
-            //    .HasForeignKey(d => d.CityInfoId)
-            //    .WillCascadeOnDelete(false);
+            modelBuilder.Entity<RankingMember>().Property(cg => cg.RankingId).IsRequired();
+            modelBuilder.Entity<RankingMember>().Property(cg => cg.CityInfoId).IsRequired();
         }
     }
 }

@@ -5,13 +5,12 @@ using CompareCity.Model;
 /// <summary>
 /// 
 /// </summary>
-public class ComparisonGroup
+public class Ranking
 {
-    public int ComparisonGroupId { get; set; }
-    public string ComparisonGroupName { get; set; }
+    public int RankingId { get; set; }
+    public string RankingName { get; set; }
 
     public int RuleSetId { get; set; }
-    //public virtual RuleSet RuleSet { get; set; }
 
     public string User { get; set; }
 }
