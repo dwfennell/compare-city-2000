@@ -25,8 +25,8 @@ namespace CompareCity.Model
             
             modelBuilder.Entity<CityInfo>().HasKey(ci => ci.CityInfoId);
             modelBuilder.Entity<RuleSet>().HasKey(rs => rs.RuleSetId);
-            modelBuilder.Entity<Ranking>().HasKey(cg => cg.RankingId);
-            modelBuilder.Entity<RankingMember>().HasKey(cg => cg.RankingMemberId);
+            modelBuilder.Entity<Ranking>().HasKey(r => r.RankingId);
+            modelBuilder.Entity<RankingMember>().HasKey(m => m.RankingMemberId);
 
             // Define required fields.
 
@@ -40,10 +40,11 @@ namespace CompareCity.Model
             modelBuilder.Entity<RuleSet>().Property(rs => rs.Created).IsRequired();
             modelBuilder.Entity<RuleSet>().Property(rs => rs.Valid).IsRequired();
 
-            modelBuilder.Entity<Ranking>().Property(cg => cg.User).IsRequired();
+            modelBuilder.Entity<Ranking>().Property(r => r.User).IsRequired();
 
-            modelBuilder.Entity<RankingMember>().Property(cg => cg.RankingId).IsRequired();
-            modelBuilder.Entity<RankingMember>().Property(cg => cg.CityInfoId).IsRequired();
+            modelBuilder.Entity<RankingMember>().Property(m => m.RankingId).IsRequired();
+            modelBuilder.Entity<RankingMember>().Property(m => m.CityInfoId).IsRequired();
+            modelBuilder.Entity<RankingMember>().Property(m => m.User).IsRequired();
         }
     }
 }

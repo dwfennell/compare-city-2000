@@ -18,5 +18,6 @@ namespace CompareCity.Model
         public int CityInfoId { get; set; }
 
         public double TotalScore { get; set; }
+        public string User { get; set; }
     }
 }
