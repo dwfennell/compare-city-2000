@@ -9,7 +9,16 @@ namespace CompareCity.Control
 {
     public static class SiteControl
     {
-        public static string Username {
+        private static string _cityFileDirectory = "App_Data/CityFiles/";
+
+        public static string CityFileDirectory
+        {
+            get { return _cityFileDirectory; }
+            private set { }
+        }
+
+        public static string Username
+        {
             get { return string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name) ? "" : HttpContext.Current.User.Identity.Name; }
             private set { }
         }
