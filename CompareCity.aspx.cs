@@ -34,7 +34,7 @@ public partial class CompareCities : System.Web.UI.Page
         // Don't allow users without logins here.
         if (String.IsNullOrWhiteSpace(SiteControl.Username))
         {
-            Response.Redirect("~/");
+            Response.Redirect(SiteControl.AnonRedirect);
         }
 
         if (!IsPostBack)

@@ -22,5 +22,12 @@ namespace CompareCity.Control
             get { return string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name) ? "" : HttpContext.Current.User.Identity.Name; }
             private set { }
         }
+
+        private static string _anonRedirect = "~/Account/Login.aspx";
+        public static string AnonRedirect
+        {
+            get { return _anonRedirect; }
+            private set { }
+        }
     }
 }

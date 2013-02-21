@@ -309,8 +309,7 @@ public static class RankingControl
             }
         }
 
-        double score = scorer.CalculateScore();
-        return score;
+        return scorer.CalculateScore();
     }
 
     private static DataTable initDataTable(Dictionary<string, Type> columns)

@@ -12,9 +12,15 @@ namespace CompareCity.Model
         public DbSet<CityInfo> CityInfoes { get; set; }
         public DbSet<Ranking> Rankings { get; set; }
         public DbSet<RankingMember> RankingMembers { get; set; }
+        public DbSet<ScoringIdentifier> ScoringIdentifiers { get; set; }
 
         public DatabaseContext() : base("CompareCity")   
         {
+        }
+
+        public void initScoringIds()
+        {
+            // TODO: Code scoring identifier init.
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -27,6 +33,7 @@ namespace CompareCity.Model
             modelBuilder.Entity<RuleSet>().HasKey(rs => rs.RuleSetId);
             modelBuilder.Entity<Ranking>().HasKey(r => r.RankingId);
             modelBuilder.Entity<RankingMember>().HasKey(m => m.RankingMemberId);
+            modelBuilder.Entity<ScoringIdentifier>().HasKey(s => s.Name);
 
             // Define required fields.
 

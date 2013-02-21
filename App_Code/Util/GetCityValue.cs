@@ -12,14 +12,52 @@ namespace CompareCity.Util
     /// </summary>
     public class GetCityValue
     {
-        public enum ValueIds { CitySize, AvailableFunds, LifeExpectancy, EducationQuotient };
+        public enum ValueIds { 
+            CitySize, 
+            AvailableFunds, 
+            LifeExpectancy, 
+            EducationQuotient, 
+            WorkforcePercentage, 
+            YearOfFounding,
+            DaysSinceFounding,
+            NeighborSize1,
+            NeighborSize2,
+            NeighborSize3,
+            NeighborSize4,
+            PolicePower,
+            FirePower,
+            Pollution,
+            Traffic,
+            Crime,
+            PropertyValue,
+            PopulationDensity, 
+            PopulationGrowth
+        };
 
         private static readonly Dictionary<string, ValueIds> _cityValueIdentifiers = new Dictionary<string, ValueIds> 
         {
-            {"citysize", ValueIds.CitySize},
-            {"availablefunds", ValueIds.AvailableFunds},
-            {"lifeexpectancy", ValueIds.LifeExpectancy},
-            {"educationquotent", ValueIds.EducationQuotient}
+            {"citySize", ValueIds.CitySize},
+            {"availableFunds", ValueIds.AvailableFunds},
+            {"lifeExpectancy", ValueIds.LifeExpectancy},
+            {"educationQuotent", ValueIds.EducationQuotient},
+            {"workforcePercentage", ValueIds.WorkforcePercentage},
+            {"yearOfFounding", ValueIds.YearOfFounding},
+            {"daysSinceFounding",ValueIds.DaysSinceFounding},
+            //{"industryDemand",ValueIds}, // function?
+            //{"industryTaxRate",ValueIds}, // function?
+            //{"industryRatio",ValueIds}, // function?
+            {"neighbor1Size",ValueIds.NeighborSize1},
+            {"neighbor2Size",ValueIds.NeighborSize2},
+            {"neighbor3Size",ValueIds.NeighborSize3},
+            {"neighbor4Size",ValueIds.NeighborSize4},
+            {"policePower",ValueIds.PolicePower},
+            {"firePower",ValueIds.FirePower},
+            {"pollution",ValueIds.Pollution},
+            {"traffic",ValueIds.Traffic},
+            {"crime", ValueIds.Crime},
+            {"propertyValue", ValueIds.PropertyValue},
+            {"populationDensity", ValueIds.PopulationDensity},
+            {"populationGrowth", ValueIds.PopulationGrowth}
         };
 
         public static bool IsValueIdentifier(string canditateString)
