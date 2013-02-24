@@ -7,26 +7,18 @@ using System.ComponentModel.DataAnnotations;
 /// </summary>
 public class ScoringIdentifier
 {
+    /// <summary>
+    /// Scoring identifier name; identifiers are referred to by name.
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// A shorter (theoretically more user-friendly) identifier name.
+    /// </summary>
+    public string ShortName { get; set; }
 
     /// <summary>
     /// A short description of the identifier, for display to user.
     /// </summary>
     public string Descrition { get; set; }
-
-    /// <summary>
-    /// The data type of the value refereced by this identifier. 
-    /// </summary>
-    public Type DataType { get; set; }
-
-    /// <summary>
-    /// Set to true if this scoring identifier is a function requiring an input parameter.
-    /// </summary>
-    public bool IsFunction { get; set; }
-
-    /// <summary>
-    /// The type expected as an input parameter.
-    /// Only applies if <see cref="IsFunction"/> is true.
-    /// </summary>
-    public Type InputParameterType { get; set; }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
 using CityParser2000;
+using CompareCity.Model;
 
 namespace CompareCity.Util
 {
@@ -12,6 +14,9 @@ namespace CompareCity.Util
     /// </summary>
     public class GetCityValue
     {
+        // TODO: Context pool? 
+        private static DatabaseContext db = new DatabaseContext();
+
         public enum ValueIds { 
             CitySize, 
             AvailableFunds, 
@@ -50,8 +55,6 @@ namespace CompareCity.Util
             {"neighbor2Size",ValueIds.NeighborSize2},
             {"neighbor3Size",ValueIds.NeighborSize3},
             {"neighbor4Size",ValueIds.NeighborSize4},
-            {"policePower",ValueIds.PolicePower},
-            {"firePower",ValueIds.FirePower},
             {"pollution",ValueIds.Pollution},
             {"traffic",ValueIds.Traffic},
             {"crime", ValueIds.Crime},
@@ -62,7 +65,7 @@ namespace CompareCity.Util
 
         public static bool IsValueIdentifier(string canditateString)
         {
-            return _cityValueIdentifiers.Keys.Contains(canditateString);
+            return db.ScoringIdentifiers.Any(s => s.Name == canditateString);
         }
 
         public static double GetValue(ValueIds valueId, City city)

@@ -1,5 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 
+using CompareCity.Control;
 
 namespace CompareCity.Model
 {
@@ -14,13 +16,9 @@ namespace CompareCity.Model
         public DbSet<RankingMember> RankingMembers { get; set; }
         public DbSet<ScoringIdentifier> ScoringIdentifiers { get; set; }
 
-        public DatabaseContext() : base("CompareCity")   
+        public DatabaseContext()
+            : base("CompareCity")
         {
-        }
-
-        public void initScoringIds()
-        {
-            // TODO: Code scoring identifier init.
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -28,7 +26,7 @@ namespace CompareCity.Model
             base.OnModelCreating(modelBuilder);
 
             // Define primary keys.
-            
+
             modelBuilder.Entity<CityInfo>().HasKey(ci => ci.CityInfoId);
             modelBuilder.Entity<RuleSet>().HasKey(rs => rs.RuleSetId);
             modelBuilder.Entity<Ranking>().HasKey(r => r.RankingId);
@@ -52,6 +50,8 @@ namespace CompareCity.Model
             modelBuilder.Entity<RankingMember>().Property(m => m.RankingId).IsRequired();
             modelBuilder.Entity<RankingMember>().Property(m => m.CityInfoId).IsRequired();
             modelBuilder.Entity<RankingMember>().Property(m => m.User).IsRequired();
+
+            modelBuilder.Entity<ScoringIdentifier>().Property(s => s.ShortName).IsRequired();
         }
     }
 }

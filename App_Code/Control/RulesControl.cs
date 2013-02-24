@@ -11,7 +11,6 @@ namespace CompareCity.Control
 {
     public class RulesControl
     {
-
         // TODO: Will having a single static db connection variable slow things to a crawl when there are multiple users? 
         //       Maybe not, but more efficient persistance access also couldn't hurt. 
         private static DatabaseContext db = new DatabaseContext();
