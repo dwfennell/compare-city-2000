@@ -8,87 +8,99 @@
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>citySize</Name>
+    <ShortName>cs</ShortName>
+    <Description>Total city size (residential, commercial, industrial).</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>lifeExpectancy</Name>
+    <ShortName>le</ShortName>
+    <Description>Life expectacy for working-age sims. A measure of citywide health.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>educationQuotent</Name>
+    <ShortName>eq</ShortName>
+    <Description>Measures how educated your sims are.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>workforcePercentage</Name>
+    <ShortName>wf%</ShortName>
+    <Description>Percentage of sims aged 20-55 in your city.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>yearOfFounding</Name>
+    <ShortName>yf</ShortName>
+    <Description>The year your city was founded (1900, 1950, 2000 or 2050).</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>daysSinceFounding</Name>
+    <ShortName>days</ShortName>
+    <Description>Number of sunrises your city has seen (1 month = 25 days, always).</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>neighborSize1</Name>
+    <ShortName>ns1</ShortName>
+    <Description>City size of your first neighbor.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>neighborSize2</Name>
+    <ShortName>ns2</ShortName>
+    <Description>City size of your second neighbor.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>neighborSize3</Name>
+    <ShortName>ns3</ShortName>
+    <Description>City size of your third neighbor.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>neighborSize4</Name>
+    <ShortName>ns4</ShortName>
+    <Description>City size of your forth neighbor.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>pollution</Name>
+    <ShortName>smog</ShortName>
+    <Description>A measure of pollution in your city.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>traffic</Name>
+    <ShortName>tfc</ShortName>
+    <Description>Measures the effectiveness of your transportation system.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>crime</Name>
+    <ShortName>crm</ShortName>
+    <Description>A measure of crime in your city.</Description>
   </Identifier>
 
   <Identifier>
-    <Name></Name>
-    <ShortName></ShortName>
-    <Description></Description>
+    <Name>propertyValue</Name>
+    <ShortName>val</ShortName>
+    <Description>Average city property value.</Description>
+  </Identifier>
+
+  <Identifier>
+    <Name>populationDensity</Name>
+    <ShortName>dense</ShortName>
+    <Description>Average population density in your city.</Description>
+  </Identifier>
+
+  <Identifier>
+    <Name>populationGrowth</Name>
+    <ShortName>grow</ShortName>
+    <Description>Average population growth in your city.</Description>
   </Identifier>
 
 </ScoringIdentifiers>
