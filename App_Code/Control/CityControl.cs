@@ -24,7 +24,7 @@ namespace CompareCity.Control
             var parser = new CityParser();
             City parserCity = parser.ParseCityFile(cityFileStream, true);
 
-            storeCity(parserCity, username, generateCityFilepath(username, filename, serverRoot));
+            storeCity(parserCity, username, generateCityFilepath(username, filename, serverRoot), cityFileStream);
         }
 
         public static void DeleteCity(int cityId)
@@ -45,7 +45,7 @@ namespace CompareCity.Control
             return query;
         }
 
-        private static void storeCity(City parserCity, string username, string filepath)
+        private static void storeCity(City parserCity, string username, string filepath, Stream cityFileStream)
         {
 
             // Fetch relevant data from parserCity.
@@ -64,15 +64,20 @@ namespace CompareCity.Control
                 Uploaded = DateTime.Now
             };
 
+            
+
             db.CityInfoes.Add(city);
-            db.SaveChanges();
 
             // TODO: Serialize and store parserCity.
 
-            // TODO: Is this necessary anymore? Does CityParser reset its own stream?
-            // Save .sc2 file on server.
-            //CityFileUpload.PostedFile.InputStream.Position = 0;
-            //CityFileUpload.PostedFile.SaveAs(filepath);
+            // Save .sc2 file on the server.
+            cityFileStream.Position = 0;
+            using (Stream outputStream = File.OpenWrite(filepath))
+            {
+                cityFileStream.CopyTo(outputStream);
+            }
+            
+            db.SaveChanges();
         }
 
 

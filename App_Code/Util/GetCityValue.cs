@@ -41,26 +41,26 @@ namespace CompareCity.Util
 
         private static readonly Dictionary<string, ValueIds> _cityValueIdentifiers = new Dictionary<string, ValueIds> 
         {
-            {"citySize", ValueIds.CitySize},
-            {"availableFunds", ValueIds.AvailableFunds},
-            {"lifeExpectancy", ValueIds.LifeExpectancy},
-            {"educationQuotent", ValueIds.EducationQuotient},
-            {"workforcePercentage", ValueIds.WorkforcePercentage},
-            {"yearOfFounding", ValueIds.YearOfFounding},
-            {"daysSinceFounding",ValueIds.DaysSinceFounding},
+            {"citysize", ValueIds.CitySize},
+            {"availablefunds", ValueIds.AvailableFunds},
+            {"lifeexpectancy", ValueIds.LifeExpectancy},
+            {"educationquotent", ValueIds.EducationQuotient},
+            {"workforcepercentage", ValueIds.WorkforcePercentage},
+            {"yearoffounding", ValueIds.YearOfFounding},
+            {"dayssincefounding",ValueIds.DaysSinceFounding},
             //{"industryDemand",ValueIds}, // function?
             //{"industryTaxRate",ValueIds}, // function?
             //{"industryRatio",ValueIds}, // function?
-            {"neighbor1Size",ValueIds.NeighborSize1},
-            {"neighbor2Size",ValueIds.NeighborSize2},
-            {"neighbor3Size",ValueIds.NeighborSize3},
-            {"neighbor4Size",ValueIds.NeighborSize4},
+            {"neighbor1size",ValueIds.NeighborSize1},
+            {"neighbor2size",ValueIds.NeighborSize2},
+            {"neighbor3size",ValueIds.NeighborSize3},
+            {"neighbor4size",ValueIds.NeighborSize4},
             {"pollution",ValueIds.Pollution},
             {"traffic",ValueIds.Traffic},
             {"crime", ValueIds.Crime},
-            {"propertyValue", ValueIds.PropertyValue},
-            {"populationDensity", ValueIds.PopulationDensity},
-            {"populationGrowth", ValueIds.PopulationGrowth}
+            {"propertyvalue", ValueIds.PropertyValue},
+            {"populationdensity", ValueIds.PopulationDensity},
+            {"populationgrowth", ValueIds.PopulationGrowth}
         };
 
         public static bool IsValueIdentifier(string canditateString)
