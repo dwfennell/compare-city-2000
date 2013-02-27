@@ -1,12 +1,15 @@
-﻿<%@ Page Title="Rank Cities" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="CompareCity.aspx.cs" Inherits="CompareCities" %>
+﻿ <%@ Page Title="Rank Cities" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="CompareCity.aspx.cs" Inherits="CompareCities" %>
 
 <asp:Content ID="FeaturedContent" ContentPlaceHolderID="FeaturedContent" Runat="Server">
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" ViewStateMode="Enabled" Runat="Server">
+
+    <%-- Ranking display table --%>
+
     <table> 
         <tr>
-            <th>City Ranking <asp:Label ID="RankingNameLabel" Text="" runat="server" /></th>
+            <th class="table-heading">City Ranking <asp:Label ID="RankingNameLabel" Text="" runat="server" /></th>
         </tr>
         <tr>
             <td colspan="3">
@@ -14,19 +17,30 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3"><span class="gridview-subheading">Cities</span></td>
-        </tr>
-        <tr>
             <td colspan="3">
                 <asp:GridView 
                     ID="CityRankingGridView"
                     AllowSorting="true" 
+                    CssClass="city-display-gridview"
+                    RowStyle-CssClass="city-display-gridview-row"
+                    HeaderStyle-CssClass="city-display-gridview-header"
                     runat="server">
                     <EmptyDataTemplate>
                         <span class="gridview-emptydata">--search below for cities to rank--</span>
                     </EmptyDataTemplate>
                 </asp:GridView>
             </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <asp:Button ID="CalcRankingButton" Text="Rank Cities!" OnClick="CalcRankingButton_Click" CssClass="ranking-button"  runat="server"/>
+                <asp:Label ID="CalcRankingStatusLabel" Text="" ForeColor="Red" runat="server" />
+            </td>
+        </tr>
+        <tr></tr>
+        
+        <tr>
+            <th class="table-subheading">Ranking Formula</th>
         </tr>
         <tr>
             <td colspan="2">
@@ -48,36 +62,12 @@
                 <asp:Button ID="LoadRuleSetButton" Text="Load Rule Set" OnClick="LoadRuleSetButton_Click" CssClass="ranking-button"  runat="server" />
             </td>
         </tr>
-        <tr>
-            <td></td>
-            <td>
-                <asp:Button ID="CalcRankingButton" Text="Rank Cities!" OnClick="CalcRankingButton_Click" CssClass="ranking-button"  runat="server"/>
-                <asp:Label ID="CalcRankingStatusLabel" Text="" ForeColor="Red" runat="server" />
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <asp:Button ID="SaveButton" Text="Save Ranking" OnClick="SaveButton_Click" CssClass="ranking-button"  runat="server"/>
-                <asp:Label ID="SaveStatusLabel" Text="" runat="server" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <asp:DropDownList ID="RankingNameList" runat="server"/>
-            </td>
-            <td>
-                <asp:Button ID="LoadRankButton" Text="Load Ranking" OnClick="LoadRankButton_Click" runat="server" CssClass="ranking-button" />
-                <asp:Label ID="LoadStatusLabel" Text="" runat="server" />
-            </td>
-            <td>
-                <asp:Button ID="NewRankButton" Text="New Ranking" OnClick="NewRankButton_Click" runat="server" CssClass="ranking-button" />
-            </td>
-        </tr>
     </table>
 
+    <%-- City search table --%>
+
     <table class="FindCitiesTable">
-        <tr><th>Find Cities</th></tr>
+        <tr><th>Add Cities</th></tr>
         <tr>
             <td>
                 <span class="textbox-preamble" >User:</span>
@@ -129,4 +119,38 @@
             </td>
         </tr>
     </table>
+
+    <%-- Ranking Save/Load --%>
+
+    <table>
+        <tr>
+            <th class="table-subheading" colspan="2">Save / Load Rankings</th>
+        </tr>
+
+        <tr>
+            <td>
+                <asp:Button ID="SaveButton" Text="Save Ranking" OnClick="SaveButton_Click" CssClass="ranking-button"  runat="server"/>
+            </td>
+            <td>
+                <asp:Label ID="SaveStatusLabel" Text="" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <asp:Button ID="LoadRankButton" Text="Load Ranking" OnClick="LoadRankButton_Click" runat="server" CssClass="ranking-button" />
+                <span class="colon">:</span>
+            </td>
+            <td>
+                <asp:DropDownList ID="RankingNameList" runat="server"/>
+                <asp:Label ID="LoadStatusLabel" Text="" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <asp:Button ID="NewRankButton" Text="New Ranking" OnClick="NewRankButton_Click" runat="server" CssClass="ranking-button" />
+            </td>
+        </tr>
+    </table>
+
+
 </asp:Content>
