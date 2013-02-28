@@ -14,7 +14,7 @@ public partial class CompareCities : System.Web.UI.Page
     #region private constants
 
     private static readonly string rankingListDefaultText = "--Select Ranking--";
-    private static readonly string ruleSetListDefaultText = "--Select Rule Set--";
+    private static readonly string ruleSetListDefaultText = "--Select Formula--";
     
     private static readonly int citySearchIdIndex = 5;
 
@@ -89,8 +89,8 @@ public partial class CompareCities : System.Web.UI.Page
     {
         if (ViewState["ruleSetId"] == null)
         {
-            // No rule set selected.
-            CalcRankingStatusLabel.Text = "Please select a rule set.";
+            // No formula (rule set) selected.
+            CalcRankingStatusLabel.Text = "Please select a formula.";
             return;
         }
 
@@ -206,10 +206,10 @@ public partial class CompareCities : System.Web.UI.Page
         }
         catch (InvalidOperationException)
         {
-            // Rule set not found.
+            // Formula (Rule set) not found.
             setRuleSetTextColor(false);
-            RuleSetLabel.Text = "Rule set not found!";
-            RuleFormulaLabel.Text = "Rule set not found!";
+            RuleSetLabel.Text = "Formula not found!";
+            RuleFormulaLabel.Text = "Formula not found!";
 
             ViewState["ruleSetId"] = null;
             return;

@@ -39,6 +39,8 @@ public static class RankingControl
 
     private const int rankingCityIdColumn = 0;
     private const int rankingScoreColumn = 3;
+
+    private const string _defaultRankingName = "";
     #endregion
 
     public enum RuleSetKeys { Name, Formula };
@@ -223,7 +225,7 @@ public static class RankingControl
 
     public static string GetUntitledRankingName()
     {
-        return "Untitled Ranking";
+        return _defaultRankingName;
     }
     #endregion
 

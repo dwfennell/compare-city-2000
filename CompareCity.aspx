@@ -46,25 +46,18 @@
         <tr></tr>
 
         <tr>
-            <th class="table-subheading">Ranking Formula</th>
+            <th class="table-subheading">Formula - <asp:Label ID="RuleSetLabel" runat="server"/></th>
         </tr>
         <tr>
             <td colspan="2">
-                <span class="label-preamble">Rule Set: </span>
-                <asp:Label ID="RuleSetLabel" Text="-no rule set loaded-" runat="server" />
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <span class="label-preamble">Formula: </span>
-                <asp:Label ID="RuleFormulaLabel" Text="-no rule set loaded-" runat="server" />
+                <asp:Label ID="RuleFormulaLabel" Text="-no formula loaded-" runat="server" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
                 <asp:Button
                     ID="LoadRuleSetButton"
-                    Text="Load Rule Set"
+                    Text="Load Formula"
                     OnClick="LoadRuleSetButton_Click"
                     CssClass="ranking-button"
                     runat="server" />
@@ -78,7 +71,7 @@
 
     <table class="FindCitiesTable">
         <tr>
-            <th class="table-subheading">Add Cities</th>
+            <th class="table-subheading">Search for Cities</th>
         </tr>
         <tr>
             <td class="checkbox-wrapper">

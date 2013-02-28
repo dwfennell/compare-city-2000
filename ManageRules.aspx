@@ -8,7 +8,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" Runat="Server">
     <table>
         <tr>
-            <th colspan="2">Create Scoring Rules</th>
+            <th colspan="2">Create Formula</th>
         </tr>
         <tr>
             <td></td>
@@ -33,7 +33,7 @@
             <td></td>
         </tr>
         <tr>
-            <th colspan="3">Your Rule Sets</th>
+            <th colspan="3">Your Formulas</th>
         </tr>
         <tr>
             <td colspan="3">
@@ -54,7 +54,7 @@
                         <asp:BoundField DataField="RuleSetName" HeaderText="Name" SortExpression="RuleSetName" />
                         <asp:BoundField DataField="Formula" HeaderText="Formula" SortExpression="Formula" />
                         <asp:BoundField DataField="Valid" HeaderText="Valid?" SortExpression="Valid" />
-                        <asp:ButtonField ButtonType="Link" Text="Copy to edit area" CommandName="CopyFormula"/>
+                        <asp:ButtonField ButtonType="Link" Text="Copy Formula" CommandName="CopyFormula"/>
                     </Columns>
                 </asp:GridView>
             </td>

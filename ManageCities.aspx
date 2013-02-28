@@ -32,9 +32,9 @@
         <Columns>
             <asp:BoundField DataField="CityName" HeaderText="City Name" SortExpression="CityName" />
             <asp:BoundField DataField="Mayor" HeaderText="Mayor" SortExpression="Mayor" />
-            <asp:BoundField DataField="CitySize" HeaderText="Pop" SortExpression="CitySize" />
+            <asp:BoundField DataField="CitySize" HeaderText="Size" SortExpression="CitySize" />
             <asp:BoundField DataField="YearOfFounding" HeaderText="Founded" SortExpression="YearOfFounding" />
-            <asp:BoundField DataField="DaysSinceFounding" HeaderText="Age (Sim Days)" SortExpression="DaysSinceFounding" />
+            <asp:BoundField DataField="DaysSinceFounding" HeaderText="Age (Days)" SortExpression="DaysSinceFounding" />
             <asp:BoundField DataField="AvailableFunds" HeaderText="Cashflow" SortExpression="AvailableFunds" />
             <asp:BoundField DataField="LifeExpectancy" HeaderText="Life Expectancy" SortExpression="LifeExpectancy" />
             <asp:BoundField DataField="EducationQuotent" HeaderText="EQ" SortExpression="EducationQuotent" />
