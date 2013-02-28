@@ -23,8 +23,8 @@
                     ID="CityRankingGridView"
                     AllowSorting="true"
                     CssClass="city-display-gridview"
-                    RowStyle-CssClass="city-display-gridview-row"
-                    HeaderStyle-CssClass="city-display-gridview-header"
+                    RowStyle-CssClass="gridview-row" 
+                    HeaderStyle-CssClass="gridview-header-row"
                     runat="server">
                     <EmptyDataTemplate>
                         <span class="gridview-emptydata">--search below for cities to rank--</span>
@@ -34,7 +34,12 @@
         </tr>
         <tr>
             <td colspan="2">
-                <asp:Button ID="CalcRankingButton" Text="Rank Cities!" OnClick="CalcRankingButton_Click" CssClass="ranking-button" runat="server" />
+                <asp:Button
+                    ID="CalcRankingButton"
+                    Text="Rank Cities!"
+                    OnClick="CalcRankingButton_Click"
+                    CssClass="ranking-button"
+                    runat="server" />
                 <asp:Label ID="CalcRankingStatusLabel" Text="" ForeColor="Red" runat="server" />
             </td>
         </tr>
@@ -57,7 +62,12 @@
         </tr>
         <tr>
             <td colspan="2">
-                <asp:Button ID="LoadRuleSetButton" Text="Load Rule Set" OnClick="LoadRuleSetButton_Click" CssClass="ranking-button" runat="server" />
+                <asp:Button
+                    ID="LoadRuleSetButton"
+                    Text="Load Rule Set"
+                    OnClick="LoadRuleSetButton_Click"
+                    CssClass="ranking-button"
+                    runat="server" />
                 <span class="colon">:</span>
                 <asp:DropDownList ID="ScoringRulesList" runat="server" />
             </td>
@@ -71,42 +81,43 @@
             <th class="table-subheading">Add Cities</th>
         </tr>
         <tr>
-            <td>
+            <td class="checkbox-wrapper">
                 <asp:CheckBox
                     ID="CitySearchOnlyMeCheckBox"
                     Checked="false"
                     AutoPostBack="true"
-                    Text="Only My Cities"
+                    Text="Only My Cities "
                     OnCheckedChanged="CitySearchOnlyMeCheckBox_CheckedChanged"
                     CssClass="city-search-checkbox"
                     runat="server" />
             </td>
-            <td>
+            <td class="checkbox-wrapper">
                 <asp:CheckBox
                     ID="CitySearchUserCheckBox"
                     Checked="true"
                     AutoPostBack="true"
-                    Text="All Users"
+                    Text="All Users "
                     OnCheckedChanged="CitySearchUserCheckBox_CheckedChanged"
                     CssClass="city-search-checkbox"
                     runat="server" />
             </td>
-            <td>
+            <td class="checkbox-wrapper">
                 <asp:CheckBox
                     ID="CitySearchCityNameCheckBox"
                     Checked="true"
                     AutoPostBack="true"
-                    Text="All Cities"
+                    Text="All Cities "
                     OnCheckedChanged="CitySearchCityNameCheckBox_CheckedChanged"
                     CssClass="city-search-checkbox"
                     runat="server" />
+
             </td>
         </tr>
     </table>
     <table>
         <tr>
             <td>
-                <asp:Label ID="CitySearchUserLabel" Text="User:" Visible="false" runat="server" />
+                <asp:Label ID="CitySearchUserLabel" Text="User: " Visible="false" runat="server" />
             </td>
             <td>
                 <asp:TextBox ID="CitySearchUserTextBox" Visible="false" Enabled="false" runat="server" />
@@ -114,7 +125,7 @@
         </tr>
         <tr>
             <td>
-                <asp:Label ID="CitySearchCityNameLabel" Text="City Name:" Visible="false" runat="server" />
+                <asp:Label ID="CitySearchCityNameLabel" Text="City Name: " Visible="false" runat="server" />
             </td>
             <td>
                 <asp:TextBox ID="CitySeachCityNameTextBox" Enabled="false" Visible="false" runat="server" />
@@ -122,7 +133,12 @@
         </tr>
         <tr>
             <td colspan="3">
-                <asp:Button ID="FindCitiesButton" Text="Find Cities" OnClick="FindCitiesButton_Click" runat="server" CssClass="ranking-button" />
+                <asp:Button
+                    ID="FindCitiesButton"
+                    Text="Find Cities"
+                    OnClick="FindCitiesButton_Click"
+                    runat="server"
+                    CssClass="ranking-button" />
             </td>
         </tr>
         <tr>
@@ -130,6 +146,8 @@
                 <asp:GridView
                     ID="CitySearchGridView"
                     AllowPaging="true"
+                    RowStyle-CssClass="gridview-row" 
+                    HeaderStyle-CssClass="gridview-header-row"
                     runat="server"
                     OnRowCommand="CitySearchGridView_RowCommand">
                     <Columns>
@@ -155,7 +173,13 @@
         </tr>
         <tr>
             <td>
-                <asp:Button ID="LoadRankButton" Text="Load Ranking" OnClick="LoadRankButton_Click" runat="server" CssClass="ranking-button" />
+                <asp:Button 
+                    ID="LoadRankButton" 
+                    Text="Load Ranking" 
+                    OnClick="LoadRankButton_Click" 
+                    runat="server" 
+                    CssClass="ranking-button" />
+
                 <span class="colon">:</span>
                 <asp:DropDownList ID="RankingNameList" runat="server" />
                 <asp:Label ID="LoadStatusLabel" Text="" runat="server" />

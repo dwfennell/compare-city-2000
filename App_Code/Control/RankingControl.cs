@@ -33,7 +33,7 @@ public static class RankingControl
     private static readonly Dictionary<string, Type> rankingMemberTableColumns = new Dictionary<string, Type>
     {
         {"City", typeof(string)},
-        {"City-Score", typeof(double)},
+        {"Score", typeof(double)},
         {"User", typeof(string)}
     };
 
@@ -282,7 +282,6 @@ public static class RankingControl
         {
             query = query.Where(c => c.CityName.StartsWith(cityNamePattern));
         }
-
 
         // Construct table from search data. 
         
