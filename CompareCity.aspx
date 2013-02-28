@@ -21,7 +21,6 @@
             <td colspan="3">
                 <asp:GridView
                     ID="CityRankingGridView"
-                    AllowSorting="true"
                     CssClass="city-display-gridview"
                     RowStyle-CssClass="gridview-row" 
                     HeaderStyle-CssClass="gridview-header-row"
