@@ -15,7 +15,7 @@ namespace CompareCity.Control
             private set { }
         }
 
-        private static string _anonRedirect = "~/Account/Login.aspx";
+        private static string _anonRedirect = "~/AnonDefault.aspx";
         public static string AnonRedirect
         {
             get { return _anonRedirect; }

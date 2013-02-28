@@ -62,7 +62,7 @@
                 <nav>
                     <ul id="menu">                        
                         <li><a runat="server" href="~/ManageCities.aspx" class="main-nav-link">Upload City</a></li>
-                        <li><a runat="server" href="~/ManageRules.aspx" class="main-nav-link">Make Formula</a></li>
+                        <li><a runat="server" href="~/ManageRules.aspx" class="main-nav-link">Write Formula</a></li>
                         <li><a runat="server" href="~/CompareCity.aspx" class="main-nav-link">Score Cities!</a></li>
                     </ul>
                 </nav>

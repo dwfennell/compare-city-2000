@@ -1,11 +1,11 @@
-﻿<%@ Page Title="Compare City" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Title="Compare City 2000" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
 <asp:Content runat="server" ID="FeaturedContent" ContentPlaceHolderID="FeaturedContent">
     <section class="featured">
         <div class="content-wrapper">
             <hgroup class="title">
                 <h1><%: Title %>.</h1>
-                <h2></h2>
+                <h2>Inspired by Sim City 2000</h2>
             </hgroup>
             <p>
                 Compare Sim City 2000 cities!
@@ -15,19 +15,19 @@
 </asp:Content>
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
-    <h3>...</h3>
+    <h3>Getting Started:</h3>
     <ol class="round">
         <li class="one">
-            <h5>..</h5>
-            ..
+            <h5>Upload Cities</h5>
+            Upload your city so our servers can run through it with a fine-toothed comb.
         </li>
         <li class="two">
-            <h5>...</h5>
-            ...
+            <h5>Write a Scoring Formula</h5>
+            Tell our mainframe what makes your city the best, by writing a precise mathematical formulas!
         </li>
         <li class="three">
-            <h5>...</h5>
-            ...
+            <h5>Group Cities and Calculate Scores!</h5>
+            Group your cities together with other users' and claim your inevitable victory.
         </li>
     </ol>
 </asp:Content>
