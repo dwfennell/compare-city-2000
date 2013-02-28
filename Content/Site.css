@@ -352,7 +352,7 @@ aside {
 .textbox-preamble {
     font-size: 1.1em;
     text-align: right;
-    float: right;
+    /*float: right;*/
 }
 
 .gridview-subheading {

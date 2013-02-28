@@ -259,28 +259,33 @@ public static class RankingControl
 
     #region city search
 
-    public static DataTable GetCitySearchTable(bool doSearchAllUsers, string userPattern, bool doGetAllCities, string cityNamePattern)
+    public static DataTable GetCitySearchTable(string currentUser, bool doSearchAllUsers, bool onlyCurrentUser, string userPattern, bool doGetAllCities, string cityNamePattern)
     {
-        // Perform city search based on input parameters. 
+        // Build query from search conditions.
+
         IQueryable<CityInfo> query;
-        if (doSearchAllUsers && doGetAllCities)
+
+        // Set user conditions.
+        if (doSearchAllUsers)
         {
-            query = db.CityInfoes;
+            query = from c in db.CityInfoes select c;
         }
-        else if (doSearchAllUsers)
+        else if (onlyCurrentUser)
         {
-            query = db.CityInfoes.Where(c => c.CityName.StartsWith(cityNamePattern));
-        }
-        else if (doGetAllCities)
-        {
-            query = db.CityInfoes.Where(c => c.User.StartsWith(userPattern));
-        }
-        else
-        {
-            query = db.CityInfoes.Where(c => c.User.StartsWith(userPattern) && c.CityName.StartsWith(cityNamePattern));
+            query = from c in db.CityInfoes where c.User == currentUser select c;
+        } else {
+            query = from c in db.CityInfoes where c.User.StartsWith(userPattern) select c;
         }
 
-        // Form table from search data. 
+        // Set cityname conditions.
+        if (!doGetAllCities)
+        {
+            query = query.Where(c => c.CityName.StartsWith(cityNamePattern));
+        }
+
+
+        // Construct table from search data. 
+        
         DataTable citySearchTable = initDataTable(citySearchTableColumns);
 
         foreach (CityInfo city in query)

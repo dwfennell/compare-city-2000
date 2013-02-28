@@ -231,11 +231,12 @@ public partial class CompareCities : System.Web.UI.Page
     {
         // Gather search conditions.
         bool allUsers = CitySearchUserCheckBox.Checked;
+        bool onlyMe = CitySearchOnlyMeCheckBox.Checked;
         bool allCityNames = CitySearchCityNameCheckBox.Checked;
         string userPattern = CitySearchUserTextBox.Text.Trim();
         string cityNamePattern = CitySeachCityNameTextBox.Text.Trim();
 
-        DataTable cities = RankingControl.GetCitySearchTable(allUsers, userPattern, allCityNames, cityNamePattern);
+        DataTable cities = RankingControl.GetCitySearchTable(SiteControl.Username, allUsers, onlyMe, userPattern, allCityNames, cityNamePattern);
 
         // Display city search results
         bindToGridview(CitySearchGridView, cities);
@@ -284,7 +285,17 @@ public partial class CompareCities : System.Web.UI.Page
     /// <param name="e"></param>
     protected void CitySearchUserCheckBox_CheckedChanged(object sender, EventArgs e)
     {
-        CitySearchUserTextBox.Enabled = !CitySearchUserCheckBox.Checked;
+        bool boxChecked = CitySearchUserCheckBox.Checked;
+
+        CitySearchUserTextBox.Enabled = !boxChecked;
+        CitySearchUserTextBox.Visible = !boxChecked;
+
+        CitySearchUserLabel.Visible = !boxChecked;
+
+        if (boxChecked)
+        {
+            CitySearchOnlyMeCheckBox.Checked = false;
+        }
     }
 
     /// <summary>
@@ -295,7 +306,33 @@ public partial class CompareCities : System.Web.UI.Page
     /// <param name="e"></param>
     protected void CitySearchCityNameCheckBox_CheckedChanged(object sender, EventArgs e)
     {
-        CitySeachCityNameTextBox.Enabled = !CitySearchCityNameCheckBox.Checked;
+        bool boxChecked = CitySearchCityNameCheckBox.Checked;
+
+        CitySeachCityNameTextBox.Enabled = !boxChecked;
+        CitySeachCityNameTextBox.Visible = !boxChecked;
+
+        CitySearchCityNameLabel.Visible = !boxChecked;
+    }
+
+    /// <summary>
+    /// Event hanler for <c>CitySearchOnlyMeCheckBox</c> check changed.
+    /// If checked city search will search only current user's city.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void CitySearchOnlyMeCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        bool boxChecked = CitySearchOnlyMeCheckBox.Checked;
+
+        CitySearchUserTextBox.Enabled = !boxChecked;
+        CitySearchUserTextBox.Visible = !boxChecked;
+
+        CitySearchUserLabel.Visible = !boxChecked;
+
+        if (boxChecked)
+        {
+            CitySearchUserCheckBox.Checked = false;
+        }
     }
     #endregion
 
