@@ -165,6 +165,8 @@ public partial class CompareCities : System.Web.UI.Page
         ViewState["rankingId"] = null;
         ViewState["ruleSetId"] = null;
 
+        RankingNameTextBox.Text = "";
+
         // TODO: Centrailize initial label text.
         RuleSetLabel.Text = "";
         RuleFormulaLabel.Text = "";
@@ -363,13 +365,14 @@ public partial class CompareCities : System.Web.UI.Page
         {
             // Ranking does not yet exist.
             ViewState["rankingId"] = RankingControl.SaveNewRanking(SiteControl.Username, rankingName, ruleSetId);
-            populateRankingsList();
         }
         else
         {
             // Update existing ranking.
             RankingControl.SaveRanking((int)ViewState["rankingId"], rankingName, ruleSetId);
         }
+
+        populateRankingsList();
 
         return true;
     }
