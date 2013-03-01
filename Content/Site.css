@@ -12,7 +12,7 @@ body {
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
     margin: 0;
     padding: 0;
-    cursor: url(targetCursor.cur), url(Content/targetCursor.cur), default;
+    cursor: url(targetCursor2.cur), url(Content/targetCursor2.cur), default;
 }
 
 a {
