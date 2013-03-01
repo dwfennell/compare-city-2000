@@ -30,6 +30,8 @@
     {
         // Code that runs when an unhandled error occurs
 
+        // TODO: Uncomment line below.
+        //Response.Redirect(CompareCity.Control.SiteControl.ErrorRedirect);
     }
 
 </script>

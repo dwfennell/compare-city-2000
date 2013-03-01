@@ -137,14 +137,16 @@ namespace CompareCity.Control
             // Make sure all value identifiers are valid.
 
             string badIds = "";
-            foreach (string id in cityIds)
+            using (var db = new DatabaseContext())
             {
-                if (!GetCityValue.IsValueIdentifier(id))
+                foreach (string id in cityIds)
                 {
-                    badIds = badIds + id + " ";
+                    if (!GetCityValue.IsValueIdentifier(id, db))
+                    {
+                        badIds = badIds + id + " ";
+                    }
                 }
             }
-
             return badIds;
         }
 

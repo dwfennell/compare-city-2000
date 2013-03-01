@@ -112,20 +112,12 @@ public static class RankingControl
             List<RankingMember> rankingMembers = getRankingMembers(rankingId, db);
 
             CityInfo city;
-            City parsedCity;
             foreach (RankingMember rankingMember in rankingMembers)
             {
                 city = getCity(rankingMember.CityInfoId, db);
 
-                // Perform full city parse. 
-                // TODO: Refer to database values instead of re-parsing files.
-                using (FileStream cityStream = File.OpenRead(city.FilePath))
-                {
-                    parsedCity = parser.ParseCityFile(cityStream);
-                }
-
                 // Score city!
-                rankingMember.Score = scoreCity(parsedCity, formula);
+                rankingMember.Score = scoreCity(city, formula, db);
             }
             db.SaveChanges();
         }
@@ -337,18 +329,20 @@ public static class RankingControl
 
     #region private helper functions
 
-    private static double scoreCity(City city, string formula)
+    private static double scoreCity(CityInfo city, string formula, DatabaseContext db)
     {
         FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore();
         scorer.ScoringFormula = formula;
 
         // Load scoring values into scorer.
         List<string> scoringIdentifiers = FormulaScore.FormulaScore.FetchScoringIDs(formula);
+        double value;
         foreach (string scoringId in scoringIdentifiers)
         {
-            if (GetCityValue.IsValueIdentifier(scoringId)) 
+            if (GetCityValue.IsValueIdentifier(scoringId, db)) 
             {
-                scorer.AddScoringValue(scoringId, GetCityValue.GetValue(scoringId, city));
+                value = GetCityValue.GetValue(scoringId, city, db);
+                scorer.AddScoringValue(scoringId, value);
             }
         }
 

@@ -21,4 +21,10 @@ public class ScoringIdentifier
     /// A short description of the identifier, for display to user.
     /// </summary>
     public string Descrition { get; set; }
+
+    /// <summary>
+    /// The name of the corresponding <see cref="CityInfo"/> object property.
+    /// </summary>
+    public string PropertyName { get; set; }
+
 }

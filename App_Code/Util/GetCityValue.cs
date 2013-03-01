@@ -14,86 +14,29 @@ namespace CompareCity.Util
     /// </summary>
     public class GetCityValue
     {
-        // TODO: Context pool? 
-        private static DatabaseContext db = new DatabaseContext();
-
-        public enum ValueIds { 
-            CitySize, 
-            AvailableFunds, 
-            LifeExpectancy, 
-            EducationQuotient, 
-            WorkforcePercentage, 
-            YearOfFounding,
-            DaysSinceFounding,
-            NeighborSize1,
-            NeighborSize2,
-            NeighborSize3,
-            NeighborSize4,
-            PolicePower,
-            FirePower,
-            Pollution,
-            Traffic,
-            Crime,
-            PropertyValue,
-            PopulationDensity, 
-            PopulationGrowth
-        };
-
-        private static readonly Dictionary<string, ValueIds> _cityValueIdentifiers = new Dictionary<string, ValueIds> 
-        {
-            {"citysize", ValueIds.CitySize},
-            {"availablefunds", ValueIds.AvailableFunds},
-            {"lifeexpectancy", ValueIds.LifeExpectancy},
-            {"educationquotent", ValueIds.EducationQuotient},
-            {"workforcepercentage", ValueIds.WorkforcePercentage},
-            {"yearoffounding", ValueIds.YearOfFounding},
-            {"dayssincefounding",ValueIds.DaysSinceFounding},
-            //{"industryDemand",ValueIds}, // function?
-            //{"industryTaxRate",ValueIds}, // function?
-            //{"industryRatio",ValueIds}, // function?
-            {"neighbor1size",ValueIds.NeighborSize1},
-            {"neighbor2size",ValueIds.NeighborSize2},
-            {"neighbor3size",ValueIds.NeighborSize3},
-            {"neighbor4size",ValueIds.NeighborSize4},
-            {"pollution",ValueIds.Pollution},
-            {"traffic",ValueIds.Traffic},
-            {"crime", ValueIds.Crime},
-            {"propertyvalue", ValueIds.PropertyValue},
-            {"populationdensity", ValueIds.PopulationDensity},
-            {"populationgrowth", ValueIds.PopulationGrowth}
-        };
-
-        public static bool IsValueIdentifier(string canditateString)
+        public static bool IsValueIdentifier(string canditateString, DatabaseContext db)
         {
             return db.ScoringIdentifiers.Any(s => s.Name == canditateString);
         }
 
-        public static double GetValue(ValueIds valueId, City city)
+        public static double GetValue(string scoringIdName, CityInfo city, DatabaseContext db)
         {
-            switch (valueId)
-            {
-                case ValueIds.AvailableFunds:
-                    return city.GetMiscStatistic(City.MiscStatistic.AvailableFunds);
-                case ValueIds.CitySize:
-                    return city.GetMiscStatistic(City.MiscStatistic.CitySize);
-                case ValueIds.EducationQuotient:
-                    return city.GetMiscStatistic(City.MiscStatistic.EducationQuotent);
-                case ValueIds.LifeExpectancy:
-                    return city.GetMiscStatistic(City.MiscStatistic.LifeExpectancy);
-            }
-            return 0.0;
-        }
+            ScoringIdentifier scoringId = db.ScoringIdentifiers.Single(s => s.Name.Equals(scoringIdName));
 
-        public static double GetValue(string valueId, City city)
-        {
-            if (_cityValueIdentifiers.Keys.Contains(valueId))
+            object objVal = city.GetType().GetProperty(scoringId.PropertyName).GetValue(city);
+            double value;
+
+            if (objVal.GetType() == typeof(int))
             {
-                return GetValue(_cityValueIdentifiers[valueId], city);
+                value = (double)(int)objVal;
             }
             else
             {
-                return 0.0;
+                // Identifier validity should have already been checked, so this should be a double.
+                value = (double)objVal;
             }
+
+            return value;
         }
     }
 }

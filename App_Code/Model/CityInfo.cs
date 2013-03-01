@@ -42,6 +42,7 @@ namespace CompareCity.Model
         public int MediaDemand { get; set; }
         public int ElectronicsDemand { get; set; }
         public int ToursimDemand { get; set; }
+
         public int SteelTaxRate { get; set; }
         public int TextilesTaxRate { get; set; }
         public int PetrochemicalTaxRate { get; set; }

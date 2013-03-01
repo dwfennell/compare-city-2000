@@ -55,6 +55,7 @@ namespace CompareCity.Model
             string name = "";
             string shortName = "";
             string description = "";
+            string propertyName = "";
 
             reader.Read();
             while (!"Identifier".Equals(reader.Name))
@@ -70,6 +71,9 @@ namespace CompareCity.Model
                     case "Description":
                         description = reader.ReadElementContentAsString();
                         break;
+                    case "PropertyName":
+                        propertyName = reader.ReadElementContentAsString();
+                        break;
                 }
 
                 reader.Read();
@@ -79,7 +83,8 @@ namespace CompareCity.Model
             {
                 Name = name,
                 ShortName = shortName,
-                Descrition = description
+                Descrition = description,
+                PropertyName = propertyName
             };
         }
     }

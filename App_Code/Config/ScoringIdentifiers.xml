@@ -5,102 +5,408 @@
     <Name>availableFunds</Name>
     <ShortName>$$</ShortName>
     <Description>Cash money.</Description>
+    <PropertyName>AvailableFunds</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>citySize</Name>
     <ShortName>cs</ShortName>
     <Description>Total city size (residential, commercial, industrial).</Description>
+    <PropertyName>CitySize</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>lifeExpectancy</Name>
     <ShortName>le</ShortName>
     <Description>Life expectacy for working-age sims. A measure of citywide health.</Description>
+    <PropertyName>LifeExpectancy</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>educationQuotent</Name>
     <ShortName>eq</ShortName>
     <Description>Measures how educated your sims are.</Description>
+    <PropertyName>EducationQuotent</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>workforcePercentage</Name>
     <ShortName>wf%</ShortName>
     <Description>Percentage of sims aged 20-55 in your city.</Description>
+    <PropertyName>WorkforcePercentage</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>yearOfFounding</Name>
     <ShortName>yf</ShortName>
     <Description>The year your city was founded (1900, 1950, 2000 or 2050).</Description>
+    <PropertyName>YearOfFounding</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>daysSinceFounding</Name>
     <ShortName>days</ShortName>
     <Description>Number of sunrises your city has seen (1 month = 25 days, always).</Description>
+    <PropertyName>DaysSinceFounding</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>neighborSize1</Name>
     <ShortName>ns1</ShortName>
     <Description>City size of your first neighbor.</Description>
+    <PropertyName>NeighborSize1</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>neighborSize2</Name>
     <ShortName>ns2</ShortName>
     <Description>City size of your second neighbor.</Description>
+    <PropertyName>NeighborSize2</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>neighborSize3</Name>
     <ShortName>ns3</ShortName>
     <Description>City size of your third neighbor.</Description>
+    <PropertyName>NeighborSize3</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>neighborSize4</Name>
     <ShortName>ns4</ShortName>
     <Description>City size of your forth neighbor.</Description>
+    <PropertyName>NeighborSize4</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>pollution</Name>
     <ShortName>smog</ShortName>
     <Description>A measure of pollution in your city.</Description>
+    <PropertyName>Pollution</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>traffic</Name>
     <ShortName>tfc</ShortName>
     <Description>Measures the effectiveness of your transportation system.</Description>
+    <PropertyName>Traffic</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>crime</Name>
     <ShortName>crm</ShortName>
     <Description>A measure of crime in your city.</Description>
+    <PropertyName>Crime</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>propertyValue</Name>
     <ShortName>val</ShortName>
     <Description>Average city property value.</Description>
+    <PropertyName>PropertyValue</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>populationDensity</Name>
     <ShortName>dense</ShortName>
     <Description>Average population density in your city.</Description>
+    <PropertyName>PopulationDensity</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>populationGrowth</Name>
     <ShortName>grow</ShortName>
     <Description>Average population growth in your city.</Description>
+    <PropertyName>PopulationGrowth</PropertyName>
   </Identifier>
 
+  <Identifier>
+    <Name>numberOfTrees</Name>
+    <ShortName>tree</ShortName>
+    <Description></Description>
+    <PropertyName>NumberOfTrees</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>residentialDemand</Name>
+    <ShortName>rd</ShortName>
+    <Description></Description>
+    <PropertyName>ResidentialDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>commercialDemand</Name>
+    <ShortName>cd</ShortName>
+    <Description></Description>
+    <PropertyName>CommercialDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>industrialDemand</Name>
+    <ShortName>id</ShortName>
+    <Description></Description>
+    <PropertyName>IndustrialDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>residentialSize</Name>
+    <ShortName>pop</ShortName>
+    <Description></Description>
+    <PropertyName>ResidentialSize</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>commercialSize</Name>
+    <ShortName>cpop</ShortName>
+    <Description></Description>
+    <PropertyName>CommercialSize</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>industrialSize</Name>
+    <ShortName>ipop</ShortName>
+    <Description></Description>
+    <PropertyName>IndustrialSize</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:SteelAndMining</Name>
+    <ShortName>ids</ShortName>
+    <Description></Description>
+    <PropertyName>SteelDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Textiles</Name>
+    <ShortName>idtx</ShortName>
+    <Description></Description>
+    <PropertyName>TextilesDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Petrochemical</Name>
+    <ShortName>idp</ShortName>
+    <Description></Description>
+    <PropertyName>PetrochemicalDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Food</Name>
+    <ShortName>idfd</ShortName>
+    <Description></Description>
+    <PropertyName>FoodDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Construction</Name>
+    <ShortName>idc</ShortName>
+    <Description></Description>
+    <PropertyName>ConstructionDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Automotive</Name>
+    <ShortName>idat</ShortName>
+    <Description></Description>
+    <PropertyName>AutomotiveDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Aerospace</Name>
+    <ShortName>idas</ShortName>
+    <Description></Description>
+    <PropertyName>AerospaceDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Finance</Name>
+    <ShortName>idfn</ShortName>
+    <Description></Description>
+    <PropertyName>FinanceDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Media</Name>
+    <ShortName>idm</ShortName>
+    <Description></Description>
+    <PropertyName>MediaDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Electronics</Name>
+    <ShortName>ide</ShortName>
+    <Description></Description>
+    <PropertyName>ElectronicsDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indDemand:Tourism</Name>
+    <ShortName>idtr</ShortName>
+    <Description></Description>
+    <PropertyName>ToursimDemand</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:SteelAndMining</Name>
+    <ShortName>its</ShortName>
+    <Description></Description>
+    <PropertyName>SteelTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Textiles</Name>
+    <ShortName>ittx</ShortName>
+    <Description></Description>
+    <PropertyName>TextilesTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Petrochemical</Name>
+    <ShortName>itp</ShortName>
+    <Description></Description>
+    <PropertyName>PetrochemicalTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Food</Name>
+    <ShortName>itfd</ShortName>
+    <Description></Description>
+    <PropertyName>FoodTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Construction</Name>
+    <ShortName>itc</ShortName>
+    <Description></Description>
+    <PropertyName>ConstructionTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Automotive</Name>
+    <ShortName>itat</ShortName>
+    <Description></Description>
+    <PropertyName>AutomotiveTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Aerospace</Name>
+    <ShortName>itas</ShortName>
+    <Description></Description>
+    <PropertyName>AerospaceTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Finance</Name>
+    <ShortName>itfn</ShortName>
+    <Description></Description>
+    <PropertyName>FinanceTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Media</Name>
+    <ShortName>itm</ShortName>
+    <Description></Description>
+    <PropertyName>MediaTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Electronics</Name>
+    <ShortName>ite</ShortName>
+    <Description></Description>
+    <PropertyName>ElectronicsTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indTaxRate:Tourism</Name>
+    <ShortName>ittr</ShortName>
+    <Description></Description>
+    <PropertyName>ToursimTaxRate</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:SteelAndMining</Name>
+    <ShortName>irs</ShortName>
+    <Description></Description>
+    <PropertyName>SteelRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Textiles</Name>
+    <ShortName>irtx</ShortName>
+    <Description></Description>
+    <PropertyName>TextilesRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Petrochemical</Name>
+    <ShortName>irp</ShortName>
+    <Description></Description>
+    <PropertyName>PetrochemicalRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Food</Name>
+    <ShortName>irfd</ShortName>
+    <Description></Description>
+    <PropertyName>FoodRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Construction</Name>
+    <ShortName>irc</ShortName>
+    <Description></Description>
+    <PropertyName>ConstructionRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Automotive</Name>
+    <ShortName>irat</ShortName>
+    <Description></Description>
+    <PropertyName>AutomotiveRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Aerospace</Name>
+    <ShortName>iras</ShortName>
+    <Description></Description>
+    <PropertyName>AerospaceRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Finance</Name>
+    <ShortName>irfn</ShortName>
+    <Description></Description>
+    <PropertyName>FinanceRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Media</Name>
+    <ShortName>irm</ShortName>
+    <Description></Description>
+    <PropertyName>MediaRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Electronics</Name>
+    <ShortName>ire</ShortName>
+    <Description></Description>
+    <PropertyName>ElectronicsRatio</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>indRatio:Tourism</Name>
+    <ShortName>irtr</ShortName>
+    <Description></Description>
+    <PropertyName>ToursimRatio</PropertyName>
+  </Identifier>
+
+  <!--
+  <Identifier>
+    <Name></Name>
+    <ShortName></ShortName>
+    <Description></Description>
+    <PropertyName></PropertyName>
+  </Identifier>
+  -->  
+  
 </ScoringIdentifiers>

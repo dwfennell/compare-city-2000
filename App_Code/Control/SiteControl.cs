@@ -34,5 +34,12 @@ namespace CompareCity.Control
             get { return _scoringIdentifierFilepath; }
             private set { }
         }
+
+        private static string _errorRedirect = "Error.html";
+        public static string ErrorRedirect
+        {
+            get { return _errorRedirect; }
+            private set { }
+        }
     }
 }
