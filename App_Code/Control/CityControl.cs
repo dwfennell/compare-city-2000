@@ -22,7 +22,7 @@ namespace CompareCity.Control
         {
             // Parse city file (quick-parse, does not fetch all information).
             var parser = new CityParser();
-            City parserCity = parser.ParseCityFile(cityFileStream, true);
+            City parserCity = parser.ParseCityFile(cityFileStream);
 
             storeCity(parserCity, username, generateCityFilepath(username, filename, serverRoot), cityFileStream);
         }
@@ -49,23 +49,7 @@ namespace CompareCity.Control
         {
 
             // Fetch relevant data from parserCity.
-            var city = new CityInfo
-            {
-                CityName = parserCity.CityName,
-                Mayor = parserCity.MayorName,
-                CitySize = parserCity.GetMiscStatistic(City.MiscStatistic.CitySize),
-                YearOfFounding = parserCity.GetMiscStatistic(City.MiscStatistic.YearOfFounding),
-                DaysSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.DaysSinceFounding),
-                AvailableFunds = parserCity.GetMiscStatistic(City.MiscStatistic.AvailableFunds),
-                LifeExpectancy = parserCity.GetMiscStatistic(City.MiscStatistic.LifeExpectancy),
-                EducationQuotent = parserCity.GetMiscStatistic(City.MiscStatistic.EducationQuotent),
-                User = username,
-                FilePath = filepath,
-                Uploaded = DateTime.Now
-            };
-
-            
-
+            var city = new CityInfo(parserCity, username, filepath, DateTime.Now);
             db.CityInfoes.Add(city);
 
             // TODO: Serialize and store parserCity.
