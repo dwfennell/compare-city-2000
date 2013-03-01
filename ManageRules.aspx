@@ -9,6 +9,14 @@
         <tr>
             <th colspan="2">Create Formula</th>
         </tr>
+
+        <tr>
+            <td colspan="2">Type in a valid mathematical expression, surrounding all City Value Identfiers with square brackets.<br />
+                Short Id may also be used. Capitilization doesn't matter.<br />
+                Ex: [citySize] * ([eq] / [pollution]) - [traffic] * 100
+            </td>
+        </tr>
+
         <tr>
             <td></td>
             <td>
@@ -54,7 +62,7 @@
                     runat="server">
                     <Columns>
                         <asp:BoundField DataField="Name" SortExpression="Name" HeaderText="Identifier" />
-                        <asp:BoundField DataField="ShortName" SortExpression="ShortName" HeaderText="Short Name" />
+                        <asp:BoundField DataField="ShortName" SortExpression="ShortName" HeaderText="Short Id" />
                         <asp:BoundField DataField="Descrition" SortExpression="Descrition" HeaderText="Description" />
                     </Columns>
                 </asp:GridView>

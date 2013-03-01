@@ -16,12 +16,13 @@ namespace CompareCity.Util
     {
         public static bool IsValueIdentifier(string canditateString, DatabaseContext db)
         {
-            return db.ScoringIdentifiers.Any(s => s.Name == canditateString);
+
+            return db.ScoringIdentifiers.Any(s => s.Name == canditateString || s.ShortName == canditateString);
         }
 
         public static double GetValue(string scoringIdName, CityInfo city, DatabaseContext db)
         {
-            ScoringIdentifier scoringId = db.ScoringIdentifiers.Single(s => s.Name.Equals(scoringIdName));
+            ScoringIdentifier scoringId = db.ScoringIdentifiers.Single(s => s.Name.Equals(scoringIdName) || s.ShortName.Equals(scoringIdName));
 
             object objVal = city.GetType().GetProperty(scoringId.PropertyName).GetValue(city);
             double value;
