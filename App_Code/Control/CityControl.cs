@@ -14,8 +14,6 @@ namespace CompareCity.Control
 {
     public class CityControl
     {
-        // TODO: Context pool? 
-        private static DatabaseContext db = new DatabaseContext();
         private static ThreadSafeRandom random = new ThreadSafeRandom();
 
         public static void UploadCity(Stream cityFileStream, string filename, string serverRoot, string username)
@@ -29,30 +27,35 @@ namespace CompareCity.Control
 
         public static void DeleteCity(int cityId)
         {
-            CityInfo cityInfo = db.CityInfoes.First(i => i.CityInfoId == cityId);
-            db.CityInfoes.Remove(cityInfo);
-            db.SaveChanges();
+            using (var db = new DatabaseContext())
+            {
+                CityInfo cityInfo = db.CityInfoes.First(i => i.CityInfoId == cityId);
+                db.CityInfoes.Remove(cityInfo);
+                db.SaveChanges();
+            }
 
             // TODO: Also delete city files... or mark them as "orphan" somehow.
         }
 
         public static IQueryable<CityInfo> GetCities(string username)
         {
-            IQueryable<CityInfo> query =
-                from c in db.CityInfoes
-                where c.User.Equals(username)
-                select c;
-            return query;
+            IQueryable<CityInfo> cities;
+            using (var db = new DatabaseContext())
+            {
+                IQueryable<CityInfo> query = from c in db.CityInfoes
+                        where c.User.Equals(username)
+                        select c;
+
+                cities = query.ToList().AsQueryable();
+            }
+
+            return cities;
         }
 
         private static void storeCity(City parserCity, string username, string filepath, Stream cityFileStream)
         {
-
             // Fetch relevant data from parserCity.
             var city = new CityInfo(parserCity, username, filepath, DateTime.Now);
-            db.CityInfoes.Add(city);
-
-            // TODO: Serialize and store parserCity.
 
             // Save .sc2 file on the server.
             cityFileStream.Position = 0;
@@ -60,10 +63,14 @@ namespace CompareCity.Control
             {
                 cityFileStream.CopyTo(outputStream);
             }
-            
-            db.SaveChanges();
-        }
 
+            // Save parsed city data to database.
+            using (var db = new DatabaseContext())
+            {
+                db.CityInfoes.Add(city);
+                db.SaveChanges();
+            }
+        }
 
         private static string generateCityFilepath(string username, string filename, string serverRoot)
         {

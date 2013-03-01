@@ -16,9 +16,6 @@ using FormulaScore;
 /// </summary>
 public static class RankingControl
 {
-    // TODO: Context pool? 
-    private static DatabaseContext db = new DatabaseContext();
-
     #region private 'constants'
 
     private static readonly Dictionary<string, Type> citySearchTableColumns = new Dictionary<string, Type>
@@ -60,37 +57,44 @@ public static class RankingControl
 
     public static void AddRankedCity(int rankingId, int cityId)
     {
-        if (db.RankingMembers.Any(r => r.CityInfoId == cityId && r.RankingId == rankingId))
+        using (var db = new DatabaseContext())
         {
-            // City is already being ranked.
-            return;
+            if (db.RankingMembers.Any(r => r.CityInfoId == cityId && r.RankingId == rankingId))
+            {
+                // City is already being ranked.
+                return;
+            }
+
+            CityInfo city = getCity(cityId, db);
+
+            RankingMember newRankingMember = new RankingMember
+            {
+                RankingId = rankingId,
+                CityInfoId = cityId,
+                Score = 0.0,
+                User = city.User
+            };
+            db.RankingMembers.Add(newRankingMember);
+
+            db.SaveChanges();
         }
-
-        CityInfo city = getCity(cityId);
-
-        RankingMember newRankingMember = new RankingMember
-        {
-            RankingId = rankingId,
-            CityInfoId = cityId,
-            Score = 0.0,
-            User = city.User
-        };
-        db.RankingMembers.Add(newRankingMember);
-
-        db.SaveChanges();
     }
 
     public static List<ListItem> GetRankings(string username)
     {
         var rankings = new List<ListItem>();
-        var query =
-            from g in db.Rankings
-            where g.User == username
-            select g;
+        IQueryable<Ranking> query;
 
-        foreach (Ranking group in query)
+        using (var db = new DatabaseContext())
         {
-            rankings.Add(new ListItem(group.RankingName, group.RankingId.ToString()));
+            query = from g in db.Rankings
+                    where g.User == username
+                    select g;
+
+            foreach (Ranking group in query)
+            {
+                rankings.Add(new ListItem(group.RankingName, group.RankingId.ToString()));
+            }
         }
 
         return rankings;
@@ -103,57 +107,63 @@ public static class RankingControl
         // Fetch rule set formula for scoring.
         string formula = LoadRuleSet(ruleSetId)[RuleSetKeys.Formula];
 
-        List<RankingMember> rankingMembers = getRankingMembers(rankingId);
-
-        CityInfo city;
-        City parsedCity;
-        foreach (RankingMember rankingMember in rankingMembers)
+        using (var db = new DatabaseContext())
         {
-            city = getCity(rankingMember.CityInfoId);
+            List<RankingMember> rankingMembers = getRankingMembers(rankingId, db);
 
-            // Perform full city parse. 
-            // TODO: Serialize the results from this and save to reduce redundant computation.
-            using (FileStream cityStream = File.OpenRead(city.FilePath))
+            CityInfo city;
+            City parsedCity;
+            foreach (RankingMember rankingMember in rankingMembers)
             {
-                parsedCity = parser.ParseCityFile(cityStream);
-            }
+                city = getCity(rankingMember.CityInfoId, db);
 
-            // Score city!
-            rankingMember.Score = scoreCity(parsedCity, formula);
+                // Perform full city parse. 
+                // TODO: Refer to database values instead of re-parsing files.
+                using (FileStream cityStream = File.OpenRead(city.FilePath))
+                {
+                    parsedCity = parser.ParseCityFile(cityStream);
+                }
+
+                // Score city!
+                rankingMember.Score = scoreCity(parsedCity, formula);
+            }
+            db.SaveChanges();
         }
-        db.SaveChanges();
 
         return constructRankingMemberTable(rankingId);
     }
 
     public static void SaveRankingCities(string rankingName, string user, DataTable citiesTable)
     {
-        // Fetch parent ranking.
-        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
-
-        // Delete old members.
-        foreach (RankingMember rankedCity in db.RankingMembers.Where(c => c.RankingId == ranking.RankingId))
+        using (var db = new DatabaseContext())
         {
-            db.RankingMembers.Remove(rankedCity);
-        }
+            // Fetch parent ranking.
+            Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
 
-        // Add new members.
-        int cityId;
-        double score;
-        for (int i = 0; i < citiesTable.Rows.Count; i++)
-        {
-            cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
-            score = (double)citiesTable.Rows[i][rankingScoreColumn];
-
-            db.RankingMembers.Add(new RankingMember
+            // Delete old members.
+            foreach (RankingMember rankedCity in db.RankingMembers.Where(c => c.RankingId == ranking.RankingId))
             {
-                CityInfoId = cityId,
-                Score = score,
-                RankingId = ranking.RankingId
-            });
-        }
+                db.RankingMembers.Remove(rankedCity);
+            }
 
-        db.SaveChanges();
+            // Add new members.
+            int cityId;
+            double score;
+            for (int i = 0; i < citiesTable.Rows.Count; i++)
+            {
+                cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
+                score = (double)citiesTable.Rows[i][rankingScoreColumn];
+
+                db.RankingMembers.Add(new RankingMember
+                {
+                    CityInfoId = cityId,
+                    Score = score,
+                    RankingId = ranking.RankingId
+                });
+            }
+
+            db.SaveChanges();
+        }
     }
 
     public static int SaveNewRanking(string username, string rankingName, int ruleSetId)
@@ -165,34 +175,45 @@ public static class RankingControl
             RuleSetId = ruleSetId,
             User = username
         };
-        db.Rankings.Add(newRanking);
 
-        db.SaveChanges();
+        using (var db = new DatabaseContext())
+        {
+            db.Rankings.Add(newRanking);
+            db.SaveChanges();
+        }
+
         return newRanking.RankingId;
     }
 
     public static void SaveRanking(int rankingId, string rankingName, int ruleSetId)
     {
         // Update existing ranking. 
-        Ranking ranking = db.Rankings.First(r => r.RankingId == rankingId);
+        using (var db = new DatabaseContext())
+        {
+            Ranking ranking = db.Rankings.First(r => r.RankingId == rankingId);
 
-        ranking.RankingName = rankingName;
-        ranking.RuleSetId = ruleSetId;
+            ranking.RankingName = rankingName;
+            ranking.RuleSetId = ruleSetId;
 
-        db.SaveChanges();
+            db.SaveChanges();
+        }
     }
 
     public static DataTable LoadRankingCities(string rankingName, string user)
     {
-        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
-
-        DataTable rankedCitiesTable = initDataTable(rankingMemberTableColumns);
-        CityInfo city;
-        List<RankingMember> rankedCities = db.RankingMembers.Where(c => c.RankingId == ranking.RankingId).ToList();
-        foreach (RankingMember rankedCity in rankedCities)
+        DataTable rankedCitiesTable;
+        using (var db = new DatabaseContext())
         {
-            city = db.CityInfoes.Single(c => c.CityInfoId == rankedCity.CityInfoId);
-            rankedCitiesTable.Rows.Add(rankedCity.CityInfoId, city.CityName, user, rankedCity.Score);
+            Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
+
+            rankedCitiesTable = initDataTable(rankingMemberTableColumns);
+            CityInfo city;
+            List<RankingMember> rankedCities = db.RankingMembers.Where(c => c.RankingId == ranking.RankingId).ToList();
+            foreach (RankingMember rankedCity in rankedCities)
+            {
+                city = db.CityInfoes.Single(c => c.CityInfoId == rankedCity.CityInfoId);
+                rankedCitiesTable.Rows.Add(rankedCity.CityInfoId, city.CityName, user, rankedCity.Score);
+            }
         }
 
         return rankedCitiesTable;
@@ -200,18 +221,23 @@ public static class RankingControl
 
     public static Dictionary<RankingKeys, string> LoadRanking(int rankingId)
     {
-        Ranking ranking = db.Rankings.Single(r => r.RankingId == rankingId);
-
-        // Load rule set info, if available.
         string ruleSetName = "";
         string ruleSetFormula = "";
         string ruleSetId = "";
-        if (ranking.RuleSetId > 0)
+        Ranking ranking;
+
+        using (var db = new DatabaseContext())
         {
-            RuleSet ruleSet = db.RuleSets.Single(r => r.RuleSetId == ranking.RuleSetId);
-            ruleSetName = ruleSet.RuleSetName;
-            ruleSetFormula = ruleSet.Formula;
-            ruleSetId = ruleSet.RuleSetId.ToString();
+            ranking = db.Rankings.Single(r => r.RankingId == rankingId);
+
+            // Load rule set info, if available.
+            if (ranking.RuleSetId > 0)
+            {
+                RuleSet ruleSet = db.RuleSets.Single(r => r.RuleSetId == ranking.RuleSetId);
+                ruleSetName = ruleSet.RuleSetName;
+                ruleSetFormula = ruleSet.Formula;
+                ruleSetId = ruleSet.RuleSetId.ToString();
+            }
         }
 
         return new Dictionary<RankingKeys, string>
@@ -233,7 +259,11 @@ public static class RankingControl
 
     public static Dictionary<RuleSetKeys, string> LoadRuleSet(int ruleSetId)
     {
-        RuleSet ruleSet = db.RuleSets.Single(r => r.RuleSetId == ruleSetId);
+        RuleSet ruleSet;
+        using (var db = new DatabaseContext())
+        {
+            ruleSet = db.RuleSets.Single(r => r.RuleSetId == ruleSetId);
+        }
 
         return new Dictionary<RuleSetKeys, string>
         {
@@ -245,14 +275,18 @@ public static class RankingControl
     public static List<ListItem> GetRuleSets(string username)
     {
         var ruleSets = new List<ListItem>();
-        var query =
-            from r in db.RuleSets
-            where r.User == username && r.Valid == true
-            select r;
+        IQueryable<RuleSet> query;
 
-        foreach (RuleSet rules in query)
+        using (var db = new DatabaseContext())
         {
-            ruleSets.Add(new ListItem(rules.RuleSetName, rules.RuleSetId.ToString()));
+            query = from r in db.RuleSets
+                    where r.User == username && r.Valid == true
+                    select r;
+
+            foreach (RuleSet rules in query)
+            {
+                ruleSets.Add(new ListItem(rules.RuleSetName, rules.RuleSetId.ToString()));
+            }
         }
 
         return ruleSets;
@@ -266,32 +300,35 @@ public static class RankingControl
         // Build query from search conditions.
 
         IQueryable<CityInfo> query;
-
-        // Set user conditions.
-        if (doSearchAllUsers)
-        {
-            query = from c in db.CityInfoes select c;
-        }
-        else if (onlyCurrentUser)
-        {
-            query = from c in db.CityInfoes where c.User == currentUser select c;
-        } else {
-            query = from c in db.CityInfoes where c.User.StartsWith(userPattern) select c;
-        }
-
-        // Set cityname conditions.
-        if (!doGetAllCities)
-        {
-            query = query.Where(c => c.CityName.StartsWith(cityNamePattern));
-        }
-
-        // Construct table from search data. 
-        
         DataTable citySearchTable = initDataTable(citySearchTableColumns);
 
-        foreach (CityInfo city in query)
+        using (var db = new DatabaseContext())
         {
-            citySearchTable.Rows.Add(city.User, city.CityName, city.CitySize, city.AvailableFunds, city.CityInfoId);
+            // Set user conditions.
+            if (doSearchAllUsers)
+            {
+                query = from c in db.CityInfoes select c;
+            }
+            else if (onlyCurrentUser)
+            {
+                query = from c in db.CityInfoes where c.User == currentUser select c;
+            }
+            else
+            {
+                query = from c in db.CityInfoes where c.User.StartsWith(userPattern) select c;
+            }
+
+            // Set cityname conditions.
+            if (!doGetAllCities)
+            {
+                query = query.Where(c => c.CityName.StartsWith(cityNamePattern));
+            }
+
+            // Construct table from search data.
+            foreach (CityInfo city in query)
+            {
+                citySearchTable.Rows.Add(city.User, city.CityName, city.CitySize, city.AvailableFunds, city.CityInfoId);
+            }
         }
 
         return citySearchTable;
@@ -337,34 +374,32 @@ public static class RankingControl
         //       ...Or letting Entity Framework deal with the CityInfo db access through a Virtual field.
 
         DataTable table = initDataTable(rankingMemberTableColumns);
+        List<RankingMember> rankingMembers;
 
-        List<RankingMember> rankingMembers = getRankingMembers(rankingId);
-        CityInfo city;
-        foreach (RankingMember rankingMember in rankingMembers)
+        using (var db = new DatabaseContext())
         {
-            city = getCity(rankingMember.CityInfoId);
-            table.Rows.Add(city.CityName, rankingMember.Score, rankingMember.User);
-        }
+            rankingMembers = getRankingMembers(rankingId, db);
 
+            CityInfo city;
+            foreach (RankingMember rankingMember in rankingMembers)
+            {
+                city = getCity(rankingMember.CityInfoId, db);
+                table.Rows.Add(city.CityName, rankingMember.Score, rankingMember.User);
+            }
+        }
         return table;
     }
 
-    private static List<RankingMember> getRankingMembers(int rankingId)
+    private static List<RankingMember> getRankingMembers(int rankingId, DatabaseContext db)
     {
         return (from m in db.RankingMembers
                 where m.RankingId == rankingId
                 select m).ToList();
     }
 
-    private static CityInfo getCity(int cityId)
+    private static CityInfo getCity(int cityId, DatabaseContext db)
     {
         return db.CityInfoes.Single(c => c.CityInfoId == cityId);
     }
-
-    private static bool rankingExists(string rankingName, string username)
-    {
-        return db.Rankings.Any(g => g.RankingName == rankingName && g.User == username);
-    }
     #endregion
-
 }

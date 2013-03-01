@@ -11,19 +11,18 @@ namespace CompareCity.Control
 {
     public class RulesControl
     {
-        // TODO: Will having a single static db connection variable slow things to a crawl when there are multiple users? 
-        //       Maybe not, but more efficient persistance access also couldn't hurt. 
-        private static DatabaseContext db = new DatabaseContext();
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
         public static void DeleteRuleSet(int id) 
         {
-            RuleSet ruleSet = db.RuleSets.First(i => i.RuleSetId == id);
-            db.RuleSets.Remove(ruleSet);
-            db.SaveChanges();
+            using (var db = new DatabaseContext())
+            {
+                RuleSet ruleSet = db.RuleSets.First(i => i.RuleSetId == id);
+                db.RuleSets.Remove(ruleSet);
+                db.SaveChanges();
+            }
         }
 
         /// <summary>
@@ -44,8 +43,11 @@ namespace CompareCity.Control
                 Valid = isValidFormula
             };
 
-            db.RuleSets.Add(ruleSet);
-            db.SaveChanges();
+            using (var db = new DatabaseContext())
+            {
+                db.RuleSets.Add(ruleSet);
+                db.SaveChanges();
+            }
         }
 
         /// <summary>
@@ -55,11 +57,18 @@ namespace CompareCity.Control
         /// <returns></returns>
         public static IQueryable<RuleSet> GetRuleSets(string username)
         {
-            IQueryable<RuleSet> query =
-                from c in db.RuleSets
-                where c.User.Equals(username)
-                select c;
-            return query;
+            IQueryable<RuleSet> ruleSets;
+
+            using (var db = new DatabaseContext())
+            {
+                IQueryable<RuleSet> query =
+                    from c in db.RuleSets
+                    where c.User.Equals(username)
+                    select c;
+                ruleSets = query.ToList().AsQueryable();
+            }
+
+            return ruleSets;
         }
 
         /// <summary>
@@ -103,12 +112,13 @@ namespace CompareCity.Control
         /// <returns></returns>
         public static bool IsDuplicateName(string name, string username)
         {
-            // Check for duplicate formula names.
-            IQueryable<RuleSet> query =
-                from r in db.RuleSets
-                where r.RuleSetName.Equals(name) && r.User.Equals(username)
-                select r;
-            return query.Count<RuleSet>() > 0;
+            bool result;
+            using (var db = new DatabaseContext())
+            {
+                result = db.RuleSets.Any(r => r.User.Equals(username) && r.RuleSetName.Equals(name));
+            }
+
+            return result;
         }
 
         /// <summary>
