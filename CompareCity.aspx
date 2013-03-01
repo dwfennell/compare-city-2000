@@ -10,7 +10,7 @@
     <table>
         <tr>
             <th class="table-heading">City Ranking
-                <asp:Label ID="RankingNameLabel" Text="" runat="server" />
+                <asp:Label ID="RankingNameLabel" Text="" runat="server"  />
             </th>
         </tr>
         <tr>
