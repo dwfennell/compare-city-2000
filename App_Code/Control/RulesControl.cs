@@ -21,6 +21,16 @@ namespace CompareCity.Control
             {
                 RuleSet ruleSet = db.RuleSets.First(i => i.RuleSetId == id);
                 db.RuleSets.Remove(ruleSet);
+
+                // Remove references to this rule set (formula) from any rankings in which it appears.
+                var rankings = from r in db.Rankings
+                               where r.RuleSetId == ruleSet.RuleSetId
+                               select r;
+                foreach (Ranking ranking in rankings)
+                {
+                    ranking.RuleSetId = -1;
+                }
+
                 db.SaveChanges();
             }
         }

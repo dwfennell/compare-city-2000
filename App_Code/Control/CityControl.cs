@@ -31,10 +31,21 @@ namespace CompareCity.Control
             {
                 CityInfo cityInfo = db.CityInfoes.First(i => i.CityInfoId == cityId);
                 db.CityInfoes.Remove(cityInfo);
+
+                // Remove the city from any rankings it was present in.
+                var rankedRefs = from r in db.RankingMembers
+                                 where r.CityInfoId == cityInfo.CityInfoId
+                                 select r;
+                foreach (RankingMember rankedReference in rankedRefs)
+                {
+                    db.RankingMembers.Remove(rankedReference);
+                }
+
                 db.SaveChanges();
             }
 
             // TODO: Also delete city files... or mark them as "orphan" somehow.
+            //       Maybe the city ref should just be marked as orphan in the db... that way we can save the ranked instances.
         }
 
         public static IQueryable<CityInfo> GetCities(string username)
