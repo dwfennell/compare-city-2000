@@ -11,7 +11,7 @@ namespace CompareCity.Model
     /// <summary>
     /// Set initial data for the application database.
     /// </summary>
-    public class DbInititializer :DropCreateDatabaseIfModelChanges<DatabaseContext>
+    public class DbInititializer : DropCreateDatabaseIfModelChanges<DatabaseContext>
     {
         private string serverHome;
 
@@ -20,7 +20,7 @@ namespace CompareCity.Model
             serverHome = serverHomeDir;
         }
 
-        protected override void Seed(DatabaseContext db) 
+        protected override void Seed(DatabaseContext db)
         {
             base.Seed(db);
 
@@ -38,11 +38,11 @@ namespace CompareCity.Model
             // Parse xml file containing our scoring identifiers.
             using (XmlReader reader = XmlReader.Create(xmlFilepath))
             {
-                while (reader.Read())
+                for (int orderNum = 0; reader.Read(); orderNum++)
                 {
                     if (reader.IsStartElement() && reader.Name.Equals("Identifier"))
                     {
-                        scoringIdentifiers.Add(parseIdentifier(reader));
+                        scoringIdentifiers.Add(parseIdentifier(reader, orderNum));
                     }
                 }
             }
@@ -50,7 +50,7 @@ namespace CompareCity.Model
             return scoringIdentifiers;
         }
 
-        private ScoringIdentifier parseIdentifier(XmlReader reader)
+        private ScoringIdentifier parseIdentifier(XmlReader reader, int orderNumber)
         {
             string name = "";
             string shortName = "";
@@ -60,7 +60,7 @@ namespace CompareCity.Model
             reader.Read();
             while (!"Identifier".Equals(reader.Name))
             {
-                switch (reader.Name) 
+                switch (reader.Name)
                 {
                     case "Name":
                         name = reader.ReadElementContentAsString();
@@ -84,7 +84,8 @@ namespace CompareCity.Model
                 Name = name,
                 ShortName = shortName,
                 Descrition = description,
-                PropertyName = propertyName
+                PropertyName = propertyName,
+                DisplayOrder = orderNumber
             };
         }
     }

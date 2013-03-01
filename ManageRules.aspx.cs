@@ -95,4 +95,23 @@ public partial class ManageRules : System.Web.UI.Page
     {
         return RulesControl.GetRuleSets(SiteControl.Username);
     }
+
+    protected void ShowScoringIdentifiersButton_Click(object sender, EventArgs e)
+    {
+        if (ScoringIdentifiersGridview.Visible)
+        {
+            ShowScoringIdentifiersButton.Text = "Show City Value Identifiers";
+        }
+        else
+        {
+            ShowScoringIdentifiersButton.Text = "Hide City Value Identifiers";
+        }
+
+        ScoringIdentifiersGridview.Visible = !ScoringIdentifiersGridview.Visible;
+    }
+
+    public IQueryable<CompareCity.Model.ScoringIdentifier> ScoringIdentifiersGridview_GetData()
+    {
+        return RulesControl.GetScoringIdentifiers();
+    }
 }

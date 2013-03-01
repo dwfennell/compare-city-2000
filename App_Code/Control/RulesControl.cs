@@ -142,6 +142,19 @@ namespace CompareCity.Control
             return getBadFormulaIds(formula, cityValueIds);
         }
 
+        public static IQueryable<ScoringIdentifier> GetScoringIdentifiers()
+        {
+            IQueryable<ScoringIdentifier> identifiers;
+            var db = new DatabaseContext();
+
+            identifiers = from s in db.ScoringIdentifiers
+                          orderby s.DisplayOrder
+                          select s;
+
+            return identifiers;
+        }
+
+
         private static string getBadFormulaIds(string formula, List<string> cityIds)
         {
             // Make sure all value identifiers are valid.

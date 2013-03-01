@@ -88,28 +88,34 @@ h5, h6 {
     }
 
 /* Gridviews */
-    .gridview-header-row th {
-        margin-right: 0.5em;
-        margin-left: 0.5em;
-        padding-left: 0.5em;
-        padding-bottom: 0.25em;
-        text-align: center;
+.gridview-header-row th {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+    padding-bottom: 0.25em;
+    text-align: center;
+}
+
+    .gridview-header-row th:hover {
+        text-shadow: 2px -20px 2px red;
+        text-decoration: underline;
     }
 
-        .gridview-header-row th:hover {
-            text-shadow: 2px -20px 2px red;
-            text-decoration:underline;
-        }
+.gridview-row td {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+    text-align: center;
+}
 
-    .gridview-row td {
-        margin-right: 0.5em;
-        margin-left: 0.5em;
-        padding-left: 0.5em;
-        text-align:center;
-    }
+.identifier-table-gridview-row td {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+    text-align: left;
+}
 
-
-    /* city compare
+/* city compare
 ----------------------------------------------------------*/
 
 .ranking-button {
@@ -367,7 +373,7 @@ aside {
     font-size: 1.1em;
     font-weight: 700;
     display: inline;
-    text-align:center;
+    text-align: center;
 }
 
 .gridview-emptydata {
