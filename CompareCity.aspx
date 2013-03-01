@@ -50,14 +50,14 @@
         </tr>
         <tr>
             <td colspan="2">
-                <asp:Label ID="RuleFormulaLabel" Text="-no formula loaded-" runat="server" />
+                <asp:Label ID="RuleFormulaLabel" Text="-no formula set-" runat="server" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
                 <asp:Button
                     ID="LoadRuleSetButton"
-                    Text="Load Formula"
+                    Text="Set Formula"
                     OnClick="LoadRuleSetButton_Click"
                     CssClass="ranking-button"
                     runat="server" />
