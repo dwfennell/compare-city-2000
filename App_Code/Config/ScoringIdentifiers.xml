@@ -16,6 +16,20 @@
   </Identifier>
 
   <Identifier>
+    <Name>citySizeArcologies</Name>
+    <ShortName>csa</ShortName>
+    <Description>Total city size for arcologies only.</Description>
+    <PropertyName>CitySizeArcology</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>citySizeNoArcologies</Name>
+    <ShortName>csa</ShortName>
+    <Description>Total city size not counting arcologies.</Description>
+    <PropertyName>CitySizeNoArcology</PropertyName>
+  </Identifier>
+  
+  <Identifier>
     <Name>lifeExpectancy</Name>
     <ShortName>le</ShortName>
     <Description>Life expectacy for working-age sims. A measure of citywide health.</Description>
@@ -48,6 +62,20 @@
     <ShortName>days</ShortName>
     <Description>Number of sunrises your city has seen (1 month = 25 days, always).</Description>
     <PropertyName>DaysSinceFounding</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>monthsSinceFounding</Name>
+    <ShortName>mts</ShortName>
+    <Description>Total months past (1 month = 25 days, always).</Description>
+    <PropertyName>MonthsSinceFounding</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>yearsSinceFounding</Name>
+    <ShortName>yrs</ShortName>
+    <Description>Total years past.</Description>
+    <PropertyName>YearsSinceFounding</PropertyName>
   </Identifier>
 
   <Identifier>

@@ -19,11 +19,15 @@ namespace CompareCity.Model
         public string CityName { get; set; }
         public string Mayor { get; set; }
         public int CitySize { get; set; }
+        public int CitySizeArcology { get; set; }
+        public int CitySizeNoArcology { get; set; }
         public int AvailableFunds { get; set; }
         public int LifeExpectancy { get; set; }
         public int EducationQuotent { get; set; }
         public int YearOfFounding { get; set; }
         public int DaysSinceFounding { get; set; }
+        public int MonthsSinceFounding { get; set; }
+        public int YearsSinceFounding { get; set; }
         public int WorkforcePercentage { get; set; }
 
         public int NeighborSize1 { get; set; }
@@ -81,9 +85,16 @@ namespace CompareCity.Model
         public int PropertyValue { get; set; }
         public int PopulationGrowth { get; set; }
         public int PopulationDensity { get; set; }
-        
-        // Derivative statistics.
-        public double YearsSinceFounding { get; set; }
+
+        public int TotalTraffic { get; set; }
+        public int TotalPolicePower { get; set; }
+        public int TotalLandValue { get; set; }
+        public int TotalCrime { get; set; }
+        public int TotalPollution { get; set; }
+        public int TotalFirePower { get; set; }
+        public int TotalPopulationDensity { get; set; }
+        public int TotalPopulationGrowth { get; set; }
+
 
         public string FilePath { get; set; }
         public string User { get; set; }
@@ -104,6 +115,8 @@ namespace CompareCity.Model
             CitySize = parserCity.GetMiscStatistic(City.MiscStatistic.CitySize);
             YearOfFounding = parserCity.GetMiscStatistic(City.MiscStatistic.YearOfFounding);
             DaysSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.DaysSinceFounding);
+            MonthsSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.MonthsSinceFounding);
+            YearsSinceFounding = parserCity.GetMiscStatistic(City.MiscStatistic.YearsSinceFounding);
             AvailableFunds = parserCity.GetMiscStatistic(City.MiscStatistic.AvailableFunds);
             LifeExpectancy = parserCity.GetMiscStatistic(City.MiscStatistic.LifeExpectancy);
             EducationQuotent = parserCity.GetMiscStatistic(City.MiscStatistic.EducationQuotent);
@@ -150,6 +163,15 @@ namespace CompareCity.Model
             ElectronicsRatio = parserCity.GetMiscStatistic(City.MiscStatistic.ElectronicsRatio);
             ToursimRatio = parserCity.GetMiscStatistic(City.MiscStatistic.TourismRatio);
 
+            TotalTraffic = parserCity.GetMiscStatistic(City.MiscStatistic.TotalTraffic);
+            TotalPolicePower = parserCity.GetMiscStatistic(City.MiscStatistic.TotalPolicePower);
+            TotalLandValue = parserCity.GetMiscStatistic(City.MiscStatistic.TotalLandValue);
+            TotalCrime = parserCity.GetMiscStatistic(City.MiscStatistic.TotalCrime);
+            TotalPollution = parserCity.GetMiscStatistic(City.MiscStatistic.TotalPollution);
+            TotalFirePower = parserCity.GetMiscStatistic(City.MiscStatistic.TotalFirePower);
+            TotalPopulationDensity = parserCity.GetMiscStatistic(City.MiscStatistic.TotalPopulationDensity);
+            TotalPopulationGrowth = parserCity.GetMiscStatistic(City.MiscStatistic.TotalPopulationGrowth);
+
             // Not yet parsed but needed:
             //NumberOfTrees = parserCity.GetMiscStatistic(City.MiscStatistic);
             //ResidentialDemand = parserCity.GetMiscStatistic(City.MiscStatistic);
@@ -166,8 +188,6 @@ namespace CompareCity.Model
             //PopulationGrowth = parserCity.GetMiscStatistic(City.MiscStatistic);
             //PopulationDensity = parserCity.GetMiscStatistic(City.MiscStatistic);
 
-            // Derivative statistics.
-            YearsSinceFounding = System.Math.Round(DaysSinceFounding / (25.0 * 12), 2);
         }
 
         public CityInfo()
