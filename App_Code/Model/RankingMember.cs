@@ -19,5 +19,10 @@ namespace CompareCity.Model
 
         public double Score { get; set; }
         public string User { get; set; }
+
+        /// <summary>
+        /// The scoring formula with all scoring identifiers replaced with their respective values.
+        /// </summary>
+        public string DetailedScoring { get; set; }
     }
 }

@@ -30,12 +30,13 @@ public static class RankingControl
     private static readonly Dictionary<string, Type> rankingMemberTableColumns = new Dictionary<string, Type>
     {
         {"City", typeof(string)},
+        {"User", typeof(string)},
         {"Score", typeof(double)},
-        {"User", typeof(string)}
+        {"Detailed Scoring", typeof(string)}
     };
 
-    private const int rankingCityIdColumn = 0;
-    private const int rankingScoreColumn = 3;
+    //private const int rankingCityIdColumn = 0;
+    //private const int rankingScoreColumn = 3;
 
     private const string _defaultRankingName = "";
     #endregion
@@ -112,12 +113,14 @@ public static class RankingControl
             List<RankingMember> rankingMembers = getRankingMembers(rankingId, db);
 
             CityInfo city;
-            foreach (RankingMember rankingMember in rankingMembers)
+            RankingMember rankingMember;
+            for (int i = 0; i < rankingMembers.Count; i++)
             {
+                rankingMember = rankingMembers[i];
                 city = getCity(rankingMember.CityInfoId, db);
 
                 // Score city!
-                rankingMember.Score = scoreCity(city, formula, db);
+                rankingMember = scoreCity(rankingMember, city, formula, db);
             }
             db.SaveChanges();
         }
@@ -125,38 +128,39 @@ public static class RankingControl
         return constructRankingMemberTable(rankingId);
     }
 
-    public static void SaveRankingCities(string rankingName, string user, DataTable citiesTable)
-    {
-        using (var db = new DatabaseContext())
-        {
-            // Fetch parent ranking.
-            Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
+    // TODO: This method shouldn't work and doesn't seem to be called... delete when that is confirmed.
+    //public static void SaveRankingCities(string rankingName, string user, DataTable citiesTable)
+    //{
+    //    using (var db = new DatabaseContext())
+    //    {
+    //        // Fetch parent ranking.
+    //        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
 
-            // Delete old members.
-            foreach (RankingMember rankedCity in db.RankingMembers.Where(c => c.RankingId == ranking.RankingId))
-            {
-                db.RankingMembers.Remove(rankedCity);
-            }
+    //        // Delete old members.
+    //        foreach (RankingMember rankedCity in db.RankingMembers.Where(c => c.RankingId == ranking.RankingId))
+    //        {
+    //            db.RankingMembers.Remove(rankedCity);
+    //        }
 
-            // Add new members.
-            int cityId;
-            double score;
-            for (int i = 0; i < citiesTable.Rows.Count; i++)
-            {
-                cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
-                score = (double)citiesTable.Rows[i][rankingScoreColumn];
+    //        // Add new members.
+    //        int cityId;
+    //        double score;
+    //        for (int i = 0; i < citiesTable.Rows.Count; i++)
+    //        {
+    //            cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
+    //            score = (double)citiesTable.Rows[i][rankingScoreColumn];
 
-                db.RankingMembers.Add(new RankingMember
-                {
-                    CityInfoId = cityId,
-                    Score = score,
-                    RankingId = ranking.RankingId
-                });
-            }
+    //            db.RankingMembers.Add(new RankingMember
+    //            {
+    //                CityInfoId = cityId,
+    //                Score = score,
+    //                RankingId = ranking.RankingId
+    //            });
+    //        }
 
-            db.SaveChanges();
-        }
-    }
+    //        db.SaveChanges();
+    //    }
+    //}
 
     public static int SaveNewRanking(string username, string rankingName, int ruleSetId)
     {
@@ -191,25 +195,25 @@ public static class RankingControl
         }
     }
 
-    public static DataTable LoadRankingCities(string rankingName, string user)
-    {
-        DataTable rankedCitiesTable;
-        using (var db = new DatabaseContext())
-        {
-            Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
+    //public static DataTable LoadRankingCities(string rankingName, string user)
+    //{
+    //    DataTable rankedCitiesTable;
+    //    using (var db = new DatabaseContext())
+    //    {
+    //        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
 
-            rankedCitiesTable = initDataTable(rankingMemberTableColumns);
-            CityInfo city;
-            List<RankingMember> rankedCities = db.RankingMembers.Where(c => c.RankingId == ranking.RankingId).ToList();
-            foreach (RankingMember rankedCity in rankedCities)
-            {
-                city = db.CityInfoes.Single(c => c.CityInfoId == rankedCity.CityInfoId);
-                rankedCitiesTable.Rows.Add(rankedCity.CityInfoId, city.CityName, user, rankedCity.Score);
-            }
-        }
+    //        rankedCitiesTable = initDataTable(rankingMemberTableColumns);
+    //        CityInfo city;
+    //        List<RankingMember> rankedCities = db.RankingMembers.Where(c => c.RankingId == ranking.RankingId).ToList();
+    //        foreach (RankingMember rankedCity in rankedCities)
+    //        {
+    //            city = db.CityInfoes.Single(c => c.CityInfoId == rankedCity.CityInfoId);
+    //            rankedCitiesTable.Rows.Add(rankedCity.CityInfoId, city.CityName, user, rankedCity.Score);
+    //        }
+    //    }
 
-        return rankedCitiesTable;
-    }
+    //    return rankedCitiesTable;
+    //}
 
     public static Dictionary<RankingKeys, string> LoadRanking(int rankingId)
     {
@@ -329,7 +333,7 @@ public static class RankingControl
 
     #region private helper functions
 
-    private static double scoreCity(CityInfo city, string formula, DatabaseContext db)
+    private static RankingMember scoreCity(RankingMember rankingMember, CityInfo city, string formula, DatabaseContext db)
     {
         FormulaScore.FormulaScore scorer = new FormulaScore.FormulaScore();
         scorer.ScoringFormula = formula;
@@ -346,7 +350,10 @@ public static class RankingControl
             }
         }
 
-        return scorer.CalculateScore();
+        rankingMember.Score = Math.Round(scorer.CalculateScore(), 0);
+        rankingMember.DetailedScoring = scorer.GetFormulaWithValues();
+
+        return rankingMember;
     }
 
     private static DataTable initDataTable(Dictionary<string, Type> columns)
@@ -378,7 +385,7 @@ public static class RankingControl
             foreach (RankingMember rankingMember in rankingMembers)
             {
                 city = getCity(rankingMember.CityInfoId, db);
-                table.Rows.Add(city.CityName, rankingMember.Score, rankingMember.User);
+                table.Rows.Add(city.CityName, rankingMember.User, rankingMember.Score, rankingMember.DetailedScoring);
             }
         }
         return table;

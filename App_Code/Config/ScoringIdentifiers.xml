@@ -66,7 +66,7 @@
 
   <Identifier>
     <Name>workforcePercentage</Name>
-    <ShortName>wf%</ShortName>
+    <ShortName>wfp</ShortName>
     <Description>Percentage of sims aged 20-55 in your city.</Description>
     <PropertyName>WorkforcePercentage</PropertyName>
   </Identifier>
@@ -80,7 +80,7 @@
 
   <Identifier>
     <Name>daysSinceFounding</Name>
-    <ShortName>days</ShortName>
+    <ShortName>dsf</ShortName>
     <Description>Number of sunrises your city has seen (1 month = 25 days, always).</Description>
     <PropertyName>DaysSinceFounding</PropertyName>
   </Identifier>
@@ -150,7 +150,7 @@
 
   <Identifier>
     <Name>propertyValue</Name>
-    <ShortName>val</ShortName>
+    <ShortName>pvl</ShortName>
     <Description>Total city property value.</Description>
     <PropertyName>TotalPropertyValue</PropertyName>
   </Identifier>
