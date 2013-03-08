@@ -28,7 +28,28 @@
     <Description>Total city size not counting arcologies.</Description>
     <PropertyName>CitySizeNoArcology</PropertyName>
   </Identifier>
-  
+
+  <Identifier>
+    <Name>citySizeResidential</Name>
+    <ShortName>csr</ShortName>
+    <Description>Total residential size.</Description>
+    <PropertyName>ResidentialSize</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>citySizeCommercial</Name>
+    <ShortName>csc</ShortName>
+    <Description>Total commercial size. (NOTE: This value is lower than it should be if Arcologies are present)</Description>
+    <PropertyName>CommercialSize</PropertyName>
+  </Identifier>
+
+  <Identifier>
+    <Name>citySizeIndustrial</Name>
+    <ShortName>csi</ShortName>
+    <Description>Total industrial size. (NOTE: This value is lower than it should be if Arcologies are present)</Description>
+    <PropertyName>IndustrialSize</PropertyName>
+  </Identifier>
+    
   <Identifier>
     <Name>lifeExpectancy</Name>
     <ShortName>le</ShortName>
@@ -109,92 +130,29 @@
   <Identifier>
     <Name>pollution</Name>
     <ShortName>smog</ShortName>
-    <Description>A measure of pollution in your city.</Description>
-    <PropertyName>Pollution</PropertyName>
+    <Description>Total city pollution.</Description>
+    <PropertyName>TotalPollution</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>traffic</Name>
     <ShortName>tfc</ShortName>
-    <Description>Measures the effectiveness of your transportation system.</Description>
-    <PropertyName>Traffic</PropertyName>
+    <Description>Total city traffic.</Description>
+    <PropertyName>TotalTraffic</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>crime</Name>
     <ShortName>crm</ShortName>
-    <Description>A measure of crime in your city.</Description>
-    <PropertyName>Crime</PropertyName>
+    <Description>Total city crime.</Description>
+    <PropertyName>TotalCrime</PropertyName>
   </Identifier>
 
   <Identifier>
     <Name>propertyValue</Name>
     <ShortName>val</ShortName>
-    <Description>Average city property value.</Description>
-    <PropertyName>PropertyValue</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>populationDensity</Name>
-    <ShortName>dense</ShortName>
-    <Description>Average population density in your city.</Description>
-    <PropertyName>PopulationDensity</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>populationGrowth</Name>
-    <ShortName>grow</ShortName>
-    <Description>Average population growth in your city.</Description>
-    <PropertyName>PopulationGrowth</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>numberOfTrees</Name>
-    <ShortName>tree</ShortName>
-    <Description></Description>
-    <PropertyName>NumberOfTrees</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>residentialDemand</Name>
-    <ShortName>rd</ShortName>
-    <Description></Description>
-    <PropertyName>ResidentialDemand</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>commercialDemand</Name>
-    <ShortName>cd</ShortName>
-    <Description></Description>
-    <PropertyName>CommercialDemand</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>industrialDemand</Name>
-    <ShortName>id</ShortName>
-    <Description></Description>
-    <PropertyName>IndustrialDemand</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>residentialSize</Name>
-    <ShortName>pop</ShortName>
-    <Description></Description>
-    <PropertyName>ResidentialSize</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>commercialSize</Name>
-    <ShortName>cpop</ShortName>
-    <Description></Description>
-    <PropertyName>CommercialSize</PropertyName>
-  </Identifier>
-
-  <Identifier>
-    <Name>industrialSize</Name>
-    <ShortName>ipop</ShortName>
-    <Description></Description>
-    <PropertyName>IndustrialSize</PropertyName>
+    <Description>Total city property value.</Description>
+    <PropertyName>TotalPropertyValue</PropertyName>
   </Identifier>
 
   <Identifier>
