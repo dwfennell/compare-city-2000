@@ -23,7 +23,7 @@
                 <asp:GridView
                     ID="CityRankingGridView"
                     CssClass="city-display-gridview"
-                    RowStyle-CssClass="gridview-row" 
+                    RowStyle-CssClass="cityscore-gridview-row" 
                     HeaderStyle-CssClass="gridview-header-row"
                     runat="server">
                     <EmptyDataTemplate>
@@ -184,6 +184,5 @@
             </td>
         </tr>
     </table>
-
 
 </asp:Content>

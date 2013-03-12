@@ -38,7 +38,9 @@
         <div class="content-wrapper">
             <div class="float-left">
                 <p class="site-title">
-                    <a runat="server" href="~/">logo.</a></p>
+                    <a runat="server" href="~/" ><img src="Images/logo.png" alt="score city 2000" />
+                    </a>
+                </p>
             </div>
             <div class="float-right">
                 <section id="login">
@@ -75,15 +77,15 @@
             <asp:ContentPlaceHolder runat="server" ID="MainContent" />
         </section>
     </div>
-    <footer>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p>
-                    &copy; <%: DateTime.Now.Year %> - Dustin Fennell
-                </p>
-            </div>
-        </div>
-    </footer>
+        <footer>
+                <div class="content-wrapper">
+                    <div class="float-left">
+                        <p>
+                            &copy; <%: DateTime.Now.Year %> - Dustin Fennell
+                        </p>
+                    </div>
+                </div>
+        </footer>
     </form>
 </body>
 </html>
