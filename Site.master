@@ -38,7 +38,7 @@
         <div class="content-wrapper">
             <div class="float-left">
                 <p class="site-title">
-                    <a runat="server" href="~/" ><img src="Images/logo.png" alt="score city 2000" />
+                    <a runat="server" href="~/Default.aspx" ><img src="Images/logo.png" alt="score city 2000" />
                     </a>
                 </p>
             </div>

@@ -14,11 +14,6 @@ public partial class ManageRules : System.Web.UI.Page
 
     public void Page_Load(object sender, EventArgs e)
     {
-        // Don't allow users without logins here.
-        if (String.IsNullOrWhiteSpace(SiteControl.Username))
-        {
-            Response.Redirect(SiteControl.AnonRedirect);
-        }
     }
 
     public void SaveFormulaButton_Click(object sender, EventArgs e)

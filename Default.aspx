@@ -1,19 +1,5 @@
 ﻿<%@ Page Title="Compare City 2000" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
-<asp:Content runat="server" ID="FeaturedContent" ContentPlaceHolderID="FeaturedContent">
-    <section class="featured">
-        <div class="content-wrapper">
-            <hgroup class="title">
-                <h1><%: Title %>.</h1>
-                <h2>Inspired by Sim City 2000</h2>
-            </hgroup>
-            <p>
-                Compare Sim City 2000 cities!
-            </p>
-        </div>
-    </section>
-</asp:Content>
-
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
     <h3>Getting Started:</h3>
     <ol class="round">
