@@ -11,9 +11,14 @@
         </tr>
 
         <tr>
-            <td colspan="2">Type in a valid mathematical expression, surrounding all City Value Identfiers with square brackets.<br />
-                Short Id may also be used. Capitilization doesn't matter.<br />
-                Ex: [citySize] * ([eq] / [pollution]) - [traffic] * 100
+            <td colspan="2" class="rules-explain-text">
+                Enter a valid math formula, and name your formula.
+                <br />
+                <b><i>City Value Identifiers</i></b> are placeholders for your cities' info.
+                <br />
+                Surround City Value Identifiers with square brackets, "Short Id"s may also be used.
+                <br />
+                Ex: [citySize] / ([eq] * [pollution])
             </td>
         </tr>
 
@@ -40,7 +45,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td colspan="2" class="show-identifiers">
                 <asp:LinkButton
                     ID="ShowScoringIdentifiersButton"
                     OnClick="ShowScoringIdentifiersButton_Click"

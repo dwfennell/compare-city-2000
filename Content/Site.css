@@ -135,6 +135,19 @@ h5, h6 {
     margin-right: 0.25em;
 }
 
+/* Manage Rules
+----------------------------------------------------------*/
+
+.rules-explain-text {
+    padding-left: 3em;
+}
+
+.show-identifiers {
+    padding-bottom: 1em;
+    padding-top: 0.5em;
+}
+
+
 /* main layout
 ----------------------------------------------------------*/
 .content-wrapper {

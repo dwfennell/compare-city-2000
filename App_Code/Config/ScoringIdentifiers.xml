@@ -24,7 +24,7 @@
 
   <Identifier>
     <Name>citySizeNoArcologies</Name>
-    <ShortName>csa</ShortName>
+    <ShortName>csna</ShortName>
     <Description>Total city size not counting arcologies.</Description>
     <PropertyName>CitySizeNoArcology</PropertyName>
   </Identifier>
