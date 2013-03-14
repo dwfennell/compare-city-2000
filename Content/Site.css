@@ -104,6 +104,22 @@ h5, h6 {
     text-align: center;
 }
 
+.citysearch-gridview-row td {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+    text-align: center;
+    background-color: #ccdcf0
+}
+
+.citysearch-gridview-alt-row td {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+    text-align: center;
+    background-color: #dcf0cb
+}
+
 .identifier-table-gridview-row td {
     margin-right: 0.5em;
     margin-left: 0.5em;
@@ -120,6 +136,11 @@ h5, h6 {
 /* city compare
 ----------------------------------------------------------*/
 
+.city-score-title {
+    padding-bottom: 1em;
+    font-size: 1.75em;
+}
+
 .ranking-button {
     min-width: 9em;
     max-width: 9em;
@@ -133,6 +154,11 @@ h5, h6 {
 .checkbox-wrapper {
     margin-left: 0.25em;
     margin-right: 0.25em;
+    padding-top: 0.25em;
+}
+
+.city-search-area {
+    padding: 0.1em;
 }
 
 /* Manage Rules

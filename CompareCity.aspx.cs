@@ -13,15 +13,15 @@ public partial class CompareCities : System.Web.UI.Page
 {
     #region private constants
 
-    private static readonly string rankingListDefaultText = "--Select Ranking--";
+    private static readonly string rankingListDefaultText = "--Select Scoring Group--";
     private static readonly string ruleSetListDefaultText = "--Select Formula--";
     
     private static readonly int citySearchIdIndex = 5;
 
     private static readonly Color statusColorHappy = Color.DarkGreen;
     private static readonly Color statusColorSad = Color.Red;
-    private static readonly Color ruleSetPresentColor = statusColorHappy;
-    private static readonly Color ruleSetMissingColor = statusColorSad;
+    private static readonly Color ruleSetPresentColor = Color.Black;
+    private static readonly Color ruleSetMissingColor = Color.Red;
     #endregion
 
     /// <summary>
@@ -33,12 +33,6 @@ public partial class CompareCities : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            // Fetch default Ranking name, if necessary.
-            if (String.IsNullOrWhiteSpace(RankingNameTextBox.Text))
-            {
-                RankingNameTextBox.Text = RankingControl.GetUntitledRankingName();
-            }
-
             // Populate dropdown lists. 
             populateRulesList();
             populateRankingsList();
@@ -65,39 +59,12 @@ public partial class CompareCities : System.Web.UI.Page
     #region ranking events
 
     /// <summary>
-    /// Event handler for <c>SaveButton</c> click. Saves the current comparison.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void SaveButton_Click(object sender, EventArgs e)
-    {
-        saveRanking();
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void CalcRankingButton_Click(object sender, EventArgs e)
     {
-        if (ViewState["ruleSetId"] == null)
-        {
-            // No formula (rule set) selected.
-            CalcRankingStatusLabel.Text = "Please select a formula.";
-            return;
-        }
-
-        if (ViewState["rankingId"] == null)
-        {
-            // Ranking not yet saved.
-            if (!saveRanking())
-            {
-                // Save not successful.
-                return;
-            }
-        }
-
         int rankingId = (int)ViewState["rankingId"];
         int ruleSetId = (int)ViewState["ruleSetId"];
 
@@ -127,15 +94,15 @@ public partial class CompareCities : System.Web.UI.Page
             Dictionary<RankingControl.RankingKeys, string> rankingInfo = RankingControl.LoadRanking(rankingId);
 
             ViewState["rankingId"] = rankingId;
-            RankingNameTextBox.Text = rankingInfo[RankingControl.RankingKeys.Name];
+            RankingNameLabel.Text = rankingInfo[RankingControl.RankingKeys.Name];
 
             // Load rule set.
             if (rankingInfo[RankingControl.RankingKeys.RuleSetName] != "") {
 
                 ViewState["ruleSetId"] = Int32.Parse(rankingInfo[RankingControl.RankingKeys.RuleSetId]);
 
-                RuleSetLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetName];
-                RuleFormulaLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetFormula];
+                //RuleSetLabel.Text = rankingInfo[RankingControl.RankingKeys.RuleSetName];
+                RuleFormulaLabel.Text = "Formula: " + rankingInfo[RankingControl.RankingKeys.RuleSetFormula];
                 
                 setRuleSetTextColor(true);
                 ScoringRulesList.SelectedIndex = 0;
@@ -146,6 +113,10 @@ public partial class CompareCities : System.Web.UI.Page
             bindToGridview(CityRankingGridView, rankedCities);
 
             RankingNameList.SelectedIndex = 0;
+
+            // Ensure visibility is sane.
+            postFormulaControlVisability();
+
         }
         catch (InvalidOperationException)
         {
@@ -159,20 +130,29 @@ public partial class CompareCities : System.Web.UI.Page
         ViewState["rankingId"] = null;
         ViewState["ruleSetId"] = null;
 
-        RankingNameTextBox.Text = "";
+        RankingNameLabel.Text = "New Score Group";
 
-        // TODO: Centrailize initial label text.
-        RuleSetLabel.Text = "";
         RuleFormulaLabel.Text = "";
         setRuleSetTextColor(false);
 
-        SaveStatusLabel.Text = "";
         CalcRankingStatusLabel.Text = "";
         
         bindToGridview(CityRankingGridView, new DataTable());
 
         ScoringRulesList.SelectedIndex = 0;
         RankingNameList.SelectedIndex = 0;
+
+        preFormulaControlVisability();
+    }
+
+    protected void DeleteRankButton_Click(object sender, EventArgs e)
+    {
+        if (ViewState["rankingId"] != null) {
+
+            RankingControl.DeleteRanking((int)ViewState["rankingId"]);
+            populateRankingsList();
+            NewRankButton_Click(null, null);
+        }
     }
     #endregion
 
@@ -192,26 +172,32 @@ public partial class CompareCities : System.Web.UI.Page
         {
             Dictionary<RankingControl.RuleSetKeys, string> ruleSetInfo = RankingControl.LoadRuleSet(ruleSetId);
 
-            RuleSetLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Name];
-            RuleFormulaLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Formula];
+            //RuleSetLabel.Text = ruleSetInfo[RankingControl.RuleSetKeys.Name];
+            string rankingName = RankingControl.GetRankingName(ruleSetInfo[RankingControl.RuleSetKeys.Name]);
+
+            RuleFormulaLabel.Text = "Formula : " + ruleSetInfo[RankingControl.RuleSetKeys.Formula];
+            RankingNameLabel.Text = rankingName;
+            ViewState["rankingId"] = RankingControl.SaveNewRanking(SiteControl.Username, rankingName, ruleSetId);
+            ViewState["ruleSetId"] = ruleSetId;
 
             setRuleSetTextColor(true);
             CalcRankingStatusLabel.Text = "";
+            
+            // Toggle control visibility.
+            postFormulaControlVisability();
 
-            ViewState["ruleSetId"] = ruleSetId;
+            populateRankingsList();
         }
         catch (InvalidOperationException)
         {
             // Formula (Rule set) not found.
             setRuleSetTextColor(false);
-            RuleSetLabel.Text = "Formula not found!";
-            RuleFormulaLabel.Text = "Formula not found!";
+            //RuleSetLabel.Text = "Formula not found!";
+            //RuleFormulaLabel.Text = "Formula not found!";
 
             ViewState["ruleSetId"] = null;
             return;
         }
-
-        // TODO: Check if scoring was done using previous rule set and clear those scores.
     }
     #endregion
 
@@ -254,21 +240,9 @@ public partial class CompareCities : System.Web.UI.Page
             // Fetch cityId from row data.
             int cityId;
             Int32.TryParse(row.Cells[citySearchIdIndex].Text, out cityId);
-
-            if (ViewState["rankingId"] == null)
-            {
-                // Ranking not yet saved.
-                if (!saveRanking())
-                {
-                    // Save not sucessful.
-                    return;
-                }
-            }
             
             int rankingId = (int)ViewState["rankingId"];
-
             RankingControl.AddRankedCity(rankingId, cityId);
-
             bindToGridview(CityRankingGridView, RankingControl.GetRankingMemberTable(rankingId));
         }
     }
@@ -334,43 +308,6 @@ public partial class CompareCities : System.Web.UI.Page
 
     #region private helper functions
 
-    private bool saveRanking()
-    {
-        string rankingName = RankingNameTextBox.Text.Trim();
-        if (String.IsNullOrWhiteSpace(rankingName))
-        {
-            SaveStatusLabel.Text = "Please enter a ranking name.";
-            SaveStatusLabel.ForeColor = statusColorSad;
-            return false;
-        }
-
-        int ruleSetId;
-        if (ViewState["ruleSetId"] == null)
-        {
-            // No rule set loaded.
-            ruleSetId = -1;
-        }
-        else
-        {
-            ruleSetId = (int)ViewState["ruleSetId"];
-        }
-
-        if (ViewState["rankingId"] == null)
-        {
-            // Ranking does not yet exist.
-            ViewState["rankingId"] = RankingControl.SaveNewRanking(SiteControl.Username, rankingName, ruleSetId);
-        }
-        else
-        {
-            // Update existing ranking.
-            RankingControl.SaveRanking((int)ViewState["rankingId"], rankingName, ruleSetId);
-        }
-
-        populateRankingsList();
-
-        return true;
-    }
-
     private int getSelectedRuleSetId()
     {
         int ruleSetId;
@@ -417,14 +354,33 @@ public partial class CompareCities : System.Web.UI.Page
     {
         if (ruleSetPresent)
         {
-            RuleSetLabel.ForeColor = ruleSetPresentColor;
+            //RuleSetLabel.ForeColor = ruleSetPresentColor;
             RuleFormulaLabel.ForeColor = ruleSetPresentColor;
         }
         else
         {
-            RuleSetLabel.ForeColor = ruleSetMissingColor;
+            //RuleSetLabel.ForeColor = ruleSetMissingColor;
             RuleFormulaLabel.ForeColor = ruleSetMissingColor;
         }
+    }
+
+    private void postFormulaControlVisability()
+    {
+        LoadRuleSetButton.Visible = false;
+        ScoringRulesList.Visible = false;
+        FindCities1.Visible = true;
+        FindCities2.Visible = true;
+        Rule2.Visible = true;
+        CalcRankingButton.Visible = true;
+    }
+
+    private void preFormulaControlVisability()
+    {
+        LoadRuleSetButton.Visible = true;
+        ScoringRulesList.Visible = true;
+        FindCities1.Visible = false;
+        FindCities2.Visible = false;
+        Rule2.Visible = false;
     }
 
     #endregion

@@ -32,11 +32,8 @@ public static class RankingControl
         {"City", typeof(string)},
         {"User", typeof(string)},
         {"Score", typeof(double)},
-        {"Detailed Scoring", typeof(string)}
+        {"Scoring Details", typeof(string)}
     };
-
-    //private const int rankingCityIdColumn = 0;
-    //private const int rankingScoreColumn = 3;
 
     private const string _defaultRankingName = "";
     #endregion
@@ -128,40 +125,6 @@ public static class RankingControl
         return constructRankingMemberTable(rankingId);
     }
 
-    // TODO: This method shouldn't work and doesn't seem to be called... delete when that is confirmed.
-    //public static void SaveRankingCities(string rankingName, string user, DataTable citiesTable)
-    //{
-    //    using (var db = new DatabaseContext())
-    //    {
-    //        // Fetch parent ranking.
-    //        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
-
-    //        // Delete old members.
-    //        foreach (RankingMember rankedCity in db.RankingMembers.Where(c => c.RankingId == ranking.RankingId))
-    //        {
-    //            db.RankingMembers.Remove(rankedCity);
-    //        }
-
-    //        // Add new members.
-    //        int cityId;
-    //        double score;
-    //        for (int i = 0; i < citiesTable.Rows.Count; i++)
-    //        {
-    //            cityId = (int)citiesTable.Rows[i][rankingCityIdColumn];
-    //            score = (double)citiesTable.Rows[i][rankingScoreColumn];
-
-    //            db.RankingMembers.Add(new RankingMember
-    //            {
-    //                CityInfoId = cityId,
-    //                Score = score,
-    //                RankingId = ranking.RankingId
-    //            });
-    //        }
-
-    //        db.SaveChanges();
-    //    }
-    //}
-
     public static int SaveNewRanking(string username, string rankingName, int ruleSetId)
     {
         // Create new ranking.
@@ -195,26 +158,6 @@ public static class RankingControl
         }
     }
 
-    //public static DataTable LoadRankingCities(string rankingName, string user)
-    //{
-    //    DataTable rankedCitiesTable;
-    //    using (var db = new DatabaseContext())
-    //    {
-    //        Ranking ranking = db.Rankings.Single(c => c.RankingName == rankingName && c.User == user);
-
-    //        rankedCitiesTable = initDataTable(rankingMemberTableColumns);
-    //        CityInfo city;
-    //        List<RankingMember> rankedCities = db.RankingMembers.Where(c => c.RankingId == ranking.RankingId).ToList();
-    //        foreach (RankingMember rankedCity in rankedCities)
-    //        {
-    //            city = db.CityInfoes.Single(c => c.CityInfoId == rankedCity.CityInfoId);
-    //            rankedCitiesTable.Rows.Add(rankedCity.CityInfoId, city.CityName, user, rankedCity.Score);
-    //        }
-    //    }
-
-    //    return rankedCitiesTable;
-    //}
-
     public static Dictionary<RankingKeys, string> LoadRanking(int rankingId)
     {
         string ruleSetName = "";
@@ -245,9 +188,38 @@ public static class RankingControl
         };
     }
 
-    public static string GetUntitledRankingName()
+    public static void DeleteRanking(int rankingId)
     {
-        return _defaultRankingName;
+        using (var db = new DatabaseContext())
+        {
+            Ranking ranking = db.Rankings.Single(r => r.RankingId == rankingId);
+            db.Rankings.Remove(ranking);
+
+            var rankingMembers = db.RankingMembers.Where(r => r.RankingId == rankingId);
+            foreach (RankingMember rankingMember in rankingMembers)
+            {
+                db.RankingMembers.Remove(rankingMember);
+            }
+
+            db.SaveChanges();
+        }
+    }
+
+    public static string GetRankingName(string ruleSetName)
+    {
+        string rankingName;
+        using (var db = new DatabaseContext()) {
+            for (int i = 1; true; i++)
+            {
+                // Find the first name in the format "<ruleSetName>-<number>" that is available.
+                rankingName = string.Format("{0}-{1}", ruleSetName, i.ToString());
+                if (!db.Rankings.Any(r => r.RankingName == rankingName)) {
+                    break;
+                }
+            }
+        }
+
+        return rankingName;
     }
     #endregion
 
