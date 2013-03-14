@@ -25,6 +25,8 @@ namespace CompareCity.Model
         {
             base.OnModelCreating(modelBuilder);
 
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DatabaseContext, Configuration>());
+
             // Define primary keys.
 
             modelBuilder.Entity<CityInfo>().HasKey(ci => ci.CityInfoId);

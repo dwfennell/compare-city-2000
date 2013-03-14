@@ -12,6 +12,7 @@
         BundleConfig.RegisterBundles(BundleTable.Bundles);
         AuthConfig.RegisterOpenAuth();
         
+        
         // Initialize database if necessary.
         Database.SetInitializer(new DbInititializer(Server.MapPath("~/")));
         using (var db = new DatabaseContext())
