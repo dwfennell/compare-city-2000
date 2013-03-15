@@ -17,7 +17,7 @@ namespace CompareCity.Model
         public DbSet<ScoringIdentifier> ScoringIdentifiers { get; set; }
 
         public DatabaseContext()
-            : base("CompareCity")
+            : base("DefaultConnection")
         {
         }
 
