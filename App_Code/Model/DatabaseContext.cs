@@ -19,15 +19,15 @@ namespace CompareCity.Model
         public DatabaseContext()
             : base("DefaultConnection")
         {
-            // Make sure MARS is set.
-            var configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
-            var connectionString = configuration.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
-            if (!connectionString.Contains("MultipleActiveResultSets=True;"))
-            {
-                connectionString += "MultipleActiveResultSets=True;";
-                configuration.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString = connectionString;
-                configuration.Save();
-            }
+            //// Make sure MARS is set.
+            //var configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
+            //var connectionString = configuration.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString;
+            //if (!connectionString.Contains("MultipleActiveResultSets=True;"))
+            //{
+            //    connectionString += ";MultipleActiveResultSets=True;";
+            //    configuration.ConnectionStrings.ConnectionStrings["DefaultConnection"].ConnectionString = connectionString;
+            //    configuration.Save();
+            //}
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
