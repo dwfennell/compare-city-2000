@@ -22,6 +22,7 @@ namespace CompareCity.Control
             var parser = new CityParser();
             City parserCity = parser.ParseCityFile(cityFileStream);
 
+            createCityFileDirectory(serverRoot);
             storeCity(parserCity, username, generateCityFilepath(username, filename, serverRoot), cityFileStream);
         }
 
@@ -80,6 +81,15 @@ namespace CompareCity.Control
             {
                 db.CityInfoes.Add(city);
                 db.SaveChanges();
+            }
+        }
+
+        private static void createCityFileDirectory(string serverRoot)
+        {
+            string directoryPath = String.Format("{0}{1}", serverRoot, SiteControl.CityFileDirectory);
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
             }
         }
 
