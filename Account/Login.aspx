@@ -41,8 +41,8 @@
         </p>
     </section>
 
-    <section id="socialLoginForm">
+<%--    <section id="socialLoginForm">
         <h2>Use another service to log in.</h2>
         <uc:OpenAuthProviders runat="server" ID="OpenAuthLogin" />
-    </section>
+    </section>--%>
 </asp:Content>
