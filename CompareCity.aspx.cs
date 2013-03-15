@@ -31,6 +31,11 @@ public partial class CompareCities : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (String.IsNullOrWhiteSpace(SiteControl.Username))
+        {
+            Response.Redirect(SiteControl.AnonRedirect);
+        }
+
         if (!IsPostBack)
         {
             // Populate dropdown lists. 
