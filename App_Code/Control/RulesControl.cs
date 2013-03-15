@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Threading.Tasks;
 
 using CompareCity.Util;
@@ -154,6 +155,86 @@ namespace CompareCity.Control
             return identifiers;
         }
 
+        public static void UpdateScoringIdentifiers(string serverHome)
+        {
+            using (DatabaseContext db = new DatabaseContext())
+            {
+                // Clear all scoring ids. 
+                // ... inefficiently, but this only runs at application start so it will do.
+                foreach (var scoringId in db.ScoringIdentifiers)
+                {
+                    db.ScoringIdentifiers.Remove(scoringId);
+                }
+
+                // Add all scoring ids.
+                foreach (var scoringId in getScoringIdentifiers(serverHome))
+                {
+                    db.ScoringIdentifiers.Add(scoringId);
+                }
+
+                db.SaveChanges();
+            }
+        }
+
+        private static List<ScoringIdentifier> getScoringIdentifiers(string serverHome)
+        {
+            List<ScoringIdentifier> scoringIdentifiers = new List<ScoringIdentifier>();
+
+            string xmlFilepath = String.Format("{0}{1}", serverHome, SiteControl.ScoringIdentifierFilepath);
+
+            // Parse xml file containing our scoring identifiers.
+            using (XmlReader reader = XmlReader.Create(xmlFilepath))
+            {
+                for (int orderNum = 0; reader.Read(); orderNum++)
+                {
+                    if (reader.IsStartElement() && reader.Name.Equals("Identifier"))
+                    {
+                        scoringIdentifiers.Add(parseIdentifier(reader, orderNum));
+                    }
+                }
+            }
+
+            return scoringIdentifiers;
+        }
+
+        private static ScoringIdentifier parseIdentifier(XmlReader reader, int orderNumber)
+        {
+            string name = "";
+            string shortName = "";
+            string description = "";
+            string propertyName = "";
+
+            reader.Read();
+            while (!"Identifier".Equals(reader.Name))
+            {
+                switch (reader.Name)
+                {
+                    case "Name":
+                        name = reader.ReadElementContentAsString();
+                        break;
+                    case "ShortName":
+                        shortName = reader.ReadElementContentAsString();
+                        break;
+                    case "Description":
+                        description = reader.ReadElementContentAsString();
+                        break;
+                    case "PropertyName":
+                        propertyName = reader.ReadElementContentAsString();
+                        break;
+                }
+
+                reader.Read();
+            }
+
+            return new ScoringIdentifier
+            {
+                Name = name,
+                ShortName = shortName,
+                Descrition = description,
+                PropertyName = propertyName,
+                DisplayOrder = orderNumber
+            };
+        }
 
         private static string getBadFormulaIds(string formula, List<string> cityIds)
         {

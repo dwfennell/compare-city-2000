@@ -3,6 +3,7 @@
 <%@ Import Namespace="System.Web.Optimization" %>
 <%@ Import Namespace="System.Data.Entity" %>
 <%@ Import Namespace="CompareCity.Model" %>
+<%@ Import Namespace="CompareCity.Control" %>
 
 <script runat="server">
 
@@ -12,13 +13,8 @@
         BundleConfig.RegisterBundles(BundleTable.Bundles);
         AuthConfig.RegisterOpenAuth();
         
-        
-        // Initialize database if necessary.
-        Database.SetInitializer(new DbInititializer(Server.MapPath("~/")));
-        using (var db = new DatabaseContext())
-        {
-            db.Database.Initialize(false);
-        }
+        // Update scoring identifiers.
+        RulesControl.UpdateScoringIdentifiers(Server.MapPath("~/"));
     }
     
     void Application_End(object sender, EventArgs e)
